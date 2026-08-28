@@ -208,6 +208,29 @@
   #victory-weak-wrap { margin: 0 auto 18px; max-width: 640px; background: var(--panel); border: 1px dashed #6a4a8a; border-radius: var(--radius); padding: 12px; display: none; }
   #victory-weak-wrap h4 { color: #b48ad4; font-weight: normal; margin-bottom: 8px; }
 
+  /* ===== spellbook & word detail ===== */
+  .spell-card { background: var(--panel); border: 1px solid var(--gold-dim); border-radius: var(--radius); padding: 16px; margin-top: 14px; }
+  .spell-card h3 { color: var(--gold); margin-bottom: 6px; }
+  .spell-card .rule { line-height: 1.6; margin-bottom: 10px; }
+  .spell-pairs { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 6px; }
+  .codex-card.owned { cursor: pointer; }
+  .codex-card.owned:hover { border-color: var(--gold); background: var(--panel2); }
+  #detail-mask {
+    display: none; position: fixed; inset: 0; background: rgba(10,8,18,.82);
+    z-index: 60; justify-content: center; align-items: center; padding: 14px;
+  }
+  #detail-mask.show { display: flex; }
+  #detail-card {
+    background: var(--panel); border: 2px solid var(--gold); border-radius: var(--radius);
+    max-width: 580px; width: 100%; padding: 22px; max-height: 88vh; overflow-y: auto;
+    animation: fadein .25s; position: relative;
+  }
+  #detail-close {
+    position: absolute; top: 10px; right: 14px; background: none; border: none;
+    color: var(--text-dim); font-size: 1.4em; cursor: pointer; font-family: inherit;
+  }
+  #detail-close:hover { color: var(--gold); }
+
   #toast {
     position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
     background: var(--gold); color: #221; padding: 12px 26px; border-radius: 30px;
@@ -250,6 +273,7 @@
       <button class="pill" id="btn-map">🗺️ <span data-t="map">地图</span></button>
       <button class="pill" id="btn-codex">📖 <span data-t="codex">词汇册</span></button>
       <button class="pill" id="btn-board">🏆 <span data-t="board">排行榜</span></button>
+      <button class="pill" id="btn-spells">✨ <span data-t="spellbook">咒语书</span></button>
     </span>
   </div>
 
@@ -301,7 +325,10 @@
   <div class="screen" id="screen-quiz">
     <div id="quiz-head">
       <span id="quiz-title"></span>
-      <span id="locks"></span>
+      <span style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+        <span id="quiz-hud" style="color:var(--gold);font-variant-numeric:tabular-nums"></span>
+        <span id="locks"></span>
+      </span>
     </div>
     <div id="quiz-art-wrap" style="display:none"><img id="quiz-art" alt="" referrerpolicy="no-referrer"><div id="quiz-art-caption"></div></div>
     <div id="quiz-story"></div>
@@ -344,6 +371,16 @@
     </div>
     <div id="codex-grid"></div>
   </div>
+
+  <div class="screen" id="screen-spells">
+    <h2 style="color:var(--gold);margin-top:10px">✨ <span data-t="spellbook">咒语书</span></h2>
+    <p style="color:var(--text-dim);margin-top:6px;line-height:1.6" data-t="spellsDesc"></p>
+    <div id="spells-list"></div>
+  </div>
+</div>
+
+<div id="detail-mask">
+  <div id="detail-card"></div>
 </div>
 
 <div id="toast"></div>
@@ -351,6 +388,7 @@
 
 <script src="data.js"></script>
 <script src="words_morph.js"></script>
+<script src="extras.js"></script>
 <script>
 /* ===================== I18N ===================== */
 const I18N = {
@@ -384,6 +422,9 @@ const I18N = {
     shareText: (n,lv,w,s)=>`我是${n},正在 FUGA MYTHICA 玩希腊神话密室逃脱学拉丁语!已通关 ${lv} 级,收集 ${w} 个拉丁词,总分 ${s}。来跟我比一比:`,
     thName: "冒险者", thLevels: "通关数", thWords: "词汇量", thScore: "总分", thGrade: "评级",
     switchPlayer: "⇄ 换人", scoreLabel: "本级得分",
+    spellbook: "咒语书", spellTag: "✨ 变形咒语",
+    spellPrompt: (la,tgt)=>`施展咒语!拉丁语 <b>${la}</b> 会变成哪个${tgt}单词?`,
+    spellRuleLabel: "📜 咒语规则", spellMore: "更多例子", spellsDesc: "拉丁语变成现代语言时遵循神奇又规整的音变规则。掌握咒语,没学过的词你也能变!",
   },
   en: {
     map: "Map", codex: "Codex", tagline: "A Greek-myth escape room · Learn Latin by adventure",
@@ -415,6 +456,9 @@ const I18N = {
     shareText: (n,lv,w,s)=>`I'm ${n}, escaping Greek myths & learning Latin in FUGA MYTHICA! Cleared ${lv} levels, collected ${w} Latin words, total score ${s}. Challenge me:`,
     thName: "Adventurer", thLevels: "Levels", thWords: "Words", thScore: "Score", thGrade: "Grade",
     switchPlayer: "⇄ Switch player", scoreLabel: "Level score",
+    spellbook: "Spellbook", spellTag: "✨ Transformation spell",
+    spellPrompt: (la,tgt)=>`Cast the spell! Latin <b>${la}</b> becomes which ${tgt} word?`,
+    spellRuleLabel: "📜 Spell rule", spellMore: "More examples", spellsDesc: "Latin changed into modern languages by magically regular sound rules. Master a spell and you can transform words you never learned!",
   },
   es: {
     map: "Mapa", codex: "Códice", tagline: "Sala de escape mitológica · Aprende latín en la aventura",
@@ -445,6 +489,9 @@ const I18N = {
     shareText: (n,lv,w,s)=>`Soy ${n} y aprendo latín en FUGA MYTHICA. Niveles: ${lv}, palabras: ${w}, puntos: ${s}. ¡Rétame!:`,
     thName: "Aventurero", thLevels: "Niveles", thWords: "Palabras", thScore: "Puntos", thGrade: "Nota",
     switchPlayer: "⇄ Cambiar jugador", scoreLabel: "Puntuación del nivel",
+    spellbook: "Libro de hechizos", spellTag: "✨ Hechizo de transformación",
+    spellPrompt: (la,tgt)=>`¡Lanza el hechizo! El latín <b>${la}</b> se convierte ¿en qué palabra ${tgt}?`,
+    spellRuleLabel: "📜 Regla del hechizo", spellMore: "Más ejemplos", spellsDesc: "El latín se transformó en lenguas modernas con reglas de sonido mágicamente regulares.",
   },
   fr: {
     map: "Carte", codex: "Codex", tagline: "Escape game mythologique · Apprends le latin en aventure",
@@ -475,6 +522,9 @@ const I18N = {
     shareText: (n,lv,w,s)=>`Je suis ${n}, j'apprends le latin dans FUGA MYTHICA. Niveaux : ${lv}, mots : ${w}, points : ${s}. Défie-moi :`,
     thName: "Aventurier", thLevels: "Niveaux", thWords: "Mots", thScore: "Points", thGrade: "Rang",
     switchPlayer: "⇄ Changer de joueur", scoreLabel: "Score du niveau",
+    spellbook: "Grimoire", spellTag: "✨ Sort de transformation",
+    spellPrompt: (la,tgt)=>`Lance le sort ! Le latin <b>${la}</b> devient quel mot ${tgt} ?`,
+    spellRuleLabel: "📜 Règle du sort", spellMore: "Plus d'exemples", spellsDesc: "Le latin s'est changé en langues modernes par des règles sonores étonnamment régulières.",
   },
   de: {
     map: "Karte", codex: "Kodex", tagline: "Mythologischer Escape-Room · Latein lernen im Abenteuer",
@@ -505,6 +555,9 @@ const I18N = {
     shareText: (n,lv,w,s)=>`Ich bin ${n} und lerne Latein in FUGA MYTHICA. Level: ${lv}, Wörter: ${w}, Punkte: ${s}. Fordere mich heraus:`,
     thName: "Abenteurer", thLevels: "Level", thWords: "Wörter", thScore: "Punkte", thGrade: "Note",
     switchPlayer: "⇄ Spieler wechseln", scoreLabel: "Level-Punktzahl",
+    spellbook: "Zauberbuch", spellTag: "✨ Verwandlungszauber",
+    spellPrompt: (la,tgt)=>`Sprich den Zauber! Lateinisch <b>${la}</b> wird zu welchem ${tgt}en Wort?`,
+    spellRuleLabel: "📜 Zauberregel", spellMore: "Mehr Beispiele", spellsDesc: "Latein verwandelte sich nach magisch regelmäßigen Lautregeln in moderne Sprachen.",
   },
   ja: {
     map: "地図", codex: "単語帳", tagline: "ギリシャ神話の脱出ゲーム · 冒険しながらラテン語を学ぼう",
@@ -535,6 +588,9 @@ const I18N = {
     shareText: (n,lv,w,s)=>`${n}です。FUGA MYTHICAでラテン語を勉強中!クリア${lv}レベル、単語${w}個、スコア${s}。挑戦してね:`,
     thName: "冒険者", thLevels: "クリア数", thWords: "単語数", thScore: "スコア", thGrade: "評価",
     switchPlayer: "⇄ プレイヤー交代", scoreLabel: "このレベルの得点",
+    spellbook: "呪文の書", spellTag: "✨ 変身の呪文",
+    spellPrompt: (la,tgt)=>`呪文をとなえよう!ラテン語 <b>${la}</b> は${tgt}のどの単語に変わる?`,
+    spellRuleLabel: "📜 呪文のルール", spellMore: "ほかの例", spellsDesc: "ラテン語は不思議なほど規則的な音の変化で現代の言語に変わりました。",
   }
 };
 
@@ -704,8 +760,17 @@ function startQuiz(ci, li, replay) {
   let qWords = shuffle(pool).slice(0, locksTotal);
   /* roll in up to 3 weak words from earlier levels for spaced review */
   const reviewKeys = shuffle(Object.keys(P().weak).filter(k => !pool.includes(k))).slice(0, 3);
-  qWords = shuffle(qWords.concat(reviewKeys));
+  qWords = qWords.concat(reviewKeys);
   locksTotal += reviewKeys.length;
+  /* levels 5+ get 2 transformation-spell questions */
+  if (li >= 4 && typeof SPELLS !== "undefined") {
+    const all = [];
+    SPELLS.forEach((sp, si) => sp.pairs.forEach((p, pi) => all.push({ sp: si, pi })));
+    const spellQs = shuffle(all).slice(0, 2);
+    qWords = qWords.concat(spellQs);
+    locksTotal += spellQs.length;
+  }
+  qWords = shuffle(qWords);
   quiz = { ci, li, replay, locksTotal, locksOpen: 0, queue: qWords, pool, lvWords: lv.words,
            reviewKeys, attempts: 0, wrong: 0, tries: {} };
   $("#quiz-title").textContent = L(ch.name) + " — " + L(lv.name);
@@ -722,10 +787,17 @@ function startQuiz(ci, li, replay) {
 }
 function renderLocks() {
   $("#locks").textContent = "🔓".repeat(quiz.locksOpen) + "🔒".repeat(quiz.locksTotal - quiz.locksOpen);
+  /* live HUD: current score estimate + questions remaining */
+  const lv = CHAPTERS[quiz.ci].levels[quiz.li];
+  const max = lv.boss ? 150 : 100;
+  const est = quiz.attempts ? Math.round(quiz.locksOpen / quiz.attempts * max) : max;
+  const remaining = quiz.locksTotal - quiz.locksOpen;
+  $("#quiz-hud").textContent = `⭐ ${est}  ·  ⏳ ${remaining}`;
 }
 function wordMeaning(k) { const w = WORDS[k]; return state.lang === "zh" ? w[2] : w[3]; }
 function nextQuestion() {
   if (quiz.locksOpen >= quiz.locksTotal) { finishQuiz(); return; }
+  if (typeof quiz.queue[0] === "object") { renderSpellQuestion(quiz.queue[0]); return; }
   const key = quiz.queue[0];
   const w = WORDS[key];
   const heroMode = P().mode === "hero";
@@ -807,6 +879,93 @@ function answer(btn, correct, key) {
   $("#btn-next-q").addEventListener("click", nextQuestion);
   $("#btn-next-q").focus();
 }
+
+/* ---- transformation-spell questions ---- */
+function spellPairsHtml(sp) {
+  return `<div class="fam-chain">` + sp.pairs.map(p =>
+    `<div class="fam-item"><i style="color:var(--accent)">${p[0]}</i> → <b>${p[1]}</b> <span class="fam-gloss">(${state.lang === "zh" ? p[2] : p[3]})</span></div>`
+  ).join("") + `</div>`;
+}
+function renderSpellQuestion(item) {
+  const sp = SPELLS[item.sp];
+  const pair = sp.pairs[item.pi];
+  $("#q-prompt-label").innerHTML = `<span class="review-tag" style="background:#8a6a2a">${t("spellTag")}</span> ${L(sp.name)}<br>` + t("spellPrompt")(pair[0], L(sp.target));
+  const qp = $("#q-prompt");
+  qp.className = ""; qp.textContent = pair[0] + " → ?";
+  const nOpts = P().mode === "hero" ? 4 : 3;
+  const others = [];
+  SPELLS.forEach(s => s.pairs.forEach(p => { if (p[1] !== pair[1]) others.push(p[1]); }));
+  const opts = shuffle([pair[1], ...shuffle([...new Set(others)]).slice(0, nOpts - 1)]);
+  const box = $("#q-options");
+  box.innerHTML = ""; $("#q-feedback").textContent = ""; $("#q-feedback").className = "";
+  opts.forEach(tgt => {
+    const b = document.createElement("button");
+    b.className = "opt-btn"; b.dataset.key = tgt;
+    b.innerHTML = `<b>${tgt}</b>`;
+    b.addEventListener("click", () => answerSpell(b, tgt === pair[1], item));
+    box.appendChild(b);
+  });
+}
+function answerSpell(btn, correct, item) {
+  document.querySelectorAll(".opt-btn").forEach(b => b.disabled = true);
+  const sp = SPELLS[item.sp];
+  const pair = sp.pairs[item.pi];
+  quiz.attempts++;
+  const tk = "sp" + item.sp + "-" + item.pi;
+  quiz.tries[tk] = (quiz.tries[tk] || 0) + 1;
+  const rightBtn = document.querySelector(`.opt-btn[data-key="${pair[1]}"]`);
+  if (rightBtn) rightBtn.classList.add("correct");
+  if (correct) { quiz.locksOpen++; quiz.queue.shift(); renderLocks(); }
+  else { quiz.wrong++; btn.classList.add("wrong"); quiz.queue.push(quiz.queue.shift()); }
+  const f = $("#q-feedback");
+  f.className = "";
+  f.innerHTML = `
+    <div style="color:${correct ? "var(--good)" : "var(--bad)"};font-size:1.05em">${correct ? t("rightMark") : t("wrongMark")}</div>
+    <div class="ans-card">
+      <div class="ans-head">${t("answerWas")} <span class="latin">${pair[0]}</span> → <b>${pair[1]}</b> (${state.lang === "zh" ? pair[2] : pair[3]})</div>
+      <div class="etym-label">${t("spellRuleLabel")} · ${L(sp.name)}</div>
+      <div class="etym">${L(sp.rule)}</div>
+      <div class="etym-label" style="margin-top:10px">${t("spellMore")}</div>
+      ${spellPairsHtml(sp)}
+      <div class="continue-wrap"><button class="continue-btn" id="btn-next-q">${t("nextQ")}</button></div>
+    </div>`;
+  $("#btn-next-q").addEventListener("click", nextQuestion);
+  $("#btn-next-q").focus();
+}
+
+/* ---- spellbook screen ---- */
+function renderSpells() {
+  $("#spells-list").innerHTML = SPELLS.map(sp => `
+    <div class="spell-card">
+      <h3>${sp.icon} ${L(sp.name)} <span style="color:var(--text-dim);font-size:.75em">→ ${L(sp.target)}</span></h3>
+      <div class="rule">${L(sp.rule)}</div>
+      <div class="spell-pairs">${sp.pairs.map(p =>
+        `<div class="fam-item"><i style="color:var(--accent)">${p[0]}</i> → <b>${p[1]}</b> <span class="fam-gloss">(${state.lang === "zh" ? p[2] : p[3]})</span></div>`).join("")}</div>
+    </div>`).join("");
+  showScreen("screen-spells");
+}
+
+/* ---- word detail (root tree) ---- */
+function showWordDetail(key) {
+  const w = WORDS[key];
+  const zh = state.lang === "zh";
+  const mo = typeof MORPH !== "undefined" ? MORPH[key] : null;
+  let html = `<button id="detail-close">✕</button>
+    <div class="ans-head" style="font-size:1.3em;margin-bottom:10px">${w[1]} <span class="latin" style="color:var(--accent);font-style:italic">${w[0]}</span> <b>${zh ? w[2] : w[3]}</b></div>
+    <div class="etym-label">${t("etymLabel")}</div>
+    <div class="etym">${(zh ? w[5] : w[6]) || ""}</div>`;
+  if (mo) {
+    html += `<div class="etym-label" style="margin-top:10px">${t("morphLabel")}</div>
+      <div class="etym"><span style="color:var(--accent);font-style:italic">${w[0]}</span> = ${zh ? mo.m[0] : mo.m[1]}</div>
+      <div class="etym-label" style="margin-top:10px">${t("famLabel")}</div>
+      <div class="fam-chain">${mo.f.map(item =>
+        `<div class="fam-item"><b>${item[0]}</b> = ${zh ? item[1] : item[2]} <span class="fam-gloss">→ ${zh ? item[3] : item[4]}</span></div>`).join("")}</div>`;
+  }
+  if (w[4] && w[4] !== "—") html += `<div class="deriv-line" style="margin-top:10px;color:var(--text-dim);font-size:.88em">${t("derivLabel")}: ${w[4]}</div>`;
+  $("#detail-card").innerHTML = html;
+  $("#detail-mask").classList.add("show");
+  $("#detail-close").addEventListener("click", () => $("#detail-mask").classList.remove("show"));
+}
 function finishQuiz() {
   const { ci, li, replay, lvWords, locksTotal, attempts, wrong, tries } = quiz;
   const ch = CHAPTERS[ci];
@@ -832,7 +991,7 @@ function finishQuiz() {
   $("#victory-grade").innerHTML = `${g.stars} <span class="grade-la">${g.la}</span> · ${state.lang==="zh"?g.zh:g.en} · ${t("scoreLabel")} <b style="color:var(--gold)">${score}</b>`;
   $("#victory-stats").textContent = I18N[state.lang].statsLine(attempts, wrong, rounds);
   /* weak words picked up during this quiz */
-  const weakNow = Object.keys(tries).filter(k => tries[k] > 1);
+  const weakNow = Object.keys(tries).filter(k => tries[k] > 1 && WORDS[k]);
   const ww = $("#victory-weak-wrap");
   if (weakNow.length) {
     ww.style.display = "block";
@@ -871,7 +1030,8 @@ function renderCodex() {
     if (has) owned++;
     if (query && !(w[0].toLowerCase().includes(query) || w[2].includes(query) || w[3].toLowerCase().includes(query))) return;
     const card = document.createElement("div");
-    card.className = "codex-card" + (has ? "" : " locked");
+    card.className = "codex-card" + (has ? " owned" : " locked");
+    if (has) card.addEventListener("click", () => showWordDetail(key));
     card.innerHTML = has
       ? `<div class="emoji">${w[1]}</div><div class="latin">${w[0]}</div>
          <div class="meaning">${state.lang === "zh" ? w[2] : w[3]}</div>
@@ -955,8 +1115,11 @@ $("#sel-lang").addEventListener("change", e => {
     else if (shown.id === "screen-chapter") openChapter(viewChapter);
     else if (shown.id === "screen-board") renderBoard();
     else if (shown.id === "screen-player") renderPlayers();
+    else if (shown.id === "screen-spells") renderSpells();
   }
 });
+$("#btn-spells").addEventListener("click", renderSpells);
+$("#detail-mask").addEventListener("click", e => { if (e.target === $("#detail-mask")) $("#detail-mask").classList.remove("show"); });
 function requirePlayer(next) {
   if (!state.player || !state.players[state.player]) { renderPlayers(); return; }
   if (!P().mode) { showScreen("screen-mode"); return; }
