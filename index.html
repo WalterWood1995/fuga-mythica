@@ -146,6 +146,15 @@
   .ans-card .etym-label { color: var(--gold); font-size: .85em; letter-spacing: 1px; margin-bottom: 4px; }
   .ans-card .etym { line-height: 1.65; font-size: .95em; }
   .ans-card .deriv-line { color: var(--text-dim); font-size: .88em; margin-top: 8px; }
+  .fam-table-wrap { overflow-x: auto; }
+  .fam-table { width: 100%; border-collapse: collapse; font-size: .88em; }
+  .fam-table th { color: var(--text-dim); font-weight: normal; font-size: .85em; text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--gold-dim); white-space: nowrap; }
+  .fam-table td { padding: 6px 8px; border-bottom: 1px solid #3a3358; vertical-align: top; line-height: 1.45; }
+  .fam-table td.c-pre { color: var(--accent); white-space: nowrap; }
+  .fam-table td.c-root { color: var(--gold); font-weight: bold; white-space: nowrap; }
+  .fam-table td.c-suf { color: #b48ad4; white-space: nowrap; }
+  .fam-table td.c-word { font-weight: bold; }
+  .fam-table td.c-meaning { color: var(--text-dim); }
   .fam-chain { display: flex; flex-direction: column; gap: 5px; }
   .fam-item { background: rgba(232,182,76,.07); border-left: 3px solid var(--gold-dim); border-radius: 0 8px 8px 0; padding: 6px 10px; font-size: .92em; line-height: 1.5; }
   .fam-item b { color: var(--gold); }
@@ -425,6 +434,7 @@ const I18N = {
     spellbook: "咒语书", spellTag: "✨ 变形咒语",
     spellPrompt: (la,tgt)=>`施展咒语!拉丁语 <b>${la}</b> 会变成哪个${tgt}单词?`,
     spellRuleLabel: "📜 咒语规则", spellMore: "更多例子", spellsDesc: "拉丁语变成现代语言时遵循神奇又规整的音变规则。掌握咒语,没学过的词你也能变!",
+    colPrefix: "前缀", colRoot: "核心词(词根)", colSuffix: "后缀", colWord: "单词", colMeaning: "直译 → 引申",
   },
   en: {
     map: "Map", codex: "Codex", tagline: "A Greek-myth escape room · Learn Latin by adventure",
@@ -459,6 +469,7 @@ const I18N = {
     spellbook: "Spellbook", spellTag: "✨ Transformation spell",
     spellPrompt: (la,tgt)=>`Cast the spell! Latin <b>${la}</b> becomes which ${tgt} word?`,
     spellRuleLabel: "📜 Spell rule", spellMore: "More examples", spellsDesc: "Latin changed into modern languages by magically regular sound rules. Master a spell and you can transform words you never learned!",
+    colPrefix: "Prefix", colRoot: "Core (root)", colSuffix: "Suffix", colWord: "Word", colMeaning: "Literal → extended",
   },
   es: {
     map: "Mapa", codex: "Códice", tagline: "Sala de escape mitológica · Aprende latín en la aventura",
@@ -492,6 +503,7 @@ const I18N = {
     spellbook: "Libro de hechizos", spellTag: "✨ Hechizo de transformación",
     spellPrompt: (la,tgt)=>`¡Lanza el hechizo! El latín <b>${la}</b> se convierte ¿en qué palabra ${tgt}?`,
     spellRuleLabel: "📜 Regla del hechizo", spellMore: "Más ejemplos", spellsDesc: "El latín se transformó en lenguas modernas con reglas de sonido mágicamente regulares.",
+    colPrefix: "Prefijo", colRoot: "Raíz", colSuffix: "Sufijo", colWord: "Palabra", colMeaning: "Literal → derivado",
   },
   fr: {
     map: "Carte", codex: "Codex", tagline: "Escape game mythologique · Apprends le latin en aventure",
@@ -525,6 +537,7 @@ const I18N = {
     spellbook: "Grimoire", spellTag: "✨ Sort de transformation",
     spellPrompt: (la,tgt)=>`Lance le sort ! Le latin <b>${la}</b> devient quel mot ${tgt} ?`,
     spellRuleLabel: "📜 Règle du sort", spellMore: "Plus d'exemples", spellsDesc: "Le latin s'est changé en langues modernes par des règles sonores étonnamment régulières.",
+    colPrefix: "Préfixe", colRoot: "Racine", colSuffix: "Suffixe", colWord: "Mot", colMeaning: "Littéral → dérivé",
   },
   de: {
     map: "Karte", codex: "Kodex", tagline: "Mythologischer Escape-Room · Latein lernen im Abenteuer",
@@ -558,6 +571,7 @@ const I18N = {
     spellbook: "Zauberbuch", spellTag: "✨ Verwandlungszauber",
     spellPrompt: (la,tgt)=>`Sprich den Zauber! Lateinisch <b>${la}</b> wird zu welchem ${tgt}en Wort?`,
     spellRuleLabel: "📜 Zauberregel", spellMore: "Mehr Beispiele", spellsDesc: "Latein verwandelte sich nach magisch regelmäßigen Lautregeln in moderne Sprachen.",
+    colPrefix: "Präfix", colRoot: "Wurzel", colSuffix: "Suffix", colWord: "Wort", colMeaning: "Wörtlich → übertragen",
   },
   ja: {
     map: "地図", codex: "単語帳", tagline: "ギリシャ神話の脱出ゲーム · 冒険しながらラテン語を学ぼう",
@@ -591,6 +605,7 @@ const I18N = {
     spellbook: "呪文の書", spellTag: "✨ 変身の呪文",
     spellPrompt: (la,tgt)=>`呪文をとなえよう!ラテン語 <b>${la}</b> は${tgt}のどの単語に変わる?`,
     spellRuleLabel: "📜 呪文のルール", spellMore: "ほかの例", spellsDesc: "ラテン語は不思議なほど規則的な音の変化で現代の言語に変わりました。",
+    colPrefix: "接頭辞", colRoot: "語根(コア)", colSuffix: "接尾辞", colWord: "単語", colMeaning: "直訳 → 派生義",
   }
 };
 
@@ -858,11 +873,7 @@ function answer(btn, correct, key) {
     morphHtml += `<div class="etym-label" style="margin-top:10px">${t("morphLabel")}</div>
       <div class="etym"><span class="latin" style="color:var(--accent);font-style:italic">${w[0]}</span> = ${zh ? mo.m[0] : mo.m[1]}</div>`;
     if (mo.f && mo.f.length) {
-      morphHtml += `<div class="etym-label" style="margin-top:10px">${t("famLabel")}</div><div class="fam-chain">`;
-      mo.f.forEach(item => {
-        morphHtml += `<div class="fam-item"><b>${item[0]}</b> = ${zh ? item[1] : item[2]} <span class="fam-gloss">→ ${zh ? item[3] : item[4]}</span></div>`;
-      });
-      morphHtml += `</div>`;
+      morphHtml += `<div class="etym-label" style="margin-top:10px">${t("famLabel")}</div>` + famTableHtml(key);
     }
   }
   f.className = "";
@@ -878,6 +889,45 @@ function answer(btn, correct, key) {
     </div>`;
   $("#btn-next-q").addEventListener("click", nextQuestion);
   $("#btn-next-q").focus();
+}
+
+/* ---- word-family table (prefix | root | suffix | word | meaning) ---- */
+function famTableHtml(key) {
+  const mo = typeof MORPH !== "undefined" ? MORPH[key] : null;
+  if (!mo || !mo.f || !mo.f.length) return "";
+  const zh = state.lang === "zh";
+  /* candidate root strings: latin fragments from the breakdown + the headword itself */
+  const rootCands = [];
+  const mhead = (mo.m[1] || mo.m[0]).split("+")[0];
+  (mhead.match(/[a-z]{2,}/gi) || []).forEach(x => rootCands.push(x.toLowerCase()));
+  rootCands.push(WORDS[key][0].toLowerCase().replace(/[^a-z]/g, ""));
+  const rows = mo.f.map(item => {
+    const partsStr = zh ? item[1] : item[2];
+    const meaning = zh ? item[3] : item[4];
+    if (!partsStr.includes("+")) {
+      return `<tr><td class="c-pre"></td><td class="c-root">${partsStr}</td><td class="c-suf"></td><td class="c-word">${item[0]}</td><td class="c-meaning">${meaning}</td></tr>`;
+    }
+    const parts = partsStr.split("+").map(s => s.trim());
+    let ri = parts.findIndex(p => {
+      const tok = (p.split(/[((]/)[0] || "").trim().toLowerCase().replace(/[^a-z]/g, "");
+      return tok.length >= 2 && rootCands.some(r => tok.slice(0, 3) === r.slice(0, 3) || r.startsWith(tok) || tok.startsWith(r.slice(0, 4)));
+    });
+    if (ri < 0) {
+      /* fallback: first part that is neither a known prefix nor a suffix */
+      const PREFIX = new Set(["con","com","co","de","re","red","in","im","il","ir","ex","e","ad","ac","af","ap","ab","sub","super","sur","pro","pre","per","dis","di","trans","inter","intra","ob","oc","of","op","un","anti","ante","post","para","amb","ambi","an","en","em","extra","hyper","semi","epi","meta","se","a","au","ef"]);
+      ri = parts.findIndex(p => {
+        const tok = (p.split(/[((]/)[0] || "").trim().toLowerCase().replace(/[^a-z]/g, "");
+        return tok && !p.trim().startsWith("-") && !PREFIX.has(tok);
+      });
+      if (ri < 0) ri = parts[0].trim().startsWith("-") ? Math.min(1, parts.length - 1) : 0;
+    }
+    const pre = parts.slice(0, ri).join(" + ");
+    const suf = parts.slice(ri + 1).join(" + ");
+    return `<tr><td class="c-pre">${pre}</td><td class="c-root">${parts[ri]}</td><td class="c-suf">${suf}</td><td class="c-word">${item[0]}</td><td class="c-meaning">${meaning}</td></tr>`;
+  }).join("");
+  return `<div class="fam-table-wrap"><table class="fam-table">
+    <tr><th>${t("colPrefix")}</th><th>${t("colRoot")}</th><th>${t("colSuffix")}</th><th>${t("colWord")}</th><th>${t("colMeaning")}</th></tr>
+    ${rows}</table></div>`;
 }
 
 /* ---- transformation-spell questions ---- */
@@ -957,9 +1007,7 @@ function showWordDetail(key) {
   if (mo) {
     html += `<div class="etym-label" style="margin-top:10px">${t("morphLabel")}</div>
       <div class="etym"><span style="color:var(--accent);font-style:italic">${w[0]}</span> = ${zh ? mo.m[0] : mo.m[1]}</div>
-      <div class="etym-label" style="margin-top:10px">${t("famLabel")}</div>
-      <div class="fam-chain">${mo.f.map(item =>
-        `<div class="fam-item"><b>${item[0]}</b> = ${zh ? item[1] : item[2]} <span class="fam-gloss">→ ${zh ? item[3] : item[4]}</span></div>`).join("")}</div>`;
+      <div class="etym-label" style="margin-top:10px">${t("famLabel")}</div>` + famTableHtml(key);
   }
   if (w[4] && w[4] !== "—") html += `<div class="deriv-line" style="margin-top:10px;color:var(--text-dim);font-size:.88em">${t("derivLabel")}: ${w[4]}</div>`;
   $("#detail-card").innerHTML = html;
