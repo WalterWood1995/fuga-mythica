@@ -146,6 +146,10 @@
   .ans-card .etym-label { color: var(--gold); font-size: .85em; letter-spacing: 1px; margin-bottom: 4px; }
   .ans-card .etym { line-height: 1.65; font-size: .95em; }
   .ans-card .deriv-line { color: var(--text-dim); font-size: .88em; margin-top: 8px; }
+  .fam-chain { display: flex; flex-direction: column; gap: 5px; }
+  .fam-item { background: rgba(232,182,76,.07); border-left: 3px solid var(--gold-dim); border-radius: 0 8px 8px 0; padding: 6px 10px; font-size: .92em; line-height: 1.5; }
+  .fam-item b { color: var(--gold); }
+  .fam-gloss { color: var(--text-dim); }
   .ans-card .continue-wrap { text-align: center; margin-top: 12px; }
   .continue-btn {
     background: linear-gradient(180deg, var(--gold), var(--gold-dim)); color: #221;
@@ -238,7 +242,11 @@
   <div id="topbar">
     <span class="title" id="btn-title">⚱ FUGA MYTHICA</span>
     <span>
-      <button class="pill" id="btn-lang">EN</button>
+      <select class="pill" id="sel-lang">
+        <option value="zh">中文</option><option value="en">English</option>
+        <option value="es">Español</option><option value="fr">Français</option>
+        <option value="de">Deutsch</option><option value="ja">日本語</option>
+      </select>
       <button class="pill" id="btn-map">🗺️ <span data-t="map">地图</span></button>
       <button class="pill" id="btn-codex">📖 <span data-t="codex">词汇册</span></button>
       <button class="pill" id="btn-board">🏆 <span data-t="board">排行榜</span></button>
@@ -342,6 +350,7 @@
 <footer>Fuga Mythica · v0.2</footer>
 
 <script src="data.js"></script>
+<script src="words_morph.js"></script>
 <script>
 /* ===================== I18N ===================== */
 const I18N = {
@@ -368,6 +377,7 @@ const I18N = {
     weakTitle: "🔄 需要复习的词(会在后面的关卡里再次出现)",
     reviewTag: "复习", answerWas: "正确答案是:",
     etymLabel: "🌱 词源与记忆", derivLabel: "同族词", nextQ: "下一题 →",
+    morphLabel: "🧩 词根词缀拆解", famLabel: "🔗 词族联想链(同根不同缀)",
     rightMark: "✨ 答对了!Optime!", wrongMark: "✗ 答错了——这个词稍后还会再来。",
     statsLine: (a,w,r)=>`共答题 ${a} 次 · 答错 ${w} 次 · 第 ${r} 轮全部答对`,
     share: "📋 复制我的成绩战报", addFriend: "➕ 邀请朋友加入", copied: "战报已复制,发给朋友吧!",
@@ -398,12 +408,133 @@ const I18N = {
     weakTitle: "🔄 Words to review (they will return in later levels)",
     reviewTag: "review", answerWas: "The correct answer is:",
     etymLabel: "🌱 Etymology & memory", derivLabel: "Word family", nextQ: "Next →",
+    morphLabel: "🧩 Root & affix breakdown", famLabel: "🔗 Word-family chain (same root, new affixes)",
     rightMark: "✨ Correct! Optime!", wrongMark: "✗ Not quite — this word will return.",
     statsLine: (a,w,r)=>`${a} answers · ${w} wrong · all correct by round ${r}`,
     share: "📋 Copy my score report", addFriend: "➕ Invite a friend", copied: "Copied — send it to a friend!",
     shareText: (n,lv,w,s)=>`I'm ${n}, escaping Greek myths & learning Latin in FUGA MYTHICA! Cleared ${lv} levels, collected ${w} Latin words, total score ${s}. Challenge me:`,
     thName: "Adventurer", thLevels: "Levels", thWords: "Words", thScore: "Score", thGrade: "Grade",
     switchPlayer: "⇄ Switch player", scoreLabel: "Level score",
+  },
+  es: {
+    map: "Mapa", codex: "Códice", tagline: "Sala de escape mitológica · Aprende latín en la aventura",
+    start: "Comenzar la aventura", reset: "Borrar progreso", choosemode: "Elige tu camino",
+    apprentice: "Aprendiz · Discipulus", apprenticedesc: "6–8 años: imágenes y palabras, 3 opciones.",
+    hero: "Héroe · Heros", herodesc: "9–12 años: ambos sentidos, 4 opciones, más memoria.",
+    codextitle: "Codex Verborum", backmap: "← Volver al mapa", quit: "Abandonar el intento",
+    correct: "✨ ¡Correcto! Optime!", wrong: "Casi — ¡esta palabra volverá!",
+    q_la2m: "¿Qué significa esta palabra latina?", q_m2la: "¿Cuál es la palabra latina?",
+    lvComplete: "¡Escapaste!", chComplete: "¡Capítulo completado!", wordsGot: "Palabras añadidas a tu Códice:",
+    nextLevel: "Siguiente nivel", backChapter: "Volver al capítulo", backMapBtn: "Volver al mapa",
+    locked: "🔒 ¡Termina primero las etapas anteriores!", building: "🚧 ¡Capítulo en construcción!",
+    mapStatus: (c,l)=>`Progreso: capítulo ${c} · nivel ${l}`,
+    legendDone: "✅ Hecho", legendCur: "⚔️ Estás aquí", legendLock: "🔒 Bloqueado",
+    confirmReset: "¿Borrar TODO el progreso de este aventurero?", searchPh: "Buscar latín o significado…",
+    bossTag: "Jefe", replayTag: "rejugar",
+    board: "Ranking", boardTitle: "Tabula Honoris — Clasificación",
+    boardDesc: "Todos los aventureros de este dispositivo compiten juntos.",
+    playerTitle: "¿Quién se aventura?", playerDesc: "Cada aventurero guarda su progreso. ¡Invita a tus amigos!",
+    newPlayer: "＋ Nuevo aventurero", namePh: "Escribe tu nombre…", nameTaken: "¡Ese nombre ya existe!",
+    weakTitle: "🔄 Palabras para repasar (volverán en niveles posteriores)",
+    reviewTag: "repaso", answerWas: "La respuesta correcta es:",
+    etymLabel: "🌱 Etimología y memoria", derivLabel: "Familia de palabras", nextQ: "Siguiente →",
+    morphLabel: "🧩 Raíz y afijos", famLabel: "🔗 Cadena de la familia (misma raíz, otros afijos)",
+    rightMark: "✨ ¡Correcto! Optime!", wrongMark: "✗ Fallaste — la palabra volverá.",
+    statsLine: (a,w,r)=>`${a} respuestas · ${w} errores · todo correcto en la ronda ${r}`,
+    share: "📋 Copiar mi informe", addFriend: "➕ Invitar a un amigo", copied: "¡Copiado — envíalo a un amigo!",
+    shareText: (n,lv,w,s)=>`Soy ${n} y aprendo latín en FUGA MYTHICA. Niveles: ${lv}, palabras: ${w}, puntos: ${s}. ¡Rétame!:`,
+    thName: "Aventurero", thLevels: "Niveles", thWords: "Palabras", thScore: "Puntos", thGrade: "Nota",
+    switchPlayer: "⇄ Cambiar jugador", scoreLabel: "Puntuación del nivel",
+  },
+  fr: {
+    map: "Carte", codex: "Codex", tagline: "Escape game mythologique · Apprends le latin en aventure",
+    start: "Commencer l'aventure", reset: "Effacer la progression", choosemode: "Choisis ta voie",
+    apprentice: "Apprenti · Discipulus", apprenticedesc: "6–8 ans : images et mots, 3 choix.",
+    hero: "Héros · Heros", herodesc: "9–12 ans : deux sens, 4 choix, plus de mémoire.",
+    codextitle: "Codex Verborum", backmap: "← Retour à la carte", quit: "Abandonner l'essai",
+    correct: "✨ Correct ! Optime !", wrong: "Presque — ce mot reviendra !",
+    q_la2m: "Que signifie ce mot latin ?", q_m2la: "Quel est le mot latin ?",
+    lvComplete: "Évadé !", chComplete: "Chapitre terminé !", wordsGot: "Mots ajoutés à ton Codex :",
+    nextLevel: "Niveau suivant", backChapter: "Retour au chapitre", backMapBtn: "Retour à la carte",
+    locked: "🔒 Termine d'abord les étapes précédentes !", building: "🚧 Chapitre en construction !",
+    mapStatus: (c,l)=>`Progression : chapitre ${c} · niveau ${l}`,
+    legendDone: "✅ Fait", legendCur: "⚔️ Tu es ici", legendLock: "🔒 Verrouillé",
+    confirmReset: "Effacer TOUTE la progression de cet aventurier ?", searchPh: "Chercher latin ou sens…",
+    bossTag: "Boss", replayTag: "rejouer",
+    board: "Classement", boardTitle: "Tabula Honoris — Classement",
+    boardDesc: "Tous les aventuriers de cet appareil concourent ensemble.",
+    playerTitle: "Qui part à l'aventure ?", playerDesc: "Chaque aventurier garde sa progression. Invite tes amis !",
+    newPlayer: "＋ Nouvel aventurier", namePh: "Écris ton nom…", nameTaken: "Ce nom est déjà pris !",
+    weakTitle: "🔄 Mots à revoir (ils reviendront plus tard)",
+    reviewTag: "révision", answerWas: "La bonne réponse est :",
+    etymLabel: "🌱 Étymologie et mémoire", derivLabel: "Famille de mots", nextQ: "Suivant →",
+    morphLabel: "🧩 Racine et affixes", famLabel: "🔗 Chaîne de la famille (même racine, autres affixes)",
+    rightMark: "✨ Correct ! Optime !", wrongMark: "✗ Raté — le mot reviendra.",
+    statsLine: (a,w,r)=>`${a} réponses · ${w} erreurs · tout juste au tour ${r}`,
+    share: "📋 Copier mon rapport", addFriend: "➕ Inviter un ami", copied: "Copié — envoie-le à un ami !",
+    shareText: (n,lv,w,s)=>`Je suis ${n}, j'apprends le latin dans FUGA MYTHICA. Niveaux : ${lv}, mots : ${w}, points : ${s}. Défie-moi :`,
+    thName: "Aventurier", thLevels: "Niveaux", thWords: "Mots", thScore: "Points", thGrade: "Rang",
+    switchPlayer: "⇄ Changer de joueur", scoreLabel: "Score du niveau",
+  },
+  de: {
+    map: "Karte", codex: "Kodex", tagline: "Mythologischer Escape-Room · Latein lernen im Abenteuer",
+    start: "Abenteuer beginnen", reset: "Fortschritt löschen", choosemode: "Wähle deinen Weg",
+    apprentice: "Lehrling · Discipulus", apprenticedesc: "6–8 Jahre: Bilder und Wörter, 3 Optionen.",
+    hero: "Held · Heros", herodesc: "9–12 Jahre: beide Richtungen, 4 Optionen.",
+    codextitle: "Codex Verborum", backmap: "← Zurück zur Karte", quit: "Versuch aufgeben",
+    correct: "✨ Richtig! Optime!", wrong: "Fast — dieses Wort kommt wieder!",
+    q_la2m: "Was bedeutet dieses lateinische Wort?", q_m2la: "Welches ist das lateinische Wort?",
+    lvComplete: "Entkommen!", chComplete: "Kapitel geschafft!", wordsGot: "Neue Wörter in deinem Kodex:",
+    nextLevel: "Nächstes Level", backChapter: "Zurück zum Kapitel", backMapBtn: "Zurück zur Karte",
+    locked: "🔒 Erst die früheren Stufen lösen!", building: "🚧 Kapitel im Bau!",
+    mapStatus: (c,l)=>`Fortschritt: Kapitel ${c} · Level ${l}`,
+    legendDone: "✅ Fertig", legendCur: "⚔️ Du bist hier", legendLock: "🔒 Gesperrt",
+    confirmReset: "Wirklich ALLEN Fortschritt dieses Abenteurers löschen?", searchPh: "Latein oder Bedeutung suchen…",
+    bossTag: "Boss", replayTag: "wiederholen",
+    board: "Rangliste", boardTitle: "Tabula Honoris — Rangliste",
+    boardDesc: "Alle Abenteurer dieses Geräts treten gegeneinander an.",
+    playerTitle: "Wer geht auf Abenteuer?", playerDesc: "Jeder Abenteurer hat eigenen Fortschritt. Lade Freunde ein!",
+    newPlayer: "＋ Neuer Abenteurer", namePh: "Deinen Namen eingeben…", nameTaken: "Der Name ist schon vergeben!",
+    weakTitle: "🔄 Wörter zum Wiederholen (sie kommen später wieder)",
+    reviewTag: "Wiederholung", answerWas: "Die richtige Antwort ist:",
+    etymLabel: "🌱 Etymologie & Gedächtnis", derivLabel: "Wortfamilie", nextQ: "Weiter →",
+    morphLabel: "🧩 Wurzel & Affixe", famLabel: "🔗 Wortfamilien-Kette (gleiche Wurzel, neue Affixe)",
+    rightMark: "✨ Richtig! Optime!", wrongMark: "✗ Daneben — das Wort kommt wieder.",
+    statsLine: (a,w,r)=>`${a} Antworten · ${w} Fehler · alles richtig in Runde ${r}`,
+    share: "📋 Meinen Bericht kopieren", addFriend: "➕ Freund einladen", copied: "Kopiert — schick es einem Freund!",
+    shareText: (n,lv,w,s)=>`Ich bin ${n} und lerne Latein in FUGA MYTHICA. Level: ${lv}, Wörter: ${w}, Punkte: ${s}. Fordere mich heraus:`,
+    thName: "Abenteurer", thLevels: "Level", thWords: "Wörter", thScore: "Punkte", thGrade: "Note",
+    switchPlayer: "⇄ Spieler wechseln", scoreLabel: "Level-Punktzahl",
+  },
+  ja: {
+    map: "地図", codex: "単語帳", tagline: "ギリシャ神話の脱出ゲーム · 冒険しながらラテン語を学ぼう",
+    start: "冒険を始める", reset: "進行データを消す", choosemode: "きみの道を選ぼう",
+    apprentice: "見習い · Discipulus", apprenticedesc: "6〜8歳:絵と単語、3択でらくらく。",
+    hero: "英雄 · Heros", herodesc: "9〜12歳:双方向の翻訳、4択で記憶に挑戦。",
+    codextitle: "Codex Verborum(単語帳)", backmap: "← 地図に戻る", quit: "今回は諦める",
+    correct: "✨ 正解!Optime!", wrong: "おしい——この単語はまた出るよ!",
+    q_la2m: "このラテン語の意味は?", q_m2la: "ラテン語ではどれ?",
+    lvComplete: "脱出成功!", chComplete: "章クリア!", wordsGot: "単語帳に追加された単語:",
+    nextLevel: "次のレベルへ", backChapter: "章に戻る", backMapBtn: "地図に戻る",
+    locked: "🔒 先に前のステージをクリアしよう!", building: "🚧 この章は建設中です!",
+    mapStatus: (c,l)=>`進行状況:第${c}章 · レベル${l}`,
+    legendDone: "✅ クリア", legendCur: "⚔️ 現在地", legendLock: "🔒 未開放",
+    confirmReset: "この冒険者のデータを全部消しますか?", searchPh: "ラテン語や意味を検索…",
+    bossTag: "ボス", replayTag: "再挑戦",
+    board: "ランキング", boardTitle: "Tabula Honoris — ランキング",
+    boardDesc: "この端末の冒険者みんなで競争します。",
+    playerTitle: "冒険するのはだれ?", playerDesc: "冒険者ごとに進行と成績を保存。友だちを誘って競争しよう!",
+    newPlayer: "＋ 新しい冒険者", namePh: "名前を入力…", nameTaken: "その名前はもう使われています!",
+    weakTitle: "🔄 復習する単語(あとの面でまた出ます)",
+    reviewTag: "復習", answerWas: "正解は:",
+    etymLabel: "🌱 語源と覚え方", derivLabel: "同族語", nextQ: "次の問題 →",
+    morphLabel: "🧩 語根と接辞の分解", famLabel: "🔗 単語ファミリー(同じ語根+違う接辞)",
+    rightMark: "✨ 正解!Optime!", wrongMark: "✗ ざんねん——この単語はまた出ます。",
+    statsLine: (a,w,r)=>`解答${a}回 · まちがい${w}回 · ${r}周目で全問正解`,
+    share: "📋 成績レポートをコピー", addFriend: "➕ 友だちを招待", copied: "コピーしました!友だちに送ろう!",
+    shareText: (n,lv,w,s)=>`${n}です。FUGA MYTHICAでラテン語を勉強中!クリア${lv}レベル、単語${w}個、スコア${s}。挑戦してね:`,
+    thName: "冒険者", thLevels: "クリア数", thWords: "単語数", thScore: "スコア", thGrade: "評価",
+    switchPlayer: "⇄ プレイヤー交代", scoreLabel: "このレベルの得点",
   }
 };
 
@@ -440,13 +571,18 @@ function load() {
     }
   } catch (e) {}
 }
-function t(k) { const v = I18N[state.lang][k]; return v === undefined ? k : v; }
-function L(o) { return o[state.lang] || o.zh; }
+function t(k) {
+  const pack = I18N[state.lang] || I18N.en;
+  const v = pack[k] !== undefined ? pack[k] : I18N.en[k] !== undefined ? I18N.en[k] : I18N.zh[k];
+  return v === undefined ? k : v;
+}
+/* content fallback: use the language if translated, else English, else Chinese */
+function L(o) { return o[state.lang] || o.en || o.zh; }
 const $ = s => document.querySelector(s);
 function showScreen(id) { document.querySelectorAll(".screen").forEach(s => s.classList.remove("show")); $("#"+id).classList.add("show"); }
 function applyI18n() {
   document.querySelectorAll("[data-t]").forEach(el => { el.textContent = t(el.dataset.t); });
-  $("#btn-lang").textContent = state.lang === "zh" ? "EN" : "中文";
+  $("#sel-lang").value = state.lang;
   $("#codex-search").placeholder = t("searchPh");
 }
 function toast(msg) {
@@ -640,9 +776,23 @@ function answer(btn, correct, key) {
     /* requeue: move to end — must answer correctly before finishing */
     quiz.queue.push(quiz.queue.shift());
   }
-  /* answer card: correct answer + etymology & memory, always shown */
+  /* answer card: correct answer + etymology + morphology + word-family chain */
   const w = WORDS[key];
-  const note = state.lang === "zh" ? w[5] : w[6];
+  const zh = state.lang === "zh";
+  const note = zh ? w[5] : w[6];
+  const mo = typeof MORPH !== "undefined" ? MORPH[key] : null;
+  let morphHtml = "";
+  if (mo) {
+    morphHtml += `<div class="etym-label" style="margin-top:10px">${t("morphLabel")}</div>
+      <div class="etym"><span class="latin" style="color:var(--accent);font-style:italic">${w[0]}</span> = ${zh ? mo.m[0] : mo.m[1]}</div>`;
+    if (mo.f && mo.f.length) {
+      morphHtml += `<div class="etym-label" style="margin-top:10px">${t("famLabel")}</div><div class="fam-chain">`;
+      mo.f.forEach(item => {
+        morphHtml += `<div class="fam-item"><b>${item[0]}</b> = ${zh ? item[1] : item[2]} <span class="fam-gloss">→ ${zh ? item[3] : item[4]}</span></div>`;
+      });
+      morphHtml += `</div>`;
+    }
+  }
   f.className = "";
   f.innerHTML = `
     <div style="color:${correct ? "var(--good)" : "var(--bad)"};font-size:1.05em">${correct ? t("rightMark") : t("wrongMark")}</div>
@@ -650,6 +800,7 @@ function answer(btn, correct, key) {
       <div class="ans-head">${t("answerWas")} <span class="latin">${w[0]}</span> ${w[1]} <b>${wordMeaning(key)}</b></div>
       <div class="etym-label">${t("etymLabel")}</div>
       <div class="etym">${note || ""}</div>
+      ${morphHtml}
       ${w[4] && w[4] !== "—" ? `<div class="deriv-line">${t("derivLabel")}: ${w[4]}</div>` : ""}
       <div class="continue-wrap"><button class="continue-btn" id="btn-next-q">${t("nextQ")}</button></div>
     </div>`;
@@ -795,8 +946,8 @@ function shareScore() {
 }
 
 /* ===================== WIRE ===================== */
-$("#btn-lang").addEventListener("click", () => {
-  state.lang = state.lang === "zh" ? "en" : "zh"; save(); applyI18n();
+$("#sel-lang").addEventListener("change", e => {
+  state.lang = e.target.value; save(); applyI18n();
   const shown = document.querySelector(".screen.show");
   if (shown) {
     if (shown.id === "screen-map") renderMap();
