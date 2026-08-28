@@ -2,8 +2,16 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Fuga Mythica — 神话密室逃脱</title>
+<meta name="theme-color" content="#1a1626">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Fuga Mythica">
 <style>
   :root {
     --bg: #1a1626;
@@ -191,6 +199,21 @@
     80% { opacity: 1; } 100% { opacity: 0; }
   }
   footer { color: #555; font-size: .75em; padding: 18px; text-align: center; }
+
+  /* ===== mobile ===== */
+  button, .pill, .opt-btn, .level-btn, .chip { touch-action: manipulation; -webkit-tap-highlight-color: rgba(232,182,76,.2); }
+  @media (max-width: 520px) {
+    #app { padding: 8px; }
+    #screen-title h1 { font-size: 1.9em; letter-spacing: 3px; }
+    #q-prompt { font-size: 1.6em; }
+    .options { grid-template-columns: 1fr 1fr; }
+    .opt-btn { padding: 12px 6px; font-size: .98em; }
+    #board-table { min-width: 460px; }
+    #topbar .title { font-size: .95em; }
+    .pill { padding: 5px 10px; font-size: .82em; }
+    #quiz-art-wrap img { max-height: 160px; }
+    #chapter-art-wrap img { max-height: 220px; }
+  }
 </style>
 </head>
 <body>
@@ -282,7 +305,7 @@
   <div class="screen" id="screen-board">
     <h2 style="color:var(--gold);margin-top:10px">🏆 <span data-t="boardTitle">排行榜 Tabula Honoris</span></h2>
     <p style="color:var(--text-dim);margin-top:6px" data-t="boardDesc">同一台设备上的所有冒险者同场竞技。总分 = 每级成绩之和(答得越准,分越高)。</p>
-    <table id="board-table"></table>
+    <div style="overflow-x:auto"><table id="board-table"></table></div>
     <div style="text-align:center;margin-top:18px">
       <button class="pill" id="btn-share" data-t="share">📋 复制我的成绩战报</button>
       <button class="pill" id="btn-add-friend" data-t="addFriend">➕ 邀请朋友加入</button>
@@ -436,6 +459,7 @@ function renderMap() {
     nodes += `
       <g class="map-node ${done||current ? "" : "locked"}" data-ch="${i}">
         ${ring}
+        <circle cx="${x}" cy="${y}" r="46" fill="transparent"/>
         <circle cx="${x}" cy="${y}" r="24" fill="${fill}" stroke="#5a4526" stroke-width="3"/>
         <text class="icon" x="${x}" y="${y+7}" text-anchor="middle" font-size="22">${done ? "✅" : (done||current) ? ch.icon : "🔒"}</text>
         <text x="${x}" y="${y+44}" text-anchor="middle" font-size="13" fill="#5a4526" font-weight="bold">${["I","II","III","IV","V","VI","VII","VIII","IX","X"][i]}</text>
@@ -787,6 +811,11 @@ $("#btn-add-friend").addEventListener("click", renderPlayers);
 load();
 applyI18n();
 showScreen("screen-title");
+
+/* PWA service worker */
+if ("serviceWorker" in navigator && location.protocol === "https:") {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
 </script>
 </body>
 </html>
