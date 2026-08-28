@@ -99,6 +99,9 @@
   #quiz-head { display: flex; justify-content: space-between; align-items: center; margin: 6px 0 10px; flex-wrap: wrap; gap: 8px; }
   #quiz-title { color: var(--gold); font-size: 1.2em; }
   #locks { font-size: 1.15em; letter-spacing: 2px; word-break: break-all; }
+  #quiz-art-wrap { position: relative; border-radius: var(--radius); overflow: hidden; border: 2px solid var(--gold-dim); margin-bottom: 12px; background: #000; }
+  #quiz-art-wrap img { display: block; width: 100%; max-height: 230px; object-fit: cover; object-position: center 25%; }
+  #quiz-art-caption { position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(transparent, rgba(0,0,0,.85)); color: #ddd; font-size: .78em; padding: 24px 12px 7px; font-style: italic; }
   #quiz-story {
     background: var(--panel); border-left: 4px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0;
     padding: 12px 16px; line-height: 1.7; margin-bottom: 14px; font-size: .95em; color: var(--text-dim);
@@ -214,6 +217,7 @@
       <span id="quiz-title"></span>
       <span id="locks"></span>
     </div>
+    <div id="quiz-art-wrap" style="display:none"><img id="quiz-art" alt="" referrerpolicy="no-referrer"><div id="quiz-art-caption"></div></div>
     <div id="quiz-story"></div>
     <div id="quiz-card">
       <div id="q-prompt-label"></div>
@@ -419,6 +423,12 @@ function startQuiz(ci, li, replay) {
   let qWords = shuffle(pool).slice(0, locksTotal);
   quiz = { ci, li, replay, locksTotal, locksOpen: 0, queue: qWords, pool, lvWords: lv.words };
   $("#quiz-title").textContent = L(ch.name) + " — " + L(lv.name);
+  const aw = $("#quiz-art-wrap");
+  if (lv.art) {
+    aw.style.display = "";
+    $("#quiz-art").src = lv.art;
+    $("#quiz-art-caption").textContent = L(lv.cap);
+  } else { aw.style.display = "none"; }
   $("#quiz-story").innerHTML = L(lv.story);
   renderLocks();
   nextQuestion();
