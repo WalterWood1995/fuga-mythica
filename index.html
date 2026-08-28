@@ -136,6 +136,23 @@
   #q-feedback { min-height: 30px; margin-top: 14px; font-size: 1.05em; }
   #q-feedback.good { color: var(--good); }
   #q-feedback.bad { color: var(--bad); }
+  .ans-card {
+    margin-top: 14px; text-align: left; background: var(--panel2);
+    border: 1px solid var(--gold-dim); border-radius: 12px; padding: 14px 16px;
+    animation: fadein .3s;
+  }
+  .ans-card .ans-head { font-size: 1.15em; margin-bottom: 8px; }
+  .ans-card .ans-head .latin { color: var(--accent); font-style: italic; font-size: 1.15em; }
+  .ans-card .etym-label { color: var(--gold); font-size: .85em; letter-spacing: 1px; margin-bottom: 4px; }
+  .ans-card .etym { line-height: 1.65; font-size: .95em; }
+  .ans-card .deriv-line { color: var(--text-dim); font-size: .88em; margin-top: 8px; }
+  .ans-card .continue-wrap { text-align: center; margin-top: 12px; }
+  .continue-btn {
+    background: linear-gradient(180deg, var(--gold), var(--gold-dim)); color: #221;
+    border: none; border-radius: 24px; padding: 10px 34px; font-size: 1.05em;
+    font-family: inherit; cursor: pointer; letter-spacing: 1px;
+  }
+  .continue-btn:hover { transform: translateY(-1px); }
   #quiz-bottom { margin-top: 12px; display: flex; justify-content: space-between; }
 
   /* ===== level complete ===== */
@@ -350,6 +367,8 @@ const I18N = {
     newPlayer: "＋ 新建冒险者", namePh: "输入你的名字…", nameTaken: "这个名字已经有人用了!",
     weakTitle: "🔄 需要复习的词(会在后面的关卡里再次出现)",
     reviewTag: "复习", answerWas: "正确答案是:",
+    etymLabel: "🌱 词源与记忆", derivLabel: "同族词", nextQ: "下一题 →",
+    rightMark: "✨ 答对了!Optime!", wrongMark: "✗ 答错了——这个词稍后还会再来。",
     statsLine: (a,w,r)=>`共答题 ${a} 次 · 答错 ${w} 次 · 第 ${r} 轮全部答对`,
     share: "📋 复制我的成绩战报", addFriend: "➕ 邀请朋友加入", copied: "战报已复制,发给朋友吧!",
     shareText: (n,lv,w,s)=>`我是${n},正在 FUGA MYTHICA 玩希腊神话密室逃脱学拉丁语!已通关 ${lv} 级,收集 ${w} 个拉丁词,总分 ${s}。来跟我比一比:`,
@@ -378,6 +397,8 @@ const I18N = {
     newPlayer: "＋ New adventurer", namePh: "Enter your name…", nameTaken: "That name is already taken!",
     weakTitle: "🔄 Words to review (they will return in later levels)",
     reviewTag: "review", answerWas: "The correct answer is:",
+    etymLabel: "🌱 Etymology & memory", derivLabel: "Word family", nextQ: "Next →",
+    rightMark: "✨ Correct! Optime!", wrongMark: "✗ Not quite — this word will return.",
     statsLine: (a,w,r)=>`${a} answers · ${w} wrong · all correct by round ${r}`,
     share: "📋 Copy my score report", addFriend: "➕ Invite a friend", copied: "Copied — send it to a friend!",
     shareText: (n,lv,w,s)=>`I'm ${n}, escaping Greek myths & learning Latin in FUGA MYTHICA! Cleared ${lv} levels, collected ${w} Latin words, total score ${s}. Challenge me:`,
@@ -601,31 +622,39 @@ function answer(btn, correct, key) {
   const f = $("#q-feedback");
   quiz.attempts++;
   quiz.tries[key] = (quiz.tries[key] || 0) + 1;
+  /* always reveal the correct option */
+  const rightBtn = document.querySelector(`.opt-btn[data-key="${key}"]`);
+  if (rightBtn) rightBtn.classList.add("correct");
   if (correct) {
-    btn.classList.add("correct");
-    f.className = "good"; f.textContent = t("correct");
     quiz.locksOpen++; quiz.queue.shift();
     /* mastering a weak word: only a correct answer in a LATER level's review clears it */
     if (quiz.reviewKeys.includes(key) && P().weak[key]) {
       P().weak[key]--; if (P().weak[key] <= 0) delete P().weak[key]; save();
     }
     renderLocks();
-    setTimeout(nextQuestion, 700);
   } else {
     quiz.wrong++;
     btn.classList.add("wrong");
-    /* reveal the correct option, then show the answer clearly */
-    const rightBtn = document.querySelector(`.opt-btn[data-key="${key}"]`);
-    if (rightBtn) rightBtn.classList.add("correct");
-    const w = WORDS[key];
-    f.className = "bad";
-    f.innerHTML = `${t("answerWas")} <b style="color:var(--accent);font-style:italic">${w[0]}</b> ${w[1]} ${wordMeaning(key)}<br><span style="font-size:.85em">${t("wrong")}</span>`;
     /* record as weak word */
     P().weak[key] = (P().weak[key] || 0) + 1; save();
     /* requeue: move to end — must answer correctly before finishing */
     quiz.queue.push(quiz.queue.shift());
-    setTimeout(nextQuestion, 2400);
   }
+  /* answer card: correct answer + etymology & memory, always shown */
+  const w = WORDS[key];
+  const note = state.lang === "zh" ? w[5] : w[6];
+  f.className = "";
+  f.innerHTML = `
+    <div style="color:${correct ? "var(--good)" : "var(--bad)"};font-size:1.05em">${correct ? t("rightMark") : t("wrongMark")}</div>
+    <div class="ans-card">
+      <div class="ans-head">${t("answerWas")} <span class="latin">${w[0]}</span> ${w[1]} <b>${wordMeaning(key)}</b></div>
+      <div class="etym-label">${t("etymLabel")}</div>
+      <div class="etym">${note || ""}</div>
+      ${w[4] && w[4] !== "—" ? `<div class="deriv-line">${t("derivLabel")}: ${w[4]}</div>` : ""}
+      <div class="continue-wrap"><button class="continue-btn" id="btn-next-q">${t("nextQ")}</button></div>
+    </div>`;
+  $("#btn-next-q").addEventListener("click", nextQuestion);
+  $("#btn-next-q").focus();
 }
 function finishQuiz() {
   const { ci, li, replay, lvWords, locksTotal, attempts, wrong, tries } = quiz;
@@ -695,7 +724,8 @@ function renderCodex() {
     card.innerHTML = has
       ? `<div class="emoji">${w[1]}</div><div class="latin">${w[0]}</div>
          <div class="meaning">${state.lang === "zh" ? w[2] : w[3]}</div>
-         ${w[4] ? `<div class="deriv">→ ${w[4]}</div>` : ""}`
+         ${w[4] && w[4] !== "—" ? `<div class="deriv">→ ${w[4]}</div>` : ""}
+         ${(state.lang === "zh" ? w[5] : w[6]) ? `<div class="deriv" style="text-align:left;margin-top:6px">${state.lang === "zh" ? w[5] : w[6]}</div>` : ""}`
       : `<div class="emoji">❔</div><div class="latin">?????</div><div class="meaning">&nbsp;</div>`;
     grid.appendChild(card);
   });
