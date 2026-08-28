@@ -152,6 +152,33 @@
   .codex-card .deriv { color: var(--text-dim); font-size: 0.78em; margin-top: 5px; line-height: 1.4; }
   .codex-card.locked { opacity: .3; filter: grayscale(1); }
 
+  /* ===== player / leaderboard ===== */
+  #player-list { display: flex; flex-direction: column; gap: 10px; max-width: 420px; margin: 18px auto; }
+  .player-row {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--panel); border: 2px solid var(--gold-dim); border-radius: 12px;
+    padding: 12px 18px; cursor: pointer; font-size: 1.05em;
+  }
+  .player-row:hover { border-color: var(--gold); background: var(--panel2); }
+  .player-row .pstats { color: var(--text-dim); font-size: .82em; }
+  #new-player-row { display: flex; gap: 8px; max-width: 420px; margin: 0 auto; }
+  #new-player-name {
+    flex: 1; background: var(--panel); border: 1px solid var(--gold-dim); color: var(--text);
+    border-radius: 20px; padding: 9px 16px; font-family: inherit; font-size: 1em;
+  }
+  #board-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+  #board-table th, #board-table td { padding: 10px 8px; text-align: center; border-bottom: 1px solid #3a3358; font-variant-numeric: tabular-nums; }
+  #board-table th { color: var(--text-dim); font-size: .85em; font-weight: normal; }
+  #board-table tr.me td { color: var(--gold); }
+  .grade-la { font-style: italic; color: var(--accent); }
+  .lv-grade { font-size: .8em; color: var(--gold); }
+  .review-tag { display: inline-block; background: #6a4a8a; color: #fff; border-radius: 10px; padding: 1px 10px; font-size: .75em; margin-left: 8px; vertical-align: middle; }
+  #victory-grade { font-size: 1.7em; margin: 6px 0 2px; }
+  #victory-grade .grade-la { font-size: 1.2em; }
+  #victory-stats { color: var(--text-dim); margin-bottom: 14px; }
+  #victory-weak-wrap { margin: 0 auto 18px; max-width: 640px; background: var(--panel); border: 1px dashed #6a4a8a; border-radius: var(--radius); padding: 12px; display: none; }
+  #victory-weak-wrap h4 { color: #b48ad4; font-weight: normal; margin-bottom: 8px; }
+
   #toast {
     position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
     background: var(--gold); color: #221; padding: 12px 26px; border-radius: 30px;
@@ -174,6 +201,7 @@
       <button class="pill" id="btn-lang">EN</button>
       <button class="pill" id="btn-map">🗺️ <span data-t="map">地图</span></button>
       <button class="pill" id="btn-codex">📖 <span data-t="codex">词汇册</span></button>
+      <button class="pill" id="btn-board">🏆 <span data-t="board">排行榜</span></button>
     </span>
   </div>
 
@@ -182,6 +210,16 @@
     <div class="subtitle" data-t="tagline">希腊神话密室逃脱 · 在冒险中学拉丁语</div>
     <button class="big-btn" id="btn-start" data-t="start">开始冒险</button>
     <div style="margin-top:10px"><span class="backlink" id="btn-reset" data-t="reset">清除进度重新开始</span></div>
+  </div>
+
+  <div class="screen" id="screen-player">
+    <h2 style="text-align:center;color:var(--gold);margin-top:20px" data-t="playerTitle">谁在冒险?</h2>
+    <p style="text-align:center;color:var(--text-dim);margin-top:6px" data-t="playerDesc">每位冒险者都有自己的进度和成绩。邀请同学和朋友,各建一个档案来比拼吧!</p>
+    <div id="player-list"></div>
+    <div id="new-player-row">
+      <input id="new-player-name" maxlength="12">
+      <button class="pill" id="btn-new-player" data-t="newPlayer">＋ 新建冒险者</button>
+    </div>
   </div>
 
   <div class="screen" id="screen-mode">
@@ -233,9 +271,22 @@
   <div class="screen" id="screen-victory">
     <div style="font-size:3.6em" id="victory-emoji">🎉</div>
     <h2 id="victory-title"></h2>
+    <div id="victory-grade"></div>
+    <div id="victory-stats"></div>
     <p id="victory-text"></p>
     <div id="victory-words"></div>
+    <div id="victory-weak-wrap"><h4 data-t="weakTitle">🔄 需要复习的词(会在后面的关卡里再次出现)</h4><div id="victory-weak"></div></div>
     <button class="big-btn" id="btn-victory-next"></button>
+  </div>
+
+  <div class="screen" id="screen-board">
+    <h2 style="color:var(--gold);margin-top:10px">🏆 <span data-t="boardTitle">排行榜 Tabula Honoris</span></h2>
+    <p style="color:var(--text-dim);margin-top:6px" data-t="boardDesc">同一台设备上的所有冒险者同场竞技。总分 = 每级成绩之和(答得越准,分越高)。</p>
+    <table id="board-table"></table>
+    <div style="text-align:center;margin-top:18px">
+      <button class="pill" id="btn-share" data-t="share">📋 复制我的成绩战报</button>
+      <button class="pill" id="btn-add-friend" data-t="addFriend">➕ 邀请朋友加入</button>
+    </div>
   </div>
 
   <div class="screen" id="screen-codex">
@@ -268,8 +319,19 @@ const I18N = {
     locked: "🔒 前面的关卡还没解开!", building: "🚧 这一关正在建造中,敬请期待!",
     mapStatus: (c,l)=>`当前进度:第 ${c} 关 · 第 ${l} 级`,
     legendDone: "✅ 已通关", legendCur: "⚔️ 当前位置", legendLock: "🔒 未解锁",
-    confirmReset: "确定要清除所有进度吗?", searchPh: "搜索拉丁词或释义…",
+    confirmReset: "确定要清除这位冒险者的所有进度吗?", searchPh: "搜索拉丁词或释义…",
     bossTag: "关底挑战", replayTag: "可重玩",
+    board: "排行榜", boardTitle: "排行榜 Tabula Honoris",
+    boardDesc: "同一台设备上的所有冒险者同场竞技。总分 = 每级成绩之和(答得越准,分越高)。",
+    playerTitle: "谁在冒险?", playerDesc: "每位冒险者都有自己的进度和成绩。邀请同学和朋友,各建一个档案来比拼吧!",
+    newPlayer: "＋ 新建冒险者", namePh: "输入你的名字…", nameTaken: "这个名字已经有人用了!",
+    weakTitle: "🔄 需要复习的词(会在后面的关卡里再次出现)",
+    reviewTag: "复习", answerWas: "正确答案是:",
+    statsLine: (a,w,r)=>`共答题 ${a} 次 · 答错 ${w} 次 · 第 ${r} 轮全部答对`,
+    share: "📋 复制我的成绩战报", addFriend: "➕ 邀请朋友加入", copied: "战报已复制,发给朋友吧!",
+    shareText: (n,lv,w,s)=>`我是${n},正在 FUGA MYTHICA 玩希腊神话密室逃脱学拉丁语!已通关 ${lv} 级,收集 ${w} 个拉丁词,总分 ${s}。来跟我比一比:`,
+    thName: "冒险者", thLevels: "通关数", thWords: "词汇量", thScore: "总分", thGrade: "评级",
+    switchPlayer: "⇄ 换人", scoreLabel: "本级得分",
   },
   en: {
     map: "Map", codex: "Codex", tagline: "A Greek-myth escape room · Learn Latin by adventure",
@@ -285,18 +347,54 @@ const I18N = {
     locked: "🔒 Finish the earlier stages first!", building: "🚧 This chapter is under construction!",
     mapStatus: (c,l)=>`Progress: Chapter ${c} · Level ${l}`,
     legendDone: "✅ Done", legendCur: "⚔️ You are here", legendLock: "🔒 Locked",
-    confirmReset: "Reset all progress?", searchPh: "Search Latin or meaning…",
+    confirmReset: "Reset ALL progress of this adventurer?", searchPh: "Search Latin or meaning…",
     bossTag: "Boss", replayTag: "replay",
+    board: "Ranks", boardTitle: "Tabula Honoris — Leaderboard",
+    boardDesc: "All adventurers on this device compete together. Total = sum of level scores (more accuracy, more points).",
+    playerTitle: "Who is adventuring?", playerDesc: "Each adventurer keeps their own progress and scores. Invite classmates and friends to compete!",
+    newPlayer: "＋ New adventurer", namePh: "Enter your name…", nameTaken: "That name is already taken!",
+    weakTitle: "🔄 Words to review (they will return in later levels)",
+    reviewTag: "review", answerWas: "The correct answer is:",
+    statsLine: (a,w,r)=>`${a} answers · ${w} wrong · all correct by round ${r}`,
+    share: "📋 Copy my score report", addFriend: "➕ Invite a friend", copied: "Copied — send it to a friend!",
+    shareText: (n,lv,w,s)=>`I'm ${n}, escaping Greek myths & learning Latin in FUGA MYTHICA! Cleared ${lv} levels, collected ${w} Latin words, total score ${s}. Challenge me:`,
+    thName: "Adventurer", thLevels: "Levels", thWords: "Words", thScore: "Score", thGrade: "Grade",
+    switchPlayer: "⇄ Switch player", scoreLabel: "Level score",
   }
 };
 
+/* grades: accuracy thresholds */
+const GRADES = [
+  { min: 0.95, la: "OPTIME",  zh: "优秀", en: "Excellent", stars: "⭐⭐⭐" },
+  { min: 0.80, la: "BENE",    zh: "良好", en: "Good",      stars: "⭐⭐" },
+  { min: 0.60, la: "SATIS",   zh: "及格", en: "Fair",      stars: "⭐" },
+  { min: 0,    la: "ITERUM",  zh: "再接再厉", en: "Keep trying", stars: "💪" },
+];
+function gradeOf(acc) { return GRADES.find(g => acc >= g.min); }
+
 /* ===================== STATE ===================== */
-const SAVE_KEY = "fuga-mythica-save-v2";
-let state = { lang: "zh", mode: null, chapter: 0, level: 0, words: [] };
-/* chapter/level = the NEXT one to play (0-based). */
+const SAVE_KEY = "fuga-mythica-save-v3";
+function newProfile() { return { mode: null, chapter: 0, level: 0, words: [], weak: {}, scores: {} }; }
+let state = { lang: "zh", player: null, players: {} };
+/* per player: chapter/level = the NEXT one to play (0-based);
+   weak: wordKey -> miss count; scores: "ci-li" -> {s,acc,att,wr,rd} */
+function P() { return state.players[state.player]; }
 function save() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (e) {} }
 function load() {
-  try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (s) Object.assign(state, s); } catch (e) {}
+  try {
+    const s = JSON.parse(localStorage.getItem(SAVE_KEY));
+    if (s) { Object.assign(state, s); return; }
+  } catch (e) {}
+  /* migrate v2 single-player save */
+  try {
+    const old = JSON.parse(localStorage.getItem("fuga-mythica-save-v2"));
+    if (old && old.mode) {
+      const p = newProfile();
+      p.mode = old.mode; p.chapter = old.chapter || 0; p.level = old.level || 0; p.words = old.words || [];
+      state.players["Heros"] = p; state.player = "Heros"; state.lang = old.lang || "zh";
+      save();
+    }
+  } catch (e) {}
 }
 function t(k) { const v = I18N[state.lang][k]; return v === undefined ? k : v; }
 function L(o) { return o[state.lang] || o.zh; }
@@ -319,8 +417,8 @@ const NODE_POS = [
   [575,225],[512,122],[678,142],[788,255],[712,408]
 ];
 function heroPos() {
-  const c = Math.min(state.chapter, 9);
-  const frac = Math.min(state.level / 10, 1);
+  const c = Math.min(P().chapter, 9);
+  const frac = Math.min(P().level / 10, 1);
   const a = NODE_POS[c];
   const b = NODE_POS[Math.min(c+1, 9)];
   return [a[0] + (b[0]-a[0])*frac, a[1] + (b[1]-a[1])*frac];
@@ -331,8 +429,8 @@ function renderMap() {
   let nodes = "";
   CHAPTERS.forEach((ch, i) => {
     const [x, y] = NODE_POS[i];
-    const done = i < state.chapter;
-    const current = i === state.chapter;
+    const done = i < P().chapter;
+    const current = i === P().chapter;
     const fill = done ? "#8a6b2f" : current ? "#c49134" : "#b8a67c";
     const ring = current ? `<circle class="node-current-ring" cx="${x}" cy="${y}" r="27" fill="none" stroke="#9c2f2f" stroke-width="3"/>` : "";
     nodes += `
@@ -373,11 +471,11 @@ function renderMap() {
   $("#map-wrap").querySelectorAll(".map-node").forEach(n => {
     n.addEventListener("click", () => {
       const i = +n.dataset.ch;
-      if (i > state.chapter) { toast(t("locked")); return; }
+      if (i > P().chapter) { toast(t("locked")); return; }
       openChapter(i);
     });
   });
-  $("#map-status").textContent = I18N[state.lang].mapStatus(state.chapter+1, Math.min(state.level+1,10));
+  $("#map-status").textContent = `${state.player} · ` + I18N[state.lang].mapStatus(P().chapter+1, Math.min(P().level+1,10));
   $("#map-legend").innerHTML = `<span>${t("legendDone")}</span><span>${t("legendCur")}</span><span>${t("legendLock")}</span>`;
   showScreen("screen-map");
 }
@@ -397,11 +495,13 @@ function openChapter(i) {
     grid.innerHTML = `<div style="grid-column:1/-1;color:var(--text-dim);padding:20px;text-align:center">${t("building")}</div>`;
   } else {
     ch.levels.forEach((lv, li) => {
-      const done = i < state.chapter || (i === state.chapter && li < state.level);
-      const current = i === state.chapter && li === state.level;
+      const done = i < P().chapter || (i === P().chapter && li < P().level);
+      const current = i === P().chapter && li === P().level;
+      const sc = P().scores[i + "-" + li];
+      const badge = done && sc ? ` <span class="lv-grade">${gradeOf(sc.acc).stars} <span class="grade-la">${gradeOf(sc.acc).la}</span> ${sc.s}</span>` : "";
       const b = document.createElement("button");
       b.className = "level-btn" + (done ? " done" : "") + (!done && !current ? " locked" : "") + (lv.boss ? " boss" : "");
-      b.innerHTML = `<span class="lv-state">${done ? "✅" : current ? "⚔️" : "🔒"}</span> ${L(lv.name)}${lv.boss ? ` <span style="color:#c46a6a">· ${t("bossTag")}</span>` : ""}${done ? ` <span style="color:var(--text-dim);font-size:.85em">(${t("replayTag")})</span>` : ""}`;
+      b.innerHTML = `<span class="lv-state">${done ? "✅" : current ? "⚔️" : "🔒"}</span> ${L(lv.name)}${lv.boss ? ` <span style="color:#c46a6a">· ${t("bossTag")}</span>` : ""}${badge}${done ? ` <span style="color:var(--text-dim);font-size:.85em">(${t("replayTag")})</span>` : ""}`;
       b.addEventListener("click", () => {
         if (!done && !current) { toast(t("locked")); return; }
         startQuiz(i, li, done);
@@ -413,15 +513,20 @@ function openChapter(i) {
 }
 
 /* ===================== QUIZ ===================== */
-let quiz = null; /* {chapter, level, replay, queue, locksTotal, locksOpen, wordSet} */
+let quiz = null;
 function startQuiz(ci, li, replay) {
   const ch = CHAPTERS[ci];
   const lv = ch.levels[li];
-  const locksTotal = lv.boss ? 15 : 10;
+  let locksTotal = lv.boss ? 15 : 10;
   /* boss reviews whole chapter; normal level uses its own 20 words */
   let pool = lv.boss ? ch.levels.flatMap(l => l.words) : lv.words;
   let qWords = shuffle(pool).slice(0, locksTotal);
-  quiz = { ci, li, replay, locksTotal, locksOpen: 0, queue: qWords, pool, lvWords: lv.words };
+  /* roll in up to 3 weak words from earlier levels for spaced review */
+  const reviewKeys = shuffle(Object.keys(P().weak).filter(k => !pool.includes(k))).slice(0, 3);
+  qWords = shuffle(qWords.concat(reviewKeys));
+  locksTotal += reviewKeys.length;
+  quiz = { ci, li, replay, locksTotal, locksOpen: 0, queue: qWords, pool, lvWords: lv.words,
+           reviewKeys, attempts: 0, wrong: 0, tries: {} };
   $("#quiz-title").textContent = L(ch.name) + " — " + L(lv.name);
   const aw = $("#quiz-art-wrap");
   if (lv.art) {
@@ -442,12 +547,13 @@ function nextQuestion() {
   if (quiz.locksOpen >= quiz.locksTotal) { finishQuiz(); return; }
   const key = quiz.queue[0];
   const w = WORDS[key];
-  const heroMode = state.mode === "hero";
+  const heroMode = P().mode === "hero";
   const reverse = heroMode && Math.random() < 0.5;   /* meaning -> latin */
   const nOpts = heroMode ? 4 : 3;
   const distractors = shuffle(quiz.pool.filter(k => k !== key && wordMeaning(k) !== wordMeaning(key))).slice(0, nOpts - 1);
   const opts = shuffle([key, ...distractors]);
-  $("#q-prompt-label").textContent = reverse ? t("q_m2la") : t("q_la2m");
+  const isReview = quiz.reviewKeys.includes(key);
+  $("#q-prompt-label").innerHTML = (reverse ? t("q_m2la") : t("q_la2m")) + (isReview ? ` <span class="review-tag">🔄 ${t("reviewTag")}</span>` : "");
   const qp = $("#q-prompt");
   if (reverse) { qp.className = "plain"; qp.textContent = WORDS[key][1] + " " + wordMeaning(key); }
   else { qp.className = ""; qp.textContent = w[0]; }
@@ -458,6 +564,7 @@ function nextQuestion() {
     const ow = WORDS[k];
     const b = document.createElement("button");
     b.className = "opt-btn";
+    b.dataset.key = k;
     b.innerHTML = reverse
       ? `<i style="color:var(--accent)">${ow[0]}</i>`
       : `<span class="opt-emoji">${ow[1]}</span>${state.lang === "zh" ? ow[2] : ow[3]}`;
@@ -468,36 +575,68 @@ function nextQuestion() {
 function answer(btn, correct, key) {
   document.querySelectorAll(".opt-btn").forEach(b => b.disabled = true);
   const f = $("#q-feedback");
+  quiz.attempts++;
+  quiz.tries[key] = (quiz.tries[key] || 0) + 1;
   if (correct) {
     btn.classList.add("correct");
     f.className = "good"; f.textContent = t("correct");
     quiz.locksOpen++; quiz.queue.shift();
+    /* mastering a weak word: only a correct answer in a LATER level's review clears it */
+    if (quiz.reviewKeys.includes(key) && P().weak[key]) {
+      P().weak[key]--; if (P().weak[key] <= 0) delete P().weak[key]; save();
+    }
     renderLocks();
     setTimeout(nextQuestion, 700);
   } else {
+    quiz.wrong++;
     btn.classList.add("wrong");
+    /* reveal the correct option, then show the answer clearly */
+    const rightBtn = document.querySelector(`.opt-btn[data-key="${key}"]`);
+    if (rightBtn) rightBtn.classList.add("correct");
     const w = WORDS[key];
     f.className = "bad";
-    f.textContent = t("wrong") + `  (${w[0]} = ${wordMeaning(key)})`;
-    /* requeue: move to end */
+    f.innerHTML = `${t("answerWas")} <b style="color:var(--accent);font-style:italic">${w[0]}</b> ${w[1]} ${wordMeaning(key)}<br><span style="font-size:.85em">${t("wrong")}</span>`;
+    /* record as weak word */
+    P().weak[key] = (P().weak[key] || 0) + 1; save();
+    /* requeue: move to end — must answer correctly before finishing */
     quiz.queue.push(quiz.queue.shift());
-    setTimeout(nextQuestion, 1600);
+    setTimeout(nextQuestion, 2400);
   }
 }
 function finishQuiz() {
-  const { ci, li, replay, lvWords } = quiz;
+  const { ci, li, replay, lvWords, locksTotal, attempts, wrong, tries } = quiz;
   const ch = CHAPTERS[ci];
   const lv = ch.levels[li];
   /* collect words */
-  lvWords.forEach(k => { if (!state.words.includes(k)) state.words.push(k); });
+  lvWords.forEach(k => { if (!P().words.includes(k)) P().words.push(k); });
+  /* score: accuracy-based, boss counts a bit more */
+  const acc = locksTotal / Math.max(attempts, locksTotal);
+  const rounds = Math.max(...Object.values(tries));
+  const score = Math.round(acc * (lv.boss ? 150 : 100));
+  const g = gradeOf(acc);
+  const skey = ci + "-" + li;
+  const prev = P().scores[skey];
+  if (!prev || score > prev.s) P().scores[skey] = { s: score, acc: +acc.toFixed(3), att: attempts, wr: wrong, rd: rounds };
   let chapterDone = false;
-  if (!replay && ci === state.chapter && li === state.level) {
-    state.level++;
-    if (state.level >= ch.levels.length) { state.chapter++; state.level = 0; chapterDone = true; }
+  if (!replay && ci === P().chapter && li === P().level) {
+    P().level++;
+    if (P().level >= ch.levels.length) { P().chapter++; P().level = 0; chapterDone = true; }
   }
   save();
   $("#victory-emoji").textContent = chapterDone ? "🏆" : "🎉";
   $("#victory-title").textContent = chapterDone ? t("chComplete") : t("lvComplete");
+  $("#victory-grade").innerHTML = `${g.stars} <span class="grade-la">${g.la}</span> · ${state.lang==="zh"?g.zh:g.en} · ${t("scoreLabel")} <b style="color:var(--gold)">${score}</b>`;
+  $("#victory-stats").textContent = I18N[state.lang].statsLine(attempts, wrong, rounds);
+  /* weak words picked up during this quiz */
+  const weakNow = Object.keys(tries).filter(k => tries[k] > 1);
+  const ww = $("#victory-weak-wrap");
+  if (weakNow.length) {
+    ww.style.display = "block";
+    $("#victory-weak").innerHTML = weakNow.map(k => {
+      const w = WORDS[k];
+      return `<span class="word-tag">${w[1]} <i>${w[0]}</i> ${state.lang === "zh" ? w[2] : w[3]}</span>`;
+    }).join(" ");
+  } else ww.style.display = "none";
   $("#victory-text").innerHTML = (chapterDone ? L(ch.story) + "<br><br>" : "") + t("wordsGot");
   const vw = $("#victory-words");
   vw.innerHTML = "";
@@ -510,7 +649,7 @@ function finishQuiz() {
   });
   const btn = $("#btn-victory-next");
   if (chapterDone) { btn.textContent = t("backMapBtn"); btn.onclick = renderMap; }
-  else if (!replay) { btn.textContent = t("nextLevel"); btn.onclick = () => { openChapter(state.chapter); }; }
+  else if (!replay) { btn.textContent = t("nextLevel"); btn.onclick = () => { openChapter(P().chapter); }; }
   else { btn.textContent = t("backChapter"); btn.onclick = () => openChapter(ci); }
   showScreen("screen-victory");
 }
@@ -524,7 +663,7 @@ function renderCodex() {
   const TOTAL_TARGET = 2000;
   Object.keys(WORDS).forEach(key => {
     const w = WORDS[key];
-    const has = state.words.includes(key);
+    const has = P().words.includes(key);
     if (has) owned++;
     if (query && !(w[0].toLowerCase().includes(query) || w[2].includes(query) || w[3].toLowerCase().includes(query))) return;
     const card = document.createElement("div");
@@ -540,6 +679,67 @@ function renderCodex() {
   showScreen("screen-codex");
 }
 
+/* ===================== PLAYERS ===================== */
+function playerStats(name) {
+  const p = state.players[name];
+  const levels = p.chapter * 10 + p.level;
+  const score = Object.values(p.scores).reduce((a, s) => a + s.s, 0);
+  const accs = Object.values(p.scores).map(s => s.acc);
+  const avgAcc = accs.length ? accs.reduce((a, b) => a + b, 0) / accs.length : 0;
+  return { levels, score, words: p.words.length, avgAcc };
+}
+function renderPlayers() {
+  const list = $("#player-list");
+  list.innerHTML = "";
+  Object.keys(state.players).forEach(name => {
+    const st = playerStats(name);
+    const row = document.createElement("div");
+    row.className = "player-row";
+    row.innerHTML = `<span>${name === state.player ? "⚔️ " : "🛡️ "}<b>${name}</b></span>
+      <span class="pstats">${t("thLevels")} ${st.levels} · ${t("thWords")} ${st.words} · ${t("thScore")} ${st.score}</span>`;
+    row.addEventListener("click", () => {
+      state.player = name; save();
+      if (P().mode) renderMap(); else showScreen("screen-mode");
+    });
+    list.appendChild(row);
+  });
+  $("#new-player-name").value = "";
+  $("#new-player-name").placeholder = t("namePh");
+  showScreen("screen-player");
+}
+function addPlayer() {
+  const name = $("#new-player-name").value.trim();
+  if (!name) return;
+  if (state.players[name]) { toast(t("nameTaken")); return; }
+  state.players[name] = newProfile();
+  state.player = name; save();
+  showScreen("screen-mode");
+}
+
+/* ===================== LEADERBOARD ===================== */
+function renderBoard() {
+  const names = Object.keys(state.players);
+  const rows = names.map(n => ({ n, ...playerStats(n) }))
+    .sort((a, b) => b.score - a.score || b.words - a.words);
+  const medal = i => ["🥇","🥈","🥉"][i] || (i + 1) + ".";
+  $("#board-table").innerHTML = `
+    <tr><th></th><th>${t("thName")}</th><th>${t("thLevels")}</th><th>${t("thWords")}</th><th>${t("thScore")}</th><th>${t("thGrade")}</th></tr>
+    ${rows.map((r, i) => {
+      const g = gradeOf(r.avgAcc);
+      return `<tr class="${r.n === state.player ? "me" : ""}">
+        <td>${medal(i)}</td><td>${r.n}</td><td>${r.levels}</td><td>${r.words}</td><td><b>${r.score}</b></td>
+        <td>${r.levels ? `${g.stars} <span class="grade-la">${g.la}</span>` : "—"}</td></tr>`;
+    }).join("")}`;
+  showScreen("screen-board");
+}
+function shareScore() {
+  const st = playerStats(state.player);
+  const text = I18N[state.lang].shareText(state.player, st.levels, st.words, st.score) + " " + location.href;
+  const done = () => toast(t("copied"));
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, () => prompt("Copy:", text));
+  else prompt("Copy:", text);
+}
+
 /* ===================== WIRE ===================== */
 $("#btn-lang").addEventListener("click", () => {
   state.lang = state.lang === "zh" ? "en" : "zh"; save(); applyI18n();
@@ -548,25 +748,41 @@ $("#btn-lang").addEventListener("click", () => {
     if (shown.id === "screen-map") renderMap();
     else if (shown.id === "screen-codex") renderCodex();
     else if (shown.id === "screen-chapter") openChapter(viewChapter);
+    else if (shown.id === "screen-board") renderBoard();
+    else if (shown.id === "screen-player") renderPlayers();
   }
 });
-$("#btn-map").addEventListener("click", () => { if (state.mode) renderMap(); else showScreen("screen-mode"); });
-$("#btn-codex").addEventListener("click", renderCodex);
+function requirePlayer(next) {
+  if (!state.player || !state.players[state.player]) { renderPlayers(); return; }
+  if (!P().mode) { showScreen("screen-mode"); return; }
+  next();
+}
+$("#btn-map").addEventListener("click", () => requirePlayer(renderMap));
+$("#btn-codex").addEventListener("click", () => requirePlayer(renderCodex));
+$("#btn-board").addEventListener("click", () => { if (!Object.keys(state.players).length) { renderPlayers(); return; } renderBoard(); });
 $("#btn-title").addEventListener("click", () => showScreen("screen-title"));
-$("#btn-start").addEventListener("click", () => { if (state.mode) renderMap(); else showScreen("screen-mode"); });
+$("#btn-start").addEventListener("click", () => {
+  if (!Object.keys(state.players).length) { renderPlayers(); return; }
+  renderPlayers();  /* always let them pick who plays */
+});
 $("#btn-reset").addEventListener("click", () => {
+  if (!state.player) { toast("—"); return; }
   if (confirm(t("confirmReset"))) {
-    try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
-    state = { lang: state.lang, mode: null, chapter: 0, level: 0, words: [] };
+    delete state.players[state.player];
+    state.player = null; save();
     showScreen("screen-title");
   }
 });
 document.querySelectorAll(".mode-card").forEach(c => {
-  c.addEventListener("click", () => { state.mode = c.dataset.mode; save(); renderMap(); });
+  c.addEventListener("click", () => { P().mode = c.dataset.mode; save(); renderMap(); });
 });
 $("#btn-back-map").addEventListener("click", renderMap);
-$("#btn-quit-quiz").addEventListener("click", () => openChapter(quiz ? quiz.ci : state.chapter));
+$("#btn-quit-quiz").addEventListener("click", () => openChapter(quiz ? quiz.ci : P().chapter));
 $("#codex-search").addEventListener("input", renderCodex);
+$("#btn-new-player").addEventListener("click", addPlayer);
+$("#new-player-name").addEventListener("keydown", e => { if (e.key === "Enter") addPlayer(); });
+$("#btn-share").addEventListener("click", shareScore);
+$("#btn-add-friend").addEventListener("click", renderPlayers);
 
 load();
 applyI18n();
