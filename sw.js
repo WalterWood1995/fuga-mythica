@@ -1,5 +1,5 @@
 /* Fuga Mythica service worker */
-const VERSION = "v0.7.1";
+const VERSION = "v0.8.0";
 const SHELL_CACHE = "fuga-shell-" + VERSION;
 const IMG_CACHE = "fuga-img-v1";
 const SHELL = [
@@ -8,6 +8,8 @@ const SHELL = [
   "./data.js",
   "./words_morph.js",
   "./extras.js",
+  "./data2.js",
+  "./morph2.js",
   "./manifest.webmanifest",
   "./icons/icon-192.png",
   "./icons/icon-512.png",

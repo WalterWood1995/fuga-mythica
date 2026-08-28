@@ -88,7 +88,8 @@
 
   /* ===== chapter ===== */
   #chapter-art-wrap { position: relative; border-radius: var(--radius); overflow: hidden; border: 2px solid var(--gold-dim); background: #000; }
-  #chapter-art-wrap img { display: block; width: 100%; max-height: 340px; object-fit: cover; object-position: center 20%; }
+  #chapter-art-wrap img { display: block; width: 100%; max-height: 340px; object-fit: contain; background: #000; cursor: zoom-in; }
+  #chapter-art-wrap img.expanded, #quiz-art-wrap img.expanded { max-height: none; cursor: zoom-out; }
   #chapter-art-caption { position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(transparent, rgba(0,0,0,.85)); color: #ddd; font-size: .8em; padding: 26px 14px 8px; font-style: italic; }
   #chapter-title { color: var(--gold); font-size: 1.5em; letter-spacing: 2px; margin: 14px 0 8px; }
   #chapter-story { background: var(--panel); border-left: 4px solid var(--gold); border-radius: 0 var(--radius) var(--radius) 0; padding: 14px 18px; line-height: 1.8; margin-bottom: 16px; }
@@ -108,7 +109,7 @@
   #quiz-title { color: var(--gold); font-size: 1.2em; }
   #locks { font-size: 1.15em; letter-spacing: 2px; word-break: break-all; }
   #quiz-art-wrap { position: relative; border-radius: var(--radius); overflow: hidden; border: 2px solid var(--gold-dim); margin-bottom: 12px; background: #000; }
-  #quiz-art-wrap img { display: block; width: 100%; max-height: 230px; object-fit: cover; object-position: center 25%; }
+  #quiz-art-wrap img { display: block; width: 100%; max-height: 230px; object-fit: contain; background: #000; cursor: zoom-in; }
   #quiz-art-caption { position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(transparent, rgba(0,0,0,.85)); color: #ddd; font-size: .78em; padding: 24px 12px 7px; font-style: italic; }
   #quiz-story {
     background: var(--panel); border-left: 4px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0;
@@ -398,6 +399,8 @@
 <script src="data.js"></script>
 <script src="words_morph.js"></script>
 <script src="extras.js"></script>
+<script src="data2.js"></script>
+<script src="morph2.js"></script>
 <script>
 /* ===================== I18N ===================== */
 const I18N = {
@@ -434,7 +437,7 @@ const I18N = {
     spellbook: "咒语书", spellTag: "✨ 变形咒语",
     spellPrompt: (la,tgt)=>`施展咒语!拉丁语 <b>${la}</b> 会变成哪个${tgt}单词?`,
     spellRuleLabel: "📜 咒语规则", spellMore: "更多例子", spellsDesc: "拉丁语变成现代语言时遵循神奇又规整的音变规则。掌握咒语,没学过的词你也能变!",
-    colPrefix: "前缀", colRoot: "核心词(词根)", colSuffix: "后缀", colWord: "单词", colMeaning: "直译 → 引申",
+    colPrefix: "前缀", colRoot: "词根", colSuffix: "后缀", colWord: "单词", colMeaning: "直译 → 引申",
   },
   en: {
     map: "Map", codex: "Codex", tagline: "A Greek-myth escape room · Learn Latin by adventure",
@@ -901,11 +904,15 @@ function famTableHtml(key) {
   const mhead = (mo.m[1] || mo.m[0]).split("+")[0];
   (mhead.match(/[a-z]{2,}/gi) || []).forEach(x => rootCands.push(x.toLowerCase()));
   rootCands.push(WORDS[key][0].toLowerCase().replace(/[^a-z]/g, ""));
+  /* header shows the root once, with its meaning: e.g. 词根 fid-(信) */
+  const rootSeg = (zh ? mo.m[0] : mo.m[1]).split("+")[0].trim()
+    .replace(/^词根\s*/, "").replace(/^root\s*/i, "");
+  const stripGloss = s => s.replace(/\s*[((][^))]*[))]\s*$/, "").trim();
   const rows = mo.f.map(item => {
     const partsStr = zh ? item[1] : item[2];
     const meaning = zh ? item[3] : item[4];
     if (!partsStr.includes("+")) {
-      return `<tr><td class="c-pre"></td><td class="c-root">${partsStr}</td><td class="c-suf"></td><td class="c-word">${item[0]}</td><td class="c-meaning">${meaning}</td></tr>`;
+      return `<tr><td class="c-pre"></td><td class="c-root">${stripGloss(partsStr)}</td><td class="c-suf"></td><td class="c-word">${item[0]}</td><td class="c-meaning">${meaning}</td></tr>`;
     }
     const parts = partsStr.split("+").map(s => s.trim());
     let ri = parts.findIndex(p => {
@@ -923,10 +930,10 @@ function famTableHtml(key) {
     }
     const pre = parts.slice(0, ri).join(" + ");
     const suf = parts.slice(ri + 1).join(" + ");
-    return `<tr><td class="c-pre">${pre}</td><td class="c-root">${parts[ri]}</td><td class="c-suf">${suf}</td><td class="c-word">${item[0]}</td><td class="c-meaning">${meaning}</td></tr>`;
+    return `<tr><td class="c-pre">${pre}</td><td class="c-root">${stripGloss(parts[ri])}</td><td class="c-suf">${suf}</td><td class="c-word">${item[0]}</td><td class="c-meaning">${meaning}</td></tr>`;
   }).join("");
   return `<div class="fam-table-wrap"><table class="fam-table">
-    <tr><th>${t("colPrefix")}</th><th>${t("colRoot")}</th><th>${t("colSuffix")}</th><th>${t("colWord")}</th><th>${t("colMeaning")}</th></tr>
+    <tr><th>${t("colPrefix")}</th><th>${t("colRoot")} ${rootSeg}</th><th>${t("colSuffix")}</th><th>${t("colWord")}</th><th>${t("colMeaning")}</th></tr>
     ${rows}</table></div>`;
 }
 
@@ -1167,6 +1174,9 @@ $("#sel-lang").addEventListener("change", e => {
   }
 });
 $("#btn-spells").addEventListener("click", renderSpells);
+/* click art to toggle full view */
+$("#chapter-art").addEventListener("click", e => e.target.classList.toggle("expanded"));
+$("#quiz-art").addEventListener("click", e => e.target.classList.toggle("expanded"));
 $("#detail-mask").addEventListener("click", e => { if (e.target === $("#detail-mask")) $("#detail-mask").classList.remove("show"); });
 function requirePlayer(next) {
   if (!state.player || !state.players[state.player]) { renderPlayers(); return; }

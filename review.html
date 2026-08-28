@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fuga Mythica — 内容勘误后台</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Georgia, "Songti SC", serif; background: #f5f0e4; color: #2a2418; padding: 20px; max-width: 1000px; margin: 0 auto; }
+  h1 { color: #7a5c30; border-bottom: 3px solid #7a5c30; padding-bottom: 8px; margin-bottom: 6px; }
+  .hint { color: #8a7a5a; margin-bottom: 24px; }
+  h2 { background: #7a5c30; color: #fff; padding: 8px 14px; margin: 34px 0 12px; border-radius: 6px; }
+  h3 { color: #7a5c30; margin: 26px 0 8px; border-left: 5px solid #c49134; padding-left: 10px; }
+  .art { margin: 10px 0; }
+  .art img { width: 100%; height: auto; display: block; border: 1px solid #b8a67c; border-radius: 6px; background: #fff; }
+  .cap { font-style: italic; color: #6a5a3a; font-size: .9em; margin-top: 4px; }
+  .story { background: #fff; border: 1px solid #d8c9a4; border-radius: 6px; padding: 10px 14px; margin: 8px 0 14px; line-height: 1.7; }
+  .story .en { color: #8a7a5a; font-size: .92em; margin-top: 6px; }
+  table.words { width: 100%; border-collapse: collapse; background: #fff; font-size: .9em; }
+  table.words th { background: #e8dcb8; padding: 6px 8px; text-align: left; border: 1px solid #c9b98a; }
+  table.words td { padding: 6px 8px; border: 1px solid #d8c9a4; vertical-align: top; line-height: 1.55; }
+  .lat { color: #1a5276; font-style: italic; font-weight: bold; white-space: nowrap; }
+  .fam { color: #555; font-size: .92em; }
+  .fam div { margin: 2px 0; }
+  .idx { color: #999; font-size: .8em; }
+  #toc a { margin-right: 14px; color: #7a5c30; }
+  @media print { .art img { max-height: 400px; object-fit: contain; } }
+</style>
+</head>
+<body>
+<h1>⚱ Fuga Mythica — 内容勘误后台</h1>
+<p class="hint">本页汇总所有关卡的完整配画、图注、剧情文本与每个单词的释义/词源/词根拆解,供团队校对。发现错误请记录「章-级-单词」位置反馈。可直接打印或另存 PDF。</p>
+<div id="toc"></div>
+<div id="content"></div>
+
+<script src="data.js"></script>
+<script src="words_morph.js"></script>
+<script src="extras.js"></script>
+<script src="data2.js"></script>
+<script src="morph2.js"></script>
+<script>
+const C = document.getElementById("content");
+const toc = document.getElementById("toc");
+let html = "";
+CHAPTERS.forEach((ch, ci) => {
+  if (!ch.levels) return;
+  const cid = "ch" + ci;
+  toc.innerHTML += `<a href="#${cid}">${ch.name.zh}</a>`;
+  html += `<h2 id="${cid}">${ch.name.zh} / ${ch.name.en}</h2>
+    <div class="art"><img loading="lazy" src="${ch.art}" referrerpolicy="no-referrer"><div class="cap">${ch.artCaption.zh}<br>${ch.artCaption.en}</div></div>
+    <div class="story">${ch.story.zh}<div class="en">${ch.story.en}</div></div>`;
+  ch.levels.forEach((lv, li) => {
+    html += `<h3>${ch.name.zh.split("·")[0].trim()} · ${lv.name.zh} / ${lv.name.en}</h3>`;
+    if (lv.art) html += `<div class="art"><img loading="lazy" src="${lv.art}" referrerpolicy="no-referrer"><div class="cap">${lv.cap ? lv.cap.zh + "<br>" + lv.cap.en : ""}</div></div>`;
+    html += `<div class="story">${lv.story.zh}<div class="en">${lv.story.en}</div></div>`;
+    html += `<table class="words"><tr><th>#</th><th>拉丁词</th><th>释义</th><th>词源与记忆</th><th>词根拆解 &amp; 词族</th></tr>`;
+    lv.words.forEach((k, wi) => {
+      const w = WORDS[k] || [];
+      const mo = MORPH[k];
+      let famHtml = "";
+      if (mo) {
+        famHtml += `<div><b>拆解:</b>${mo.m[0]}</div>`;
+        if (mo.f && mo.f.length) famHtml += mo.f.map(it => `<div>· <b>${it[0]}</b> = ${it[1]} → ${it[3]}</div>`).join("");
+      }
+      html += `<tr>
+        <td class="idx">${li + 1}-${wi + 1}</td>
+        <td>${w[1] || ""} <span class="lat">${w[0] || k}</span></td>
+        <td>${w[2] || ""}<br><span style="color:#8a7a5a">${w[3] || ""}</span>${w[4] && w[4] !== "—" ? `<br><span class="fam">同族: ${w[4]}</span>` : ""}</td>
+        <td>${w[5] || ""}<div class="fam">${w[6] || ""}</div></td>
+        <td class="fam">${famHtml}</td></tr>`;
+    });
+    html += `</table>`;
+  });
+});
+C.innerHTML = html;
+</script>
+</body>
+</html>
