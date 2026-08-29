@@ -174,7 +174,16 @@
   .fam-table td.c-pre { color: var(--accent); white-space: nowrap; }
   .fam-table td.c-root { color: var(--gold); font-weight: bold; white-space: nowrap; }
   .fam-table td.c-suf { color: #b48ad4; white-space: nowrap; }
-  .fam-table td.c-conn { color: var(--text-dim); font-style: italic; text-align: center; }
+  .c-conn-in { color: var(--text-dim); font-style: italic; font-weight: normal; }
+  /* black-figure tondo medallion for word icons */
+  .tondo {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2.1em; height: 2.1em; border-radius: 50%;
+    background: radial-gradient(circle at 38% 32%, #E08A4E, #B85B2A 68%, #93441F);
+    border: 2px solid #6b4f14; box-shadow: 0 0 0 2px #2A1E16, 0 2px 6px rgba(0,0,0,.45);
+    vertical-align: middle;
+  }
+  .tondo .ticon { filter: grayscale(1) brightness(0.28) contrast(1.3); font-size: 1.15em; line-height: 1; }
   .fam-table td.c-word { font-weight: bold; }
   .fam-table td.c-meaning { color: var(--text-dim); }
   .fam-chain { display: flex; flex-direction: column; gap: 5px; }
@@ -297,9 +306,15 @@
     <span class="title" id="btn-title">⚱ FUGA MYTHICA</span>
     <span>
       <select class="pill" id="sel-lang">
-        <option value="zh">中文</option><option value="en">English</option>
-        <option value="es">Español</option><option value="fr">Français</option>
-        <option value="de">Deutsch</option><option value="ja">日本語</option>
+        <optgroup label="Europa">
+          <option value="de">Deutsch</option><option value="en">English</option>
+          <option value="es">Español</option><option value="fr">Français</option>
+          <option value="ru">Русский</option>
+        </optgroup>
+        <optgroup label="Asia">
+          <option value="zh">中文</option><option value="ja">日本語</option>
+          <option value="hi">हिन्दी</option><option value="ar">العربية</option>
+        </optgroup>
       </select>
       <button class="pill" id="btn-map">🗺️ <span data-t="map">地图</span></button>
       <button class="pill" id="btn-codex">📖 <span data-t="codex">词汇册</span></button>
@@ -429,6 +444,7 @@
 <script src="morph2.js"></script>
 <script src="living.js"></script>
 <script src="etym_stories.js"></script>
+<script src="meanings_i18n.js"></script>
 <script>
 /* ===================== I18N ===================== */
 const I18N = {
@@ -637,6 +653,108 @@ const I18N = {
     spellPrompt: (la,tgt)=>`呪文をとなえよう!ラテン語 <b>${la}</b> は${tgt}のどの単語に変わる?`,
     spellRuleLabel: "📜 呪文のルール", spellMore: "ほかの例", spellsDesc: "ラテン語は不思議なほど規則的な音の変化で現代の言語に変わりました。",
     colPrefix: "接頭辞", colRoot: "語根", colConn: "つなぎ", colSuffix: "接尾辞", colWord: "単語", colMeaning: "直訳 → 派生義",
+  },
+  ru: {
+    map: "Карта", codex: "Словарь", tagline: "Квест по греческим мифам · Учи латынь в приключении",
+    start: "Начать приключение", reset: "Сбросить прогресс", choosemode: "Выбери свой путь",
+    apprentice: "Ученик · Discipulus", apprenticedesc: "6–8 лет: картинки и слова, 3 варианта.",
+    hero: "Герой · Heros", herodesc: "9–12 лет: перевод в обе стороны, 4 варианта.",
+    codextitle: "Codex Verborum", backmap: "← К карте", quit: "Сдаться",
+    correct: "✨ Верно! Optime!", wrong: "Почти — это слово ещё вернётся!",
+    q_la2m: "Что значит это латинское слово?", q_m2la: "Какое это латинское слово?",
+    lvComplete: "Побег удался!", chComplete: "Глава пройдена!", wordsGot: "Слова добавлены в словарь:",
+    nextLevel: "Следующий уровень", backChapter: "К главе", backMapBtn: "К карте",
+    locked: "🔒 Сначала пройди предыдущие уровни!", building: "🚧 Глава строится!",
+    mapStatus: (c,l)=>`Прогресс: глава ${c} · уровень ${l}`,
+    legendDone: "✅ Пройдено", legendCur: "⚔️ Ты здесь", legendLock: "🔒 Закрыто",
+    confirmReset: "Стереть ВЕСЬ прогресс этого искателя?", searchPh: "Искать латынь или значение…",
+    bossTag: "Босс", replayTag: "повтор",
+    board: "Рейтинг", boardTitle: "Tabula Honoris — Рейтинг",
+    boardDesc: "Все искатели на этом устройстве соревнуются вместе.",
+    playerTitle: "Кто идёт в приключение?", playerDesc: "У каждого — свой прогресс. Зови друзей!",
+    newPlayer: "＋ Новый искатель", namePh: "Введи имя…", nameTaken: "Имя уже занято!",
+    weakTitle: "🔄 Слова на повторение (вернутся позже)",
+    reviewTag: "повтор", answerWas: "Правильный ответ:",
+    etymLabel: "🌱 Этимология", derivLabel: "Семья слов", nextQ: "Дальше →",
+    morphLabel: "🌱 Корень и происхождение", famLabel: "🔗 Производные слова", aliveLabel: "🌍 Это слово живо и сегодня",
+    rightMark: "✨ Верно! Optime!", wrongMark: "✗ Мимо — слово вернётся.",
+    statsLine: (a,w,r)=>`${a} ответов · ${w} ошибок · всё верно к кругу ${r}`,
+    share: "📋 Скопировать отчёт", addFriend: "➕ Пригласить друга", copied: "Скопировано!",
+    shareText: (n,lv,w,s)=>`Я ${n}, учу латынь в FUGA MYTHICA! Уровней: ${lv}, слов: ${w}, очков: ${s}. Вызови меня:`,
+    thName: "Искатель", thLevels: "Уровни", thWords: "Слова", thScore: "Очки", thGrade: "Ранг",
+    switchPlayer: "⇄ Сменить игрока", scoreLabel: "Очки уровня",
+    spellbook: "Книга заклинаний", spellTag: "✨ Заклинание превращения",
+    spellPrompt: (la,tgt)=>`Произнеси заклинание! Латинское <b>${la}</b> станет каким словом (${tgt})?`,
+    spellRuleLabel: "📜 Правило", spellMore: "Ещё примеры", spellsDesc: "Латынь превращалась в новые языки по волшебно регулярным звуковым законам.",
+    colPrefix: "Приставка", colRoot: "Корень", colConn: "Связка", colSuffix: "Суффикс", colWord: "Слово", colMeaning: "Буквально → переносно",
+  },
+  hi: {
+    map: "नक़्शा", codex: "शब्दकोश", tagline: "यूनानी मिथकों का एस्केप रूम · रोमांच में लातिनी सीखो",
+    start: "साहसिक यात्रा शुरू करो", reset: "प्रगति मिटाओ", choosemode: "अपना मार्ग चुनो",
+    apprentice: "शिष्य · Discipulus", apprenticedesc: "6–8 वर्ष: चित्र और शब्द, 3 विकल्प।",
+    hero: "वीर · Heros", herodesc: "9–12 वर्ष: दोनों दिशाओं में अनुवाद, 4 विकल्प।",
+    codextitle: "Codex Verborum", backmap: "← नक़्शे पर लौटो", quit: "इस बार छोड़ो",
+    correct: "✨ सही! Optime!", wrong: "लगभग — यह शब्द फिर आएगा!",
+    q_la2m: "इस लातिनी शब्द का अर्थ क्या है?", q_m2la: "लातिनी शब्द कौन-सा है?",
+    lvComplete: "बच निकले!", chComplete: "अध्याय पूरा!", wordsGot: "शब्दकोश में नए शब्द:",
+    nextLevel: "अगला स्तर", backChapter: "अध्याय पर लौटो", backMapBtn: "नक़्शे पर लौटो",
+    locked: "🔒 पहले पिछले स्तर पूरे करो!", building: "🚧 यह अध्याय निर्माणाधीन है!",
+    mapStatus: (c,l)=>`प्रगति: अध्याय ${c} · स्तर ${l}`,
+    legendDone: "✅ पूर्ण", legendCur: "⚔️ तुम यहाँ हो", legendLock: "🔒 बंद",
+    confirmReset: "इस साहसी की पूरी प्रगति मिटाएँ?", searchPh: "लातिनी या अर्थ खोजो…",
+    bossTag: "बॉस", replayTag: "फिर खेलो",
+    board: "रैंकिंग", boardTitle: "Tabula Honoris — रैंकिंग",
+    boardDesc: "इस डिवाइस के सभी साहसी साथ प्रतिस्पर्धा करते हैं।",
+    playerTitle: "कौन साहसिक यात्रा पर जाएगा?", playerDesc: "हर साहसी की अपनी प्रगति। दोस्तों को बुलाओ!",
+    newPlayer: "＋ नया साहसी", namePh: "अपना नाम लिखो…", nameTaken: "यह नाम पहले से है!",
+    weakTitle: "🔄 दोहराने वाले शब्द (बाद में फिर आएँगे)",
+    reviewTag: "दोहराव", answerWas: "सही उत्तर है:",
+    etymLabel: "🌱 व्युत्पत्ति", derivLabel: "शब्द-परिवार", nextQ: "अगला →",
+    morphLabel: "🌱 धातु और मूल", famLabel: "🔗 व्युत्पन्न शब्द", aliveLabel: "🌍 यह शब्द आज भी जीवित है",
+    rightMark: "✨ सही! Optime!", wrongMark: "✗ चूक गए — शब्द फिर आएगा।",
+    statsLine: (a,w,r)=>`${a} उत्तर · ${w} ग़लत · चक्र ${r} में सब सही`,
+    share: "📋 रिपोर्ट कॉपी करो", addFriend: "➕ मित्र को बुलाओ", copied: "कॉपी हो गया!",
+    shareText: (n,lv,w,s)=>`मैं ${n}, FUGA MYTHICA में लातिनी सीख रहा हूँ! स्तर: ${lv}, शब्द: ${w}, अंक: ${s}. मुझे चुनौती दो:`,
+    thName: "साहसी", thLevels: "स्तर", thWords: "शब्द", thScore: "अंक", thGrade: "श्रेणी",
+    switchPlayer: "⇄ खिलाड़ी बदलो", scoreLabel: "स्तर के अंक",
+    spellbook: "मंत्र-पुस्तक", spellTag: "✨ रूपांतरण मंत्र",
+    spellPrompt: (la,tgt)=>`मंत्र बोलो! लातिनी <b>${la}</b> किस ${tgt} शब्द में बदलेगा?`,
+    spellRuleLabel: "📜 मंत्र का नियम", spellMore: "और उदाहरण", spellsDesc: "लातिनी जादुई रूप से नियमित ध्वनि-परिवर्तनों से आधुनिक भाषाओं में बदली।",
+    colPrefix: "उपसर्ग", colRoot: "धातु", colConn: "योजक", colSuffix: "प्रत्यय", colWord: "शब्द", colMeaning: "शाब्दिक → लाक्षणिक",
+  },
+  ar: {
+    map: "الخريطة", codex: "المعجم", tagline: "غرفة هروب من الأساطير اليونانية · تعلّم اللاتينية بالمغامرة",
+    start: "ابدأ المغامرة", reset: "امسح التقدم", choosemode: "اختر طريقك",
+    apprentice: "التلميذ · Discipulus", apprenticedesc: "من 6 إلى 8 سنوات: صور وكلمات، 3 خيارات.",
+    hero: "البطل · Heros", herodesc: "من 9 إلى 12 سنة: ترجمة في الاتجاهين، 4 خيارات.",
+    codextitle: "Codex Verborum", backmap: "← عودة إلى الخريطة", quit: "التخلي عن المحاولة",
+    correct: "✨ صحيح! Optime!", wrong: "قريب — ستعود هذه الكلمة!",
+    q_la2m: "ما معنى هذه الكلمة اللاتينية؟", q_m2la: "ما هي الكلمة اللاتينية؟",
+    lvComplete: "نجوت!", chComplete: "اكتمل الفصل!", wordsGot: "كلمات أُضيفت إلى معجمك:",
+    nextLevel: "المستوى التالي", backChapter: "عودة إلى الفصل", backMapBtn: "عودة إلى الخريطة",
+    locked: "🔒 أكمل المراحل السابقة أولًا!", building: "🚧 هذا الفصل قيد الإنشاء!",
+    mapStatus: (c,l)=>`التقدم: الفصل ${c} · المستوى ${l}`,
+    legendDone: "✅ منجز", legendCur: "⚔️ أنت هنا", legendLock: "🔒 مقفل",
+    confirmReset: "أتمسح كل تقدم هذا المغامر؟", searchPh: "ابحث باللاتينية أو المعنى…",
+    bossTag: "الزعيم", replayTag: "إعادة",
+    board: "الترتيب", boardTitle: "Tabula Honoris — الترتيب",
+    boardDesc: "كل المغامرين على هذا الجهاز يتنافسون معًا.",
+    playerTitle: "من سيغامر؟", playerDesc: "لكل مغامر تقدمه الخاص. ادعُ أصدقاءك!",
+    newPlayer: "＋ مغامر جديد", namePh: "اكتب اسمك…", nameTaken: "هذا الاسم مستخدم!",
+    weakTitle: "🔄 كلمات للمراجعة (ستعود لاحقًا)",
+    reviewTag: "مراجعة", answerWas: "الإجابة الصحيحة:",
+    etymLabel: "🌱 أصل الكلمة", derivLabel: "عائلة الكلمة", nextQ: "التالي ←",
+    morphLabel: "🌱 الجذر وأصله", famLabel: "🔗 الكلمات المشتقة", aliveLabel: "🌍 هذه الكلمة حية إلى اليوم",
+    rightMark: "✨ صحيح! Optime!", wrongMark: "✗ خطأ — ستعود الكلمة.",
+    statsLine: (a,w,r)=>`${a} إجابة · ${w} خطأ · كل الإجابات صحيحة في الجولة ${r}`,
+    share: "📋 انسخ تقريري", addFriend: "➕ ادعُ صديقًا", copied: "تم النسخ!",
+    shareText: (n,lv,w,s)=>`أنا ${n}، أتعلم اللاتينية في FUGA MYTHICA! المستويات: ${lv}، الكلمات: ${w}، النقاط: ${s}. تحدَّني:`,
+    thName: "المغامر", thLevels: "المستويات", thWords: "الكلمات", thScore: "النقاط", thGrade: "الرتبة",
+    switchPlayer: "⇄ تبديل اللاعب", scoreLabel: "نقاط المستوى",
+    spellbook: "كتاب التعاويذ", spellTag: "✨ تعويذة التحول",
+    spellPrompt: (la,tgt)=>`ألقِ التعويذة! الكلمة اللاتينية <b>${la}</b> تتحول إلى أي كلمة (${tgt})؟`,
+    spellRuleLabel: "📜 قاعدة التعويذة", spellMore: "أمثلة أخرى", spellsDesc: "تحولت اللاتينية إلى اللغات الحديثة بقوانين صوتية منتظمة كالسحر.",
+    colPrefix: "سابقة", colRoot: "جذر", colConn: "وصلة", colSuffix: "لاحقة", colWord: "كلمة", colMeaning: "حرفي ← مجازي",
   }
 };
 
@@ -686,6 +804,8 @@ function applyI18n() {
   document.querySelectorAll("[data-t]").forEach(el => { el.textContent = t(el.dataset.t); });
   $("#sel-lang").value = state.lang;
   $("#codex-search").placeholder = t("searchPh");
+  document.documentElement.dir = state.lang === "ar" ? "rtl" : "ltr";
+  document.documentElement.lang = state.lang;
 }
 function toast(msg) {
   const el = $("#toast"); el.textContent = msg;
@@ -879,7 +999,12 @@ function renderLocks() {
   const remaining = quiz.locksTotal - quiz.locksOpen;
   $("#quiz-hud").textContent = `⭐ ${est}  ·  ⏳ ${remaining}`;
 }
-function wordMeaning(k) { const w = WORDS[k]; return state.lang === "zh" ? w[2] : w[3]; }
+function wordMeaning(k) {
+  const w = WORDS[k];
+  if (state.lang === "zh") return w[2];
+  if (state.lang === "en") return w[3];
+  return (typeof MEANINGS !== "undefined" && MEANINGS[state.lang] && MEANINGS[state.lang][k]) || w[3];
+}
 function nextQuestion() {
   if (quiz.locksOpen >= quiz.locksTotal) { finishQuiz(); return; }
   if (typeof quiz.queue[0] === "object") { renderSpellQuestion(quiz.queue[0]); return; }
@@ -893,7 +1018,7 @@ function nextQuestion() {
   const isReview = quiz.reviewKeys.includes(key);
   $("#q-prompt-label").innerHTML = (reverse ? t("q_m2la") : t("q_la2m")) + (isReview ? ` <span class="review-tag">🔄 ${t("reviewTag")}</span>` : "");
   const qp = $("#q-prompt");
-  if (reverse) { qp.className = "plain"; qp.textContent = WORDS[key][1] + " " + wordMeaning(key); }
+  if (reverse) { qp.className = "plain"; qp.innerHTML = `<span class="tondo"><span class="ticon">${WORDS[key][1]}</span></span> ${wordMeaning(key)}`; }
   else { qp.className = ""; qp.textContent = w[0]; }
   const box = $("#q-options");
   box.innerHTML = "";
@@ -905,7 +1030,7 @@ function nextQuestion() {
     b.dataset.key = k;
     b.innerHTML = reverse
       ? `<i style="color:var(--accent)">${ow[0]}</i>`
-      : `<span class="opt-emoji">${ow[1]}</span>${state.lang === "zh" ? ow[2] : ow[3]}`;
+      : `<span class="opt-emoji"><span class="tondo"><span class="ticon">${ow[1]}</span></span></span>${wordMeaning(k)}`;
     b.addEventListener("click", () => answer(b, k === key, key));
     box.appendChild(b);
   });
@@ -938,7 +1063,7 @@ function answer(btn, correct, key) {
   f.innerHTML = `
     <div style="color:${correct ? "var(--good)" : "var(--bad)"};font-size:1.05em">${correct ? t("rightMark") : t("wrongMark")}</div>
     <div class="ans-card">
-      <div class="ans-head">${t("answerWas")} <span class="latin">${WORDS[key][0]}</span> ${WORDS[key][1]} <b>${wordMeaning(key)}</b></div>
+      <div class="ans-head">${t("answerWas")} <span class="latin">${WORDS[key][0]}</span> <span class="tondo"><span class="ticon">${WORDS[key][1]}</span></span> <b>${wordMeaning(key)}</b></div>
       ${wordInfoHtml(key)}
       <div class="continue-wrap"><button class="continue-btn" id="btn-next-q">${t("nextQ")}</button></div>
     </div>`;
@@ -955,9 +1080,7 @@ function etymOf(key, zh) {
 /* living words with meanings: segments without a gloss get the headword's meaning */
 function vivaHtml(key) {
   if (typeof VIVA === "undefined" || !VIVA[key]) return "";
-  const w = WORDS[key];
-  const zh = state.lang === "zh";
-  const gloss = zh ? w[2] : w[3];
+  const gloss = wordMeaning(key);
   return VIVA[key].split("·").map(s => {
     s = s.trim();
     return /[((]/.test(s) || s.startsWith("—") ? s : `${s}(${gloss})`;
@@ -1039,20 +1162,21 @@ function famTableHtml(key) {
       /* attach glosses from the data parts when tokens match */
       const preGloss = parts.slice(0, ri).map(glossOf).filter(Boolean).join(",");
       const sufGloss = parts.slice(ri + 1).map(glossOf).filter(Boolean).join(",");
+      /* connector joins the root cell: spir-a (dim italic) */
+      const rootCell = frag + (conn ? `-<span class="c-conn-in">${conn}</span>` : "");
       return `<tr>
         <td class="c-pre">${preStr ? preStr + (preGloss ? `(${preGloss})` : "") : ""}</td>
-        <td class="c-root">${frag}</td>
-        <td class="c-conn">${conn}</td>
+        <td class="c-root">${rootCell}</td>
         <td class="c-suf">${sufStr ? "-" + sufStr + (sufGloss ? `(${sufGloss})` : "") : ""}</td>
         <td class="c-word">${item[0]}</td><td class="c-meaning">${meaning}</td></tr>`;
     }
     /* fallback: render the data parts as before */
     const pre = parts.slice(0, ri).join(" + ");
     const suf = parts.slice(ri + 1).join(" + ");
-    return `<tr><td class="c-pre">${pre}</td><td class="c-root">${stripGloss(parts[ri])}</td><td class="c-conn"></td><td class="c-suf">${suf}</td><td class="c-word">${item[0]}</td><td class="c-meaning">${meaning}</td></tr>`;
+    return `<tr><td class="c-pre">${pre}</td><td class="c-root">${stripGloss(parts[ri])}</td><td class="c-suf">${suf}</td><td class="c-word">${item[0]}</td><td class="c-meaning">${meaning}</td></tr>`;
   }).join("");
   return `<div class="fam-table-wrap"><table class="fam-table">
-    <tr><th>${t("colPrefix")}</th><th>${t("colRoot")} ${rootSeg}</th><th>${t("colConn")}</th><th>${t("colSuffix")}</th><th>${t("colWord")}</th><th>${t("colMeaning")}</th></tr>
+    <tr><th>${t("colPrefix")}</th><th>${t("colRoot")} ${rootSeg}</th><th>${t("colSuffix")}</th><th>${t("colWord")}</th><th>${t("colMeaning")}</th></tr>
     ${rows}</table></div>`;
 }
 
@@ -1126,7 +1250,7 @@ function showWordDetail(key) {
   const w = WORDS[key];
   const zh = state.lang === "zh";
   const html = `<button id="detail-close">✕</button>
-    <div class="ans-head" style="font-size:1.3em;margin-bottom:10px">${w[1]} <span class="latin" style="color:var(--accent);font-style:italic">${w[0]}</span> <b>${zh ? w[2] : w[3]}</b></div>`
+    <div class="ans-head" style="font-size:1.3em;margin-bottom:10px"><span class="tondo"><span class="ticon">${w[1]}</span></span> <span class="latin" style="color:var(--accent);font-style:italic">${w[0]}</span> <b>${wordMeaning(key)}</b></div>`
     + wordInfoHtml(key);
   $("#detail-card").innerHTML = html;
   $("#detail-mask").classList.add("show");
@@ -1163,7 +1287,7 @@ function finishQuiz() {
     ww.style.display = "block";
     $("#victory-weak").innerHTML = weakNow.map(k => {
       const w = WORDS[k];
-      return `<span class="word-tag">${w[1]} <i>${w[0]}</i> ${state.lang === "zh" ? w[2] : w[3]}</span>`;
+      return `<span class="word-tag">${w[1]} <i>${w[0]}</i> ${wordMeaning(k)}</span>`;
     }).join(" ");
   } else ww.style.display = "none";
   $("#victory-text").innerHTML = (chapterDone ? L(ch.story) + "<br><br>" : "") + t("wordsGot");
@@ -1173,7 +1297,7 @@ function finishQuiz() {
     const w = WORDS[k];
     const s = document.createElement("span");
     s.className = "word-tag";
-    s.innerHTML = `${w[1]} <i>${w[0]}</i> ${state.lang === "zh" ? w[2] : w[3]}`;
+    s.innerHTML = `${w[1]} <i>${w[0]}</i> ${wordMeaning(k)}`;
     vw.appendChild(s);
   });
   const btn = $("#btn-victory-next");
@@ -1199,8 +1323,8 @@ function renderCodex() {
     card.className = "codex-card" + (has ? " owned" : " locked");
     if (has) card.addEventListener("click", () => showWordDetail(key));
     card.innerHTML = has
-      ? `<div class="emoji">${w[1]}</div><div class="latin">${w[0]}</div>
-         <div class="meaning">${state.lang === "zh" ? w[2] : w[3]}</div>
+      ? `<div class="emoji"><span class="tondo" style="width:2.3em;height:2.3em"><span class="ticon">${w[1]}</span></span></div><div class="latin">${w[0]}</div>
+         <div class="meaning">${wordMeaning(key)}</div>
          ${w[4] && w[4] !== "—" ? `<div class="deriv">→ ${w[4]}</div>` : ""}
          ${etymOf(key, state.lang === "zh") ? `<div class="deriv" style="text-align:left;margin-top:6px">${etymOf(key, state.lang === "zh")}</div>` : ""}`
       : `<div class="emoji">❔</div><div class="latin">?????</div><div class="meaning">&nbsp;</div>`;

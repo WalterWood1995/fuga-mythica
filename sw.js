@@ -1,11 +1,12 @@
 /* Fuga Mythica service worker */
-const VERSION = "v0.11.0";
+const VERSION = "v0.12.0";
 const SHELL_CACHE = "fuga-shell-" + VERSION;
 const IMG_CACHE = "fuga-img-v1";
 const SHELL = [
   "./",
   "./index.html",
   "./etym_stories.js",
+  "./meanings_i18n.js",
   "./data.js",
   "./words_morph.js",
   "./extras.js",
