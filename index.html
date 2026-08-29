@@ -230,11 +230,18 @@
   }
   .player-row:hover { border-color: var(--gold); background: var(--panel2); }
   .player-row .pstats { color: var(--text-dim); font-size: .82em; }
-  #new-player-row { display: flex; gap: 8px; max-width: 420px; margin: 0 auto; }
-  #new-player-name {
-    flex: 1; background: var(--panel); border: 1px solid var(--gold-dim); color: var(--text);
-    border-radius: 20px; padding: 9px 16px; font-family: inherit; font-size: 1em;
+  .reg-card {
+    max-width: 440px; margin: 16px auto; background: var(--panel);
+    border: 2px solid var(--gold-dim); border-radius: var(--radius); padding: 22px;
   }
+  .reg-card label { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .reg-card label span { width: 110px; color: var(--text-dim); font-size: .92em; flex-shrink: 0; }
+  .reg-card input, .reg-card select {
+    flex: 1; background: var(--bg-deep); border: 1px solid var(--gold-dim); color: var(--text);
+    border-radius: 8px; padding: 9px 12px; font-family: inherit; font-size: 1em; min-width: 0;
+  }
+  .reg-card input:focus, .reg-card select:focus { outline: none; border-color: var(--gold); }
+  .player-row .pmeta { font-size: .8em; color: var(--text-dim); }
   #board-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
   #board-table th, #board-table td { padding: 10px 8px; text-align: center; border-bottom: 1px solid #3a3358; font-variant-numeric: tabular-nums; }
   #board-table th { color: var(--text-dim); font-size: .85em; font-weight: normal; }
@@ -306,15 +313,11 @@
     <span class="title" id="btn-title">⚱ FUGA MYTHICA</span>
     <span>
       <select class="pill" id="sel-lang">
-        <optgroup label="Europa">
-          <option value="de">Deutsch</option><option value="en">English</option>
-          <option value="es">Español</option><option value="fr">Français</option>
-          <option value="ru">Русский</option>
-        </optgroup>
-        <optgroup label="Asia">
-          <option value="zh">中文</option><option value="ja">日本語</option>
-          <option value="hi">हिन्दी</option><option value="ar">العربية</option>
-        </optgroup>
+        <option value="de">Deutsch</option><option value="en">English</option>
+        <option value="es">Español</option><option value="fr">Français</option>
+        <option value="ru">Русский</option><option value="zh">中文</option>
+        <option value="ja">日本語</option><option value="hi">हिन्दी</option>
+        <option value="ar">العربية</option>
       </select>
       <button class="pill" id="btn-map">🗺️ <span data-t="map">地图</span></button>
       <button class="pill" id="btn-codex">📖 <span data-t="codex">词汇册</span></button>
@@ -337,9 +340,36 @@
     <h2 style="text-align:center;color:var(--gold);margin-top:20px" data-t="playerTitle">谁在冒险?</h2>
     <p style="text-align:center;color:var(--text-dim);margin-top:6px" data-t="playerDesc">每位冒险者都有自己的进度和成绩。邀请同学和朋友,各建一个档案来比拼吧!</p>
     <div id="player-list"></div>
-    <div id="new-player-row">
-      <input id="new-player-name" maxlength="12">
-      <button class="pill" id="btn-new-player" data-t="newPlayer">＋ 新建冒险者</button>
+    <div style="text-align:center;margin-top:14px">
+      <button class="big-btn" id="btn-show-register" data-t="registerOpen">＋ 注册新冒险者</button>
+    </div>
+  </div>
+
+  <!-- Register -->
+  <div class="screen" id="screen-register">
+    <div class="reg-card">
+      <h2 style="color:var(--gold);text-align:center" data-t="regTitle">⚱️ 冒险者注册</h2>
+      <p style="text-align:center;color:var(--text-dim);margin:6px 0 16px;font-size:.9em" data-t="regDesc">建立你的英雄档案——以后可以邀请好友、同榜竞技。</p>
+      <label><span data-t="fUsername">用户名(唯一)</span><input id="reg-name" maxlength="14" autocomplete="off"></label>
+      <label><span data-t="fPassword">密码</span><input id="reg-pw" type="password" maxlength="24"></label>
+      <label><span data-t="fPassword2">确认密码</span><input id="reg-pw2" type="password" maxlength="24"></label>
+      <label><span data-t="fAge">年龄</span>
+        <select id="reg-age">
+          <option value="">—</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option>
+          <option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option value="15+">15+</option>
+        </select></label>
+      <label><span data-t="fGender">性别</span>
+        <select id="reg-gender">
+          <option value="">—</option>
+          <option value="m" data-t="gBoy">男孩</option>
+          <option value="f" data-t="gGirl">女孩</option>
+          <option value="x" data-t="gOther">其他 / 不想说</option>
+        </select></label>
+      <div id="reg-error" style="color:var(--bad);min-height:22px;text-align:center;font-size:.9em"></div>
+      <div style="text-align:center">
+        <button class="big-btn" id="btn-register" data-t="registerBtn">注册并开始冒险</button><br>
+        <span class="backlink" id="btn-reg-back" data-t="backList">← 返回冒险者列表</span>
+      </div>
     </div>
   </div>
 
@@ -464,6 +494,14 @@ const I18N = {
     legendDone: "✅ 已通关", legendCur: "⚔️ 当前位置", legendLock: "🔒 未解锁",
     confirmReset: "确定要清除这位冒险者的所有进度吗?", searchPh: "搜索拉丁词或释义…",
     bossTag: "关底挑战", replayTag: "可重玩",
+    registerOpen: "＋ 注册新冒险者", regTitle: "⚱️ 冒险者注册",
+    regDesc: "建立你的英雄档案——以后可以邀请好友、同榜竞技。",
+    fUsername: "用户名(唯一)", fPassword: "密码", fPassword2: "确认密码", fAge: "年龄", fGender: "性别",
+    gBoy: "男孩", gGirl: "女孩", gOther: "其他 / 不想说",
+    registerBtn: "注册并开始冒险", backList: "← 返回冒险者列表",
+    errName: "请输入用户名", errTaken: "这个用户名已被注册!", errPwShort: "密码至少 4 位",
+    errPwMismatch: "两次输入的密码不一致",
+    loginPw: "请输入密码:", pwWrong: "密码不对,再试试!",
     board: "排行榜", boardTitle: "排行榜 Tabula Honoris",
     boardDesc: "同一台设备上的所有冒险者同场竞技。总分 = 每级成绩之和(答得越准,分越高)。",
     playerTitle: "谁在冒险?", playerDesc: "每位冒险者都有自己的进度和成绩。邀请同学和朋友,各建一个档案来比拼吧!",
@@ -499,6 +537,14 @@ const I18N = {
     legendDone: "✅ Done", legendCur: "⚔️ You are here", legendLock: "🔒 Locked",
     confirmReset: "Reset ALL progress of this adventurer?", searchPh: "Search Latin or meaning…",
     bossTag: "Boss", replayTag: "replay",
+    registerOpen: "＋ Register a new adventurer", regTitle: "⚱️ Adventurer Registration",
+    regDesc: "Create your hero profile — invite friends and compete later.",
+    fUsername: "Username (unique)", fPassword: "Password", fPassword2: "Confirm password", fAge: "Age", fGender: "Gender",
+    gBoy: "Boy", gGirl: "Girl", gOther: "Other / prefer not to say",
+    registerBtn: "Register & start", backList: "← Back to adventurers",
+    errName: "Please enter a username", errTaken: "That username is already registered!", errPwShort: "Password needs at least 4 characters",
+    errPwMismatch: "Passwords do not match",
+    loginPw: "Enter password:", pwWrong: "Wrong password — try again!",
     board: "Ranks", boardTitle: "Tabula Honoris — Leaderboard",
     boardDesc: "All adventurers on this device compete together. Total = sum of level scores (more accuracy, more points).",
     playerTitle: "Who is adventuring?", playerDesc: "Each adventurer keeps their own progress and scores. Invite classmates and friends to compete!",
@@ -1343,30 +1389,63 @@ function playerStats(name) {
   const avgAcc = accs.length ? accs.reduce((a, b) => a + b, 0) / accs.length : 0;
   return { levels, score, words: p.words.length, avgAcc };
 }
+async function sha256(s) {
+  try {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("fuga·" + s));
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+  } catch (e) {
+    /* non-secure context fallback: simple deterministic hash */
+    let h = 0; const str = "fuga·" + s;
+    for (let i = 0; i < str.length; i++) { h = (h * 31 + str.charCodeAt(i)) | 0; }
+    return "x" + (h >>> 0).toString(16);
+  }
+}
 function renderPlayers() {
   const list = $("#player-list");
   list.innerHTML = "";
   Object.keys(state.players).forEach(name => {
+    const p = state.players[name];
     const st = playerStats(name);
+    const meta = [p.age ? `🎂${p.age}` : "", p.gender === "m" ? "♂" : p.gender === "f" ? "♀" : ""].filter(Boolean).join(" ");
     const row = document.createElement("div");
     row.className = "player-row";
-    row.innerHTML = `<span>${name === state.player ? "⚔️ " : "🛡️ "}<b>${name}</b></span>
+    row.innerHTML = `<span>${name === state.player ? "⚔️ " : "🛡️ "}<b>${name}</b> ${p.pw ? "🔐" : ""} <span class="pmeta">${meta}</span></span>
       <span class="pstats">${t("thLevels")} ${st.levels} · ${t("thWords")} ${st.words} · ${t("thScore")} ${st.score}</span>`;
-    row.addEventListener("click", () => {
-      state.player = name; save();
-      if (P().mode) renderMap(); else showScreen("screen-mode");
-    });
+    row.addEventListener("click", () => loginAs(name));
     list.appendChild(row);
   });
-  $("#new-player-name").value = "";
-  $("#new-player-name").placeholder = t("namePh");
   showScreen("screen-player");
 }
-function addPlayer() {
-  const name = $("#new-player-name").value.trim();
-  if (!name) return;
-  if (state.players[name]) { toast(t("nameTaken")); return; }
-  state.players[name] = newProfile();
+async function loginAs(name) {
+  const p = state.players[name];
+  if (p.pw) {
+    const entered = prompt(t("loginPw"));
+    if (entered === null) return;
+    if (await sha256(entered) !== p.pw) { toast(t("pwWrong")); return; }
+  }
+  state.player = name; save();
+  if (P().mode) renderMap(); else showScreen("screen-mode");
+}
+function showRegister() {
+  ["reg-name","reg-pw","reg-pw2"].forEach(id => $("#" + id).value = "");
+  $("#reg-age").value = ""; $("#reg-gender").value = "";
+  $("#reg-error").textContent = "";
+  showScreen("screen-register");
+}
+async function doRegister() {
+  const err = $("#reg-error");
+  const name = $("#reg-name").value.trim();
+  const pw = $("#reg-pw").value, pw2 = $("#reg-pw2").value;
+  if (!name) { err.textContent = t("errName"); return; }
+  if (state.players[name]) { err.textContent = t("errTaken"); return; }
+  if (pw.length < 4) { err.textContent = t("errPwShort"); return; }
+  if (pw !== pw2) { err.textContent = t("errPwMismatch"); return; }
+  const p = newProfile();
+  p.pw = await sha256(pw);
+  p.age = $("#reg-age").value || null;
+  p.gender = $("#reg-gender").value || null;
+  p.created = new Date().toISOString().slice(0, 10);
+  state.players[name] = p;
   state.player = name; save();
   showScreen("screen-mode");
 }
@@ -1440,8 +1519,9 @@ document.querySelectorAll(".mode-card").forEach(c => {
 $("#btn-back-map").addEventListener("click", renderMap);
 $("#btn-quit-quiz").addEventListener("click", () => openChapter(quiz ? quiz.ci : P().chapter));
 $("#codex-search").addEventListener("input", renderCodex);
-$("#btn-new-player").addEventListener("click", addPlayer);
-$("#new-player-name").addEventListener("keydown", e => { if (e.key === "Enter") addPlayer(); });
+$("#btn-show-register").addEventListener("click", showRegister);
+$("#btn-register").addEventListener("click", doRegister);
+$("#btn-reg-back").addEventListener("click", renderPlayers);
 $("#btn-share").addEventListener("click", shareScore);
 $("#btn-add-friend").addEventListener("click", renderPlayers);
 
