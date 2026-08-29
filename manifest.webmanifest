@@ -1,4 +1,5 @@
 {
+  "id": "/fuga-mythica/",
   "name": "Fuga Mythica — 神话密室逃脱学拉丁语",
   "short_name": "Fuga Mythica",
   "description": "A Greek-myth escape room for learning Latin. 希腊神话密室逃脱,在冒险中学拉丁语。",
@@ -10,9 +11,33 @@
   "theme_color": "#1a1626",
   "lang": "zh",
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
-  ]
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": [
+    "education",
+    "games",
+    "kids"
+  ],
+  "dir": "ltr"
 }
