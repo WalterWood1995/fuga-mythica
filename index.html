@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
@@ -482,6 +482,8 @@
 <script src="etym_stories.js"></script>
 <script src="meanings_i18n.js"></script>
 <script src="word_art.js"></script>
+<script src="latfam1.js"></script>
+<script src="latfam2.js"></script>
 <script>
 /* ===================== I18N ===================== */
 const I18N = {
@@ -516,7 +518,8 @@ const I18N = {
     weakTitle: "🔄 需要复习的词(会在后面的关卡里再次出现)",
     reviewTag: "复习", answerWas: "正确答案是:",
     etymLabel: "🌱 词源与记忆", derivLabel: "同族词", nextQ: "下一题 →",
-    morphLabel: "🌱 词根与词源", famLabel: "🔗 衍生词(同一词根,换前缀/后缀)", aliveLabel: "🌍 这个词今天还活着",
+    morphLabel: "🌱 词根与词源", famLabel: "🔗 拉丁语衍生词(同一词根,换前缀/后缀)", aliveLabel: "🌍 这个词今天还活着",
+    colHeir: "现代后代",
     rightMark: "✨ 答对了!Optime!", wrongMark: "✗ 答错了——这个词稍后还会再来。",
     statsLine: (a,w,r)=>`共答题 ${a} 次 · 答错 ${w} 次 · 第 ${r} 轮全部答对`,
     share: "📋 复制我的成绩战报", addFriend: "➕ 邀请朋友加入", copied: "战报已复制,发给朋友吧!",
@@ -559,7 +562,8 @@ const I18N = {
     weakTitle: "🔄 Words to review (they will return in later levels)",
     reviewTag: "review", answerWas: "The correct answer is:",
     etymLabel: "🌱 Etymology & memory", derivLabel: "Word family", nextQ: "Next →",
-    morphLabel: "🌱 Root & origin", famLabel: "🔗 Derived words (same root, new affixes)", aliveLabel: "🌍 This word is still alive today",
+    morphLabel: "🌱 Root & origin", famLabel: "🔗 Latin derivatives (same root, new affixes)", aliveLabel: "🌍 This word is still alive today",
+    colHeir: "Modern heir",
     rightMark: "✨ Correct! Optime!", wrongMark: "✗ Not quite — this word will return.",
     statsLine: (a,w,r)=>`${a} answers · ${w} wrong · all correct by round ${r}`,
     share: "📋 Copy my score report", addFriend: "➕ Invite a friend", copied: "Copied — send it to a friend!",
@@ -1172,6 +1176,12 @@ function wordInfoHtml(key) {
 function famTableHtml(key) {
   const mo = typeof MORPH !== "undefined" ? MORPH[key] : null;
   if (!mo || !mo.f || !mo.f.length) return "";
+  /* Latin derivative family takes priority; English family is the fallback */
+  const isLatin = typeof LATFAM !== "undefined" && LATFAM[key] && LATFAM[key].length;
+  const items = isLatin ? LATFAM[key] : mo.f;
+  const hasHeir = items.some(it => it.length > 5 && it[5]);
+  /* English-fallback tables (Greek loans without a Latin family) mark words with (EN) */
+  const enTag = isLatin ? "" : ` <span class="fam-gloss">(EN)</span>`;
   const zh = state.lang === "zh";
   /* candidate root strings: latin fragments from the breakdown + the headword itself */
   const rootCands = [];
@@ -1185,7 +1195,8 @@ function famTableHtml(key) {
   const PREFIX = new Set(["con","com","co","de","re","red","in","im","il","ir","ex","e","ad","ac","af","ap","ab","sub","super","sur","pro","pre","per","dis","di","trans","inter","intra","ob","oc","of","op","un","anti","ante","post","para","amb","ambi","an","en","em","extra","hyper","semi","epi","meta","se","a","au","ef"]);
   const tokOf = p => (p.split(/[((]/)[0] || "").trim().toLowerCase().replace(/[^a-zœéèêàçäöüáíóúñ'-]/gi, "").replace(/^-|-$/g, "");
   const glossOf = p => { const mch = p.match(/[((]([^))]*)[))]/); return mch ? mch[1] : ""; };
-  const rows = mo.f.map(item => {
+  const heirCell = item => hasHeir ? `<td class="c-meaning" style="font-style:italic">${item[5] || ""}</td>` : "";
+  const rows = items.map(item => {
     const partsStr = zh ? item[1] : item[2];
     const meaning = zh ? item[3] : item[4];
     const parts = partsStr.includes("+") ? partsStr.split("+").map(s => s.trim()) : [partsStr.trim()];
@@ -1226,15 +1237,15 @@ function famTableHtml(key) {
         <td class="c-pre">${preStr ? preStr + (preGloss ? `(${preGloss})` : "") : ""}</td>
         <td class="c-root">${rootCell}</td>
         <td class="c-suf">${sufStr ? "-" + sufStr + (sufGloss ? `(${sufGloss})` : "") : ""}</td>
-        <td class="c-word">${item[0]}</td><td class="c-meaning">${meaning}</td></tr>`;
+        <td class="c-word">${item[0]}${enTag}</td><td class="c-meaning">${meaning}</td>${heirCell(item)}</tr>`;
     }
     /* fallback: render the data parts as before */
     const pre = parts.slice(0, ri).join(" + ");
     const suf = parts.slice(ri + 1).join(" + ");
-    return `<tr><td class="c-pre">${pre}</td><td class="c-root">${stripGloss(parts[ri])}</td><td class="c-suf">${suf}</td><td class="c-word">${item[0]}</td><td class="c-meaning">${meaning}</td></tr>`;
+    return `<tr><td class="c-pre">${pre}</td><td class="c-root">${stripGloss(parts[ri])}</td><td class="c-suf">${suf}</td><td class="c-word">${item[0]}${enTag}</td><td class="c-meaning">${meaning}</td>${heirCell(item)}</tr>`;
   }).join("");
   return `<div class="fam-table-wrap"><table class="fam-table">
-    <tr><th>${t("colPrefix")}</th><th>${t("colRoot")} ${rootSeg}</th><th>${t("colSuffix")}</th><th>${t("colWord")}</th><th>${t("colMeaning")}</th></tr>
+    <tr><th>${t("colPrefix")}</th><th>${t("colRoot")} ${rootSeg}</th><th>${t("colSuffix")}</th><th>${t("colWord")}</th><th>${t("colMeaning")}</th>${hasHeir ? `<th>${t("colHeir")}</th>` : ""}</tr>
     ${rows}</table></div>`;
 }
 
