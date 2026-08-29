@@ -38,6 +38,7 @@
 <script src="extras.js"></script>
 <script src="data2.js"></script>
 <script src="morph2.js"></script>
+<script src="living.js"></script>
 <script>
 const C = document.getElementById("content");
 const toc = document.getElementById("toc");
@@ -62,6 +63,7 @@ CHAPTERS.forEach((ch, ci) => {
         famHtml += `<div><b>拆解:</b>${mo.m[0]}</div>`;
         if (mo.f && mo.f.length) famHtml += mo.f.map(it => `<div>· <b>${it[0]}</b> = ${it[1]} → ${it[3]}</div>`).join("");
       }
+      if (typeof VIVA !== "undefined" && VIVA[k]) famHtml += `<div style="color:#1a7a3a"><b>活词:</b>${VIVA[k]}</div>`;
       html += `<tr>
         <td class="idx">${li + 1}-${wi + 1}</td>
         <td>${w[1] || ""} <span class="lat">${w[0] || k}</span></td>

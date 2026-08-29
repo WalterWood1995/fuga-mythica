@@ -147,6 +147,7 @@
   .ans-card .etym-label { color: var(--gold); font-size: .85em; letter-spacing: 1px; margin-bottom: 4px; }
   .ans-card .etym { line-height: 1.65; font-size: .95em; }
   .ans-card .deriv-line { color: var(--text-dim); font-size: .88em; margin-top: 8px; }
+  .viva-line { background: rgba(126,222,138,.08); border-left: 3px solid var(--good); border-radius: 0 8px 8px 0; padding: 8px 12px; line-height: 1.7; font-size: 1.02em; }
   .fam-table-wrap { overflow-x: auto; }
   .fam-table { width: 100%; border-collapse: collapse; font-size: .88em; }
   .fam-table th { color: var(--text-dim); font-weight: normal; font-size: .85em; text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--gold-dim); white-space: nowrap; }
@@ -401,6 +402,7 @@
 <script src="extras.js"></script>
 <script src="data2.js"></script>
 <script src="morph2.js"></script>
+<script src="living.js"></script>
 <script>
 /* ===================== I18N ===================== */
 const I18N = {
@@ -427,7 +429,7 @@ const I18N = {
     weakTitle: "🔄 需要复习的词(会在后面的关卡里再次出现)",
     reviewTag: "复习", answerWas: "正确答案是:",
     etymLabel: "🌱 词源与记忆", derivLabel: "同族词", nextQ: "下一题 →",
-    morphLabel: "🧩 词根词缀拆解", famLabel: "🔗 词族联想链(同根不同缀)",
+    morphLabel: "🌱 词根与词源", famLabel: "🔗 衍生词(同一词根,换前缀/后缀)", aliveLabel: "🌍 这个词今天还活着",
     rightMark: "✨ 答对了!Optime!", wrongMark: "✗ 答错了——这个词稍后还会再来。",
     statsLine: (a,w,r)=>`共答题 ${a} 次 · 答错 ${w} 次 · 第 ${r} 轮全部答对`,
     share: "📋 复制我的成绩战报", addFriend: "➕ 邀请朋友加入", copied: "战报已复制,发给朋友吧!",
@@ -462,7 +464,7 @@ const I18N = {
     weakTitle: "🔄 Words to review (they will return in later levels)",
     reviewTag: "review", answerWas: "The correct answer is:",
     etymLabel: "🌱 Etymology & memory", derivLabel: "Word family", nextQ: "Next →",
-    morphLabel: "🧩 Root & affix breakdown", famLabel: "🔗 Word-family chain (same root, new affixes)",
+    morphLabel: "🌱 Root & origin", famLabel: "🔗 Derived words (same root, new affixes)", aliveLabel: "🌍 This word is still alive today",
     rightMark: "✨ Correct! Optime!", wrongMark: "✗ Not quite — this word will return.",
     statsLine: (a,w,r)=>`${a} answers · ${w} wrong · all correct by round ${r}`,
     share: "📋 Copy my score report", addFriend: "➕ Invite a friend", copied: "Copied — send it to a friend!",
@@ -496,7 +498,7 @@ const I18N = {
     weakTitle: "🔄 Palabras para repasar (volverán en niveles posteriores)",
     reviewTag: "repaso", answerWas: "La respuesta correcta es:",
     etymLabel: "🌱 Etimología y memoria", derivLabel: "Familia de palabras", nextQ: "Siguiente →",
-    morphLabel: "🧩 Raíz y afijos", famLabel: "🔗 Cadena de la familia (misma raíz, otros afijos)",
+    morphLabel: "🌱 Raíz y origen", famLabel: "🔗 Palabras derivadas (misma raíz, otros afijos)", aliveLabel: "🌍 Esta palabra sigue viva hoy",
     rightMark: "✨ ¡Correcto! Optime!", wrongMark: "✗ Fallaste — la palabra volverá.",
     statsLine: (a,w,r)=>`${a} respuestas · ${w} errores · todo correcto en la ronda ${r}`,
     share: "📋 Copiar mi informe", addFriend: "➕ Invitar a un amigo", copied: "¡Copiado — envíalo a un amigo!",
@@ -530,7 +532,7 @@ const I18N = {
     weakTitle: "🔄 Mots à revoir (ils reviendront plus tard)",
     reviewTag: "révision", answerWas: "La bonne réponse est :",
     etymLabel: "🌱 Étymologie et mémoire", derivLabel: "Famille de mots", nextQ: "Suivant →",
-    morphLabel: "🧩 Racine et affixes", famLabel: "🔗 Chaîne de la famille (même racine, autres affixes)",
+    morphLabel: "🌱 Racine et origine", famLabel: "🔗 Mots dérivés (même racine, autres affixes)", aliveLabel: "🌍 Ce mot vit encore aujourd'hui",
     rightMark: "✨ Correct ! Optime !", wrongMark: "✗ Raté — le mot reviendra.",
     statsLine: (a,w,r)=>`${a} réponses · ${w} erreurs · tout juste au tour ${r}`,
     share: "📋 Copier mon rapport", addFriend: "➕ Inviter un ami", copied: "Copié — envoie-le à un ami !",
@@ -564,7 +566,7 @@ const I18N = {
     weakTitle: "🔄 Wörter zum Wiederholen (sie kommen später wieder)",
     reviewTag: "Wiederholung", answerWas: "Die richtige Antwort ist:",
     etymLabel: "🌱 Etymologie & Gedächtnis", derivLabel: "Wortfamilie", nextQ: "Weiter →",
-    morphLabel: "🧩 Wurzel & Affixe", famLabel: "🔗 Wortfamilien-Kette (gleiche Wurzel, neue Affixe)",
+    morphLabel: "🌱 Wurzel & Herkunft", famLabel: "🔗 Abgeleitete Wörter (gleiche Wurzel, neue Affixe)", aliveLabel: "🌍 Dieses Wort lebt heute noch",
     rightMark: "✨ Richtig! Optime!", wrongMark: "✗ Daneben — das Wort kommt wieder.",
     statsLine: (a,w,r)=>`${a} Antworten · ${w} Fehler · alles richtig in Runde ${r}`,
     share: "📋 Meinen Bericht kopieren", addFriend: "➕ Freund einladen", copied: "Kopiert — schick es einem Freund!",
@@ -598,7 +600,7 @@ const I18N = {
     weakTitle: "🔄 復習する単語(あとの面でまた出ます)",
     reviewTag: "復習", answerWas: "正解は:",
     etymLabel: "🌱 語源と覚え方", derivLabel: "同族語", nextQ: "次の問題 →",
-    morphLabel: "🧩 語根と接辞の分解", famLabel: "🔗 単語ファミリー(同じ語根+違う接辞)",
+    morphLabel: "🌱 語根と語源", famLabel: "🔗 派生語(同じ語根+違う接辞)", aliveLabel: "🌍 この単語は今も生きている",
     rightMark: "✨ 正解!Optime!", wrongMark: "✗ ざんねん——この単語はまた出ます。",
     statsLine: (a,w,r)=>`解答${a}回 · まちがい${w}回 · ${r}周目で全問正解`,
     share: "📋 成績レポートをコピー", addFriend: "➕ 友だちを招待", copied: "コピーしました!友だちに送ろう!",
@@ -866,32 +868,39 @@ function answer(btn, correct, key) {
     /* requeue: move to end — must answer correctly before finishing */
     quiz.queue.push(quiz.queue.shift());
   }
-  /* answer card: correct answer + etymology + morphology + word-family chain */
-  const w = WORDS[key];
-  const zh = state.lang === "zh";
-  const note = zh ? w[5] : w[6];
-  const mo = typeof MORPH !== "undefined" ? MORPH[key] : null;
-  let morphHtml = "";
-  if (mo) {
-    morphHtml += `<div class="etym-label" style="margin-top:10px">${t("morphLabel")}</div>
-      <div class="etym"><span class="latin" style="color:var(--accent);font-style:italic">${w[0]}</span> = ${zh ? mo.m[0] : mo.m[1]}</div>`;
-    if (mo.f && mo.f.length) {
-      morphHtml += `<div class="etym-label" style="margin-top:10px">${t("famLabel")}</div>` + famTableHtml(key);
-    }
-  }
+  /* answer card: 1) root & origin  2) derivative table  3) living descendants */
   f.className = "";
   f.innerHTML = `
     <div style="color:${correct ? "var(--good)" : "var(--bad)"};font-size:1.05em">${correct ? t("rightMark") : t("wrongMark")}</div>
     <div class="ans-card">
-      <div class="ans-head">${t("answerWas")} <span class="latin">${w[0]}</span> ${w[1]} <b>${wordMeaning(key)}</b></div>
-      <div class="etym-label">${t("etymLabel")}</div>
-      <div class="etym">${note || ""}</div>
-      ${morphHtml}
-      ${w[4] && w[4] !== "—" ? `<div class="deriv-line">${t("derivLabel")}: ${w[4]}</div>` : ""}
+      <div class="ans-head">${t("answerWas")} <span class="latin">${WORDS[key][0]}</span> ${WORDS[key][1]} <b>${wordMeaning(key)}</b></div>
+      ${wordInfoHtml(key)}
       <div class="continue-wrap"><button class="continue-btn" id="btn-next-q">${t("nextQ")}</button></div>
     </div>`;
   $("#btn-next-q").addEventListener("click", nextQuestion);
   $("#btn-next-q").focus();
+}
+
+/* shared word-info body: root+origin, derivative table, living words */
+function wordInfoHtml(key) {
+  const w = WORDS[key];
+  const zh = state.lang === "zh";
+  const mo = typeof MORPH !== "undefined" ? MORPH[key] : null;
+  let html = "";
+  /* 1. root & its origin */
+  html += `<div class="etym-label">${t("morphLabel")}</div>`;
+  if (mo) html += `<div class="etym"><span class="latin" style="color:var(--accent);font-style:italic">${w[0]}</span> = ${zh ? mo.m[0] : mo.m[1]}</div>`;
+  html += `<div class="etym" style="margin-top:4px">${(zh ? w[5] : w[6]) || ""}</div>`;
+  /* 2. derivative table */
+  if (mo && mo.f && mo.f.length) {
+    html += `<div class="etym-label" style="margin-top:10px">${t("famLabel")}</div>` + famTableHtml(key);
+  }
+  /* 3. still alive today */
+  if (typeof VIVA !== "undefined" && VIVA[key]) {
+    html += `<div class="etym-label" style="margin-top:10px">${t("aliveLabel")}</div>
+      <div class="viva-line">${VIVA[key]}</div>`;
+  }
+  return html;
 }
 
 /* ---- word-family table (prefix | root | suffix | word | meaning) ---- */
@@ -1006,17 +1015,9 @@ function renderSpells() {
 function showWordDetail(key) {
   const w = WORDS[key];
   const zh = state.lang === "zh";
-  const mo = typeof MORPH !== "undefined" ? MORPH[key] : null;
-  let html = `<button id="detail-close">✕</button>
-    <div class="ans-head" style="font-size:1.3em;margin-bottom:10px">${w[1]} <span class="latin" style="color:var(--accent);font-style:italic">${w[0]}</span> <b>${zh ? w[2] : w[3]}</b></div>
-    <div class="etym-label">${t("etymLabel")}</div>
-    <div class="etym">${(zh ? w[5] : w[6]) || ""}</div>`;
-  if (mo) {
-    html += `<div class="etym-label" style="margin-top:10px">${t("morphLabel")}</div>
-      <div class="etym"><span style="color:var(--accent);font-style:italic">${w[0]}</span> = ${zh ? mo.m[0] : mo.m[1]}</div>
-      <div class="etym-label" style="margin-top:10px">${t("famLabel")}</div>` + famTableHtml(key);
-  }
-  if (w[4] && w[4] !== "—") html += `<div class="deriv-line" style="margin-top:10px;color:var(--text-dim);font-size:.88em">${t("derivLabel")}: ${w[4]}</div>`;
+  const html = `<button id="detail-close">✕</button>
+    <div class="ans-head" style="font-size:1.3em;margin-bottom:10px">${w[1]} <span class="latin" style="color:var(--accent);font-style:italic">${w[0]}</span> <b>${zh ? w[2] : w[3]}</b></div>`
+    + wordInfoHtml(key);
   $("#detail-card").innerHTML = html;
   $("#detail-mask").classList.add("show");
   $("#detail-close").addEventListener("click", () => $("#detail-mask").classList.remove("show"));
