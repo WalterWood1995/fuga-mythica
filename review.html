@@ -39,6 +39,7 @@
 <script src="data2.js"></script>
 <script src="morph2.js"></script>
 <script src="living.js"></script>
+<script src="etym_stories.js"></script>
 <script>
 const C = document.getElementById("content");
 const toc = document.getElementById("toc");
@@ -68,7 +69,7 @@ CHAPTERS.forEach((ch, ci) => {
         <td class="idx">${li + 1}-${wi + 1}</td>
         <td>${w[1] || ""} <span class="lat">${w[0] || k}</span></td>
         <td>${w[2] || ""}<br><span style="color:#8a7a5a">${w[3] || ""}</span>${w[4] && w[4] !== "—" ? `<br><span class="fam">同族: ${w[4]}</span>` : ""}</td>
-        <td>${w[5] || ""}<div class="fam">${w[6] || ""}</div></td>
+        <td>${(typeof ETYM !== "undefined" && ETYM[k]) ? ETYM[k][0] : (w[5] || "")}<div class="fam">${(typeof ETYM !== "undefined" && ETYM[k]) ? ETYM[k][1] : (w[6] || "")}</div></td>
         <td class="fam">${famHtml}</td></tr>`;
     });
     html += `</table>`;
