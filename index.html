@@ -47,7 +47,9 @@
     min-height: 100vh;
     display: flex; flex-direction: column; align-items: center;
   }
-  #app { width: 100%; max-width: 960px; padding: 12px; }
+  #app { width: 100%; max-width: 960px;
+    padding: calc(12px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right))
+             calc(12px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left)); }
 
   #topbar { display: flex; justify-content: space-between; align-items: center; padding: 8px 4px 12px; gap: 8px; flex-wrap: wrap;
     border-bottom: 3px solid transparent;
@@ -299,7 +301,7 @@
   #detail-close:hover { color: var(--gold); }
 
   #toast {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    position: fixed; bottom: calc(24px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
     background: var(--gold); color: #221; padding: 12px 26px; border-radius: 30px;
     font-size: 1em; z-index: 90; display: none; box-shadow: 0 6px 24px rgba(0,0,0,.5); max-width: 90vw;
   }
