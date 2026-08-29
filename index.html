@@ -130,6 +130,11 @@
   #quiz-art-wrap { position: relative; border-radius: var(--radius); overflow: hidden; border: 2px solid var(--chac); margin-bottom: 12px; background: #000; }
   #quiz-art-wrap img { display: block; width: 100%; max-height: 230px; object-fit: contain; background: #000; cursor: zoom-in; }
   #quiz-art-caption { position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(transparent, rgba(0,0,0,.85)); color: #ddd; font-size: .78em; padding: 24px 12px 7px; font-style: italic; }
+  .set-block { background: var(--panel); border: 2px solid var(--chac); border-radius: var(--radius);
+    padding: 16px 18px; margin: 14px 0; }
+  .set-title { color: var(--gold); font-size: 1.05em; margin-bottom: 6px; }
+  .set-desc { color: var(--text-dim); font-size: .9em; line-height: 1.6; margin-bottom: 10px; }
+  .set-desc a { color: var(--accent); }
   #quiz-intro {
     margin: 0 0 12px; padding: 10px 16px; text-align: center;
     border-top: 1px solid var(--chac); border-bottom: 1px solid var(--chac);
@@ -338,6 +343,7 @@
       <button class="pill" id="btn-codex">📖 <span data-t="codex">词汇册</span></button>
       <button class="pill" id="btn-board">🏆 <span data-t="board">排行榜</span></button>
       <button class="pill" id="btn-spells">✨ <span data-t="spellbook">咒语书</span></button>
+      <button class="pill" id="btn-settings">⚙️ <span data-t="settings">设置</span></button>
     </span>
   </div>
 
@@ -386,6 +392,36 @@
         <span class="backlink" id="btn-reg-back" data-t="backList">← 返回冒险者列表</span>
       </div>
     </div>
+  </div>
+
+  <div class="screen" id="screen-settings">
+    <h2 style="text-align:center;color:var(--gold);margin-top:20px" data-t="settings">设置</h2>
+
+    <div class="set-block">
+      <div class="set-title" data-t="offlineTitle">离线包</div>
+      <div class="set-desc" data-t="offlineDesc">把全部插图下载到本机,之后没有网络也能玩。约 60–120 MB,建议连 Wi-Fi 下载。</div>
+      <button class="pill" id="btn-offline-go" data-t="offlineGo">⬇️ 下载全部插图</button>
+      <div id="offline-progress" class="set-desc" style="margin-top:8px"></div>
+    </div>
+
+    <div class="set-block">
+      <div class="set-title" data-t="saveTitle">存档备份</div>
+      <div class="set-desc" data-t="saveDesc">进度只存在这台设备上。换手机、或 iPhone 清理网站数据前,先导出备份。</div>
+      <button class="pill" id="btn-save-export" data-t="saveExport">📤 导出存档</button>
+      <button class="pill" id="btn-save-import" data-t="saveImport">📥 导入存档</button>
+      <input type="file" id="save-file" accept="application/json,.json" style="display:none">
+      <div id="save-msg" class="set-desc" style="margin-top:8px"></div>
+    </div>
+
+    <div class="set-block">
+      <div class="set-title" data-t="aboutTitle">关于</div>
+      <div class="set-desc">
+        <a href="attributions.html" target="_blank" rel="noopener" data-t="linkAttrib">图片来源与授权</a> ·
+        <a href="privacy.html" target="_blank" rel="noopener" data-t="linkPrivacy">隐私说明</a>
+      </div>
+    </div>
+
+    <div style="margin-top:14px;text-align:center"><span class="backlink" id="btn-set-back" data-t="backmap">← 返回地图</span></div>
   </div>
 
   <div class="screen" id="screen-mode">
@@ -500,6 +536,15 @@
 /* ===================== I18N ===================== */
 const I18N = {
   zh: {
+    settings: "设置",
+    offlineTitle: "离线包", offlineDesc: "把全部插图下载到本机,之后没有网络也能玩。约 60–120 MB,建议连 Wi-Fi 下载。",
+    offlineGo: "⬇️ 下载全部插图", offlineProgress: "已下载 {done} / {total}(失败 {failed})",
+    offlineDone: "✅ 完成,现在可以离线游玩。", offlineNoSupport: "这个浏览器不支持离线缓存。",
+    saveTitle: "存档备份", saveDesc: "进度只存在这台设备上。换手机、或 iPhone 清理网站数据前,先导出备份。",
+    saveExport: "📤 导出存档", saveImport: "📥 导入存档",
+    saveExported: "✅ 已导出,请妥善保存这个文件。", saveImported: "✅ 存档已导入。",
+    saveBadFile: "❌ 这不是有效的存档文件。",
+    aboutTitle: "关于", linkAttrib: "图片来源与授权", linkPrivacy: "隐私说明",
     map: "地图", codex: "词汇册", tagline: "希腊神话密室逃脱 · 在冒险中学拉丁语",
     start: "开始冒险", reset: "清除进度重新开始", choosemode: "选择你的身份",
     apprentice: "学徒 Discipulus", apprenticedesc: "适合 6–8 岁:看图选词,三选一,轻松闯关。",
@@ -544,6 +589,15 @@ const I18N = {
     colPrefix: "前缀", colRoot: "词根", colConn: "连接", colSuffix: "后缀", colWord: "单词", colMeaning: "直译 → 引申",
   },
   en: {
+    settings: "Settings",
+    offlineTitle: "Offline pack", offlineDesc: "Download every illustration to this device so the game works with no connection. Roughly 60–120 MB — best done on Wi-Fi.",
+    offlineGo: "⬇️ Download all artwork", offlineProgress: "Downloaded {done} / {total} ({failed} failed)",
+    offlineDone: "✅ Done — you can now play offline.", offlineNoSupport: "This browser cannot store an offline cache.",
+    saveTitle: "Save backup", saveDesc: "Progress lives only on this device. Export a backup before changing phones, or before iOS clears website data.",
+    saveExport: "📤 Export save", saveImport: "📥 Import save",
+    saveExported: "✅ Exported — keep the file somewhere safe.", saveImported: "✅ Save imported.",
+    saveBadFile: "❌ That is not a valid save file.",
+    aboutTitle: "About", linkAttrib: "Image sources and licences", linkPrivacy: "Privacy",
     map: "Map", codex: "Codex", tagline: "A Greek-myth escape room · Learn Latin by adventure",
     start: "Start Adventure", reset: "Reset progress", choosemode: "Choose your path",
     apprentice: "Apprentice · Discipulus", apprenticedesc: "Ages 6–8: pictures & words, 3 choices, relaxed.",
@@ -1532,6 +1586,85 @@ $("#sel-lang").addEventListener("change", e => {
   }
 });
 $("#btn-spells").addEventListener("click", renderSpells);
+
+/* ---- settings: offline art pack + save backup ---- */
+function allArtUrls() {
+  const urls = [];
+  if (typeof WORD_ART !== "undefined") {
+    for (const k in WORD_ART) urls.push(WORD_ART_URL(WORD_ART[k]));
+  }
+  CHAPTERS.forEach(ch => {
+    if (ch.art) urls.push(ch.art);
+    (ch.levels || []).forEach(lv => { if (lv && lv.art) urls.push(lv.art); });
+  });
+  return [...new Set(urls)];
+}
+
+async function downloadOfflinePack() {
+  const box = $("#offline-progress");
+  const btn = $("#btn-offline-go");
+  if (!("caches" in window)) { box.textContent = t("offlineNoSupport"); return; }
+  const urls = allArtUrls();
+  btn.disabled = true;
+  let done = 0, failed = 0;
+  const cache = await caches.open("fuga-img-v1");
+  const tick = () => { box.textContent = t("offlineProgress")
+    .replace("{done}", done).replace("{total}", urls.length).replace("{failed}", failed); };
+  tick();
+  const queue = urls.slice();
+  const worker = async () => {
+    while (queue.length) {
+      const u = queue.shift();
+      try {
+        const hit = await cache.match(u);
+        /* cache.add() rejects opaque cross-origin responses, so fetch + put */
+        if (!hit) {
+          const resp = await fetch(u, { mode: "no-cors" });
+          await cache.put(u, resp.clone());
+        }
+      } catch (e) { failed++; }
+      done++;
+      if (done % 5 === 0 || !queue.length) tick();
+    }
+  };
+  await Promise.all([worker(), worker(), worker(), worker()]);
+  tick();
+  box.textContent += "  " + t("offlineDone");
+  btn.disabled = false;
+}
+
+function exportSave() {
+  const blob = new Blob([JSON.stringify(state, null, 1)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "fuga-mythica-save.json";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  $("#save-msg").textContent = t("saveExported");
+}
+
+function importSave(file) {
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const data = JSON.parse(r.result);
+      if (!data || typeof data !== "object" || !data.players) throw new Error("shape");
+      state = Object.assign(state, data);
+      save();
+      $("#save-msg").textContent = t("saveImported");
+      applyI18n();
+    } catch (e) { $("#save-msg").textContent = t("saveBadFile"); }
+  };
+  r.readAsText(file);
+}
+
+$("#btn-settings").addEventListener("click", () => { $("#save-msg").textContent = ""; showScreen("screen-settings"); });
+$("#btn-set-back").addEventListener("click", () => showScreen("screen-map"));
+$("#btn-offline-go").addEventListener("click", downloadOfflinePack);
+$("#btn-save-export").addEventListener("click", exportSave);
+$("#btn-save-import").addEventListener("click", () => $("#save-file").click());
+$("#save-file").addEventListener("change", e => { if (e.target.files[0]) importSave(e.target.files[0]); e.target.value = ""; });
+
 /* click art to toggle full view */
 $("#chapter-art").addEventListener("click", e => e.target.classList.toggle("expanded"));
 $("#quiz-art").addEventListener("click", e => e.target.classList.toggle("expanded"));

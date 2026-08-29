@@ -1,7 +1,8 @@
 /* Fuga Mythica service worker */
-const VERSION = "v0.16.0";
+const VERSION = "v0.17.0";
 const SHELL_CACHE = "fuga-shell-" + VERSION;
 const IMG_CACHE = "fuga-img-v1";
+const FONT_CACHE = "fuga-font-v1";
 const SHELL = [
   "./",
   "./index.html",
@@ -18,6 +19,8 @@ const SHELL = [
   "./data2.js",
   "./morph2.js",
   "./living.js",
+  "./privacy.html",
+  "./attributions.html",
   "./manifest.webmanifest",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
@@ -43,6 +46,19 @@ self.addEventListener("fetch", e => {
   if (url.hostname.endsWith("wikimedia.org")) {
     e.respondWith(
       caches.open(IMG_CACHE).then(cache =>
+        cache.match(e.request).then(hit => hit || fetch(e.request).then(resp => {
+          if (resp.ok || resp.type === "opaque") cache.put(e.request, resp.clone());
+          return resp;
+        }).catch(() => hit))
+      )
+    );
+    return;
+  }
+
+  /* web fonts: cache-first, so an installed app keeps its typeface offline */
+  if (url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com") {
+    e.respondWith(
+      caches.open(FONT_CACHE).then(cache =>
         cache.match(e.request).then(hit => hit || fetch(e.request).then(resp => {
           if (resp.ok || resp.type === "opaque") cache.put(e.request, resp.clone());
           return resp;
