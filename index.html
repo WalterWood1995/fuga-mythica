@@ -130,6 +130,13 @@
   #quiz-art-wrap { position: relative; border-radius: var(--radius); overflow: hidden; border: 2px solid var(--chac); margin-bottom: 12px; background: #000; }
   #quiz-art-wrap img { display: block; width: 100%; max-height: 230px; object-fit: contain; background: #000; cursor: zoom-in; }
   #quiz-art-caption { position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(transparent, rgba(0,0,0,.85)); color: #ddd; font-size: .78em; padding: 24px 12px 7px; font-style: italic; }
+  #quiz-intro {
+    margin: 0 0 12px; padding: 10px 16px; text-align: center;
+    border-top: 1px solid var(--chac); border-bottom: 1px solid var(--chac);
+  }
+  #quiz-intro .qi-la { font-family: Georgia, "Times New Roman", serif; font-style: italic;
+    color: var(--gold); font-size: 1.05em; line-height: 1.5; }
+  #quiz-intro .qi-tr { color: var(--text-dim); font-size: .9em; margin-top: 3px; }
   #quiz-story {
     background: var(--panel); border-left: 4px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0;
     padding: 12px 16px; line-height: 1.7; margin-bottom: 14px; font-size: .95em; color: var(--text-dim);
@@ -190,6 +197,8 @@
     border: 2px solid var(--gold-dim); background: #000; cursor: zoom-in;
   }
   .word-art.expanded { max-height: none; cursor: zoom-out; }
+  .word-art-cap { color: var(--text-dim); font-size: .82em; font-style: italic;
+    line-height: 1.5; margin: 5px auto 0; max-width: 46em; }
   .fam-table td.c-word { font-weight: bold; }
   .fam-table td.c-meaning { color: var(--text-dim); }
   .fam-chain { display: flex; flex-direction: column; gap: 5px; }
@@ -417,6 +426,7 @@
       </span>
     </div>
     <div id="quiz-art-wrap" style="display:none"><img id="quiz-art" alt="" referrerpolicy="no-referrer"><div id="quiz-art-caption"></div></div>
+    <div id="quiz-intro" style="display:none"><div class="qi-la"></div><div class="qi-tr"></div></div>
     <div id="quiz-story"></div>
     <div class="band" id="quiz-band"></div>
     <div id="quiz-card">
@@ -482,6 +492,8 @@
 <script src="etym_stories.js"></script>
 <script src="meanings_i18n.js"></script>
 <script src="word_art.js"></script>
+<script src="intros.js"></script>
+<script src="art_caps.js"></script>
 <script src="latfam1.js"></script>
 <script src="latfam2.js"></script>
 <script>
@@ -1042,6 +1054,13 @@ function startQuiz(ci, li, replay) {
     $("#quiz-art").src = lv.art;
     $("#quiz-art-caption").textContent = L(lv.cap);
   } else { aw.style.display = "none"; }
+  const iv = typeof LEVEL_INTRO !== "undefined" ? LEVEL_INTRO["c" + (ci + 1) + "l" + (li + 1)] : null;
+  const ib = $("#quiz-intro");
+  if (iv) {
+    ib.style.display = "";
+    ib.querySelector(".qi-la").textContent = iv.la;
+    ib.querySelector(".qi-tr").textContent = L(iv);
+  } else { ib.style.display = "none"; }
   $("#quiz-story").innerHTML = L(lv.story);
   renderLocks();
   nextQuestion();
@@ -1152,8 +1171,10 @@ function wordInfoHtml(key) {
   let html = "";
   /* 0. classical artwork for the word, when curated */
   if (typeof WORD_ART !== "undefined" && WORD_ART[key]) {
+    const cap = typeof WORD_ART_CAP !== "undefined" && WORD_ART_CAP[key] ? L(WORD_ART_CAP[key]) : "";
     html += `<div class="word-art-wrap"><img class="word-art" loading="lazy" referrerpolicy="no-referrer"
-      src="${WORD_ART_URL(WORD_ART[key])}" onclick="this.classList.toggle('expanded')" alt=""></div>`;
+      src="${WORD_ART_URL(WORD_ART[key])}" onclick="this.classList.toggle('expanded')" alt="">
+      ${cap ? `<div class="word-art-cap">${cap}</div>` : ""}</div>`;
   }
   /* 1. root & its origin story */
   html += `<div class="etym-label">${t("morphLabel")}</div>`;
