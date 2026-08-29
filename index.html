@@ -12,22 +12,32 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Fuga Mythica">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Marcellus&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #1a1626;
-    --panel: #2a2440;
-    --panel2: #352d52;
-    --gold: #e8b64c;
-    --gold-dim: #a8842e;
-    --text: #f0e9d8;
-    --text-dim: #b0a890;
-    --accent: #7ec8e3;
-    --good: #7ede8a;
-    --bad: #e37e7e;
+    /* Attic pottery palette: fired-clay black + terracotta + gilt */
+    --bg: #1C1410;
+    --bg-deep: #120D0A;
+    --panel: #2A1E16;
+    --panel2: #3A2A1E;
+    --gold: #C9A227;
+    --gold-bright: #E6C35C;
+    --gold-dim: #8a6f2a;
+    --terra: #C8622E;
+    --terra-bright: #E07B39;
+    --text: #EDE3D0;
+    --text-dim: #C9B896;
+    --accent: #E07B39;      /* latin text = red-figure clay orange */
+    --chac: #C9A227;        /* per-chapter accent, set by JS */
+    --good: #5FA88F;
+    --bad: #E34234;
     --parch: #e6d5a8;
     --parch2: #d4bd85;
     --ink: #5a4526;
-    --radius: 14px;
+    --radius: 10px;
+    --font-display: "Cinzel", "Marcellus", Georgia, serif;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -39,8 +49,13 @@
   }
   #app { width: 100%; max-width: 960px; padding: 12px; }
 
-  #topbar { display: flex; justify-content: space-between; align-items: center; padding: 8px 4px; gap: 8px; flex-wrap: wrap; }
-  #topbar .title { font-size: 1.1em; color: var(--gold); letter-spacing: 2px; cursor: pointer; }
+  #topbar { display: flex; justify-content: space-between; align-items: center; padding: 8px 4px 12px; gap: 8px; flex-wrap: wrap;
+    border-bottom: 3px solid transparent;
+    border-image: repeating-linear-gradient(90deg, var(--gold) 0 6px, transparent 6px 12px) 1; /* dentil frieze */
+  }
+  #topbar .title { font-family: var(--font-display); font-size: 1.05em; color: var(--gold-bright); letter-spacing: 3px; cursor: pointer; }
+  .band { height: 14px; background-repeat: repeat-x; background-position: center; margin: 6px 0 12px; }
+  .band.gold-meander { }
   .pill {
     background: var(--panel); border: 1px solid var(--gold-dim); color: var(--text);
     border-radius: 20px; padding: 5px 14px; cursor: pointer; font-size: 0.9em; font-family: inherit;
@@ -52,14 +67,18 @@
   @keyframes fadein { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: none; } }
 
   /* title */
-  #screen-title { text-align: center; padding: 40px 10px; }
-  #screen-title h1 { font-size: 2.6em; color: var(--gold); letter-spacing: 6px; margin-bottom: 6px; text-shadow: 0 0 30px rgba(232,182,76,.35); }
-  #screen-title .subtitle { color: var(--text-dim); margin-bottom: 30px; font-size: 1.1em; }
+  #screen-title { text-align: center; padding: 30px 10px; }
+  #screen-title h1 {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 2.7em; color: var(--gold-bright); letter-spacing: 8px; margin: 10px 0 6px;
+    text-shadow: 0 2px 0 #6b4f14, 0 0 34px rgba(201,162,39,.35);
+  }
+  #screen-title .subtitle { color: var(--text-dim); margin-bottom: 26px; font-size: 1.1em; }
   .big-btn {
-    display: inline-block; background: linear-gradient(180deg, var(--gold), var(--gold-dim));
-    color: #221; font-size: 1.15em; padding: 13px 42px; border-radius: 30px;
-    border: none; cursor: pointer; font-family: inherit; letter-spacing: 2px;
-    box-shadow: 0 4px 18px rgba(232,182,76,.3); margin: 8px;
+    display: inline-block; background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color: #1C1410; font-size: 1.15em; padding: 13px 42px; border-radius: 6px;
+    border: 2px solid #6b4f14; cursor: pointer; font-family: inherit; letter-spacing: 2px;
+    box-shadow: 0 4px 18px rgba(201,162,39,.3); margin: 8px;
   }
   .big-btn:hover { transform: translateY(-2px); }
   .backlink { color: var(--text-dim); cursor: pointer; text-decoration: underline; font-size: .9em; }
@@ -87,12 +106,12 @@
   #map-status { text-align: center; color: var(--gold); margin-top: 10px; font-size: 1.05em; }
 
   /* ===== chapter ===== */
-  #chapter-art-wrap { position: relative; border-radius: var(--radius); overflow: hidden; border: 2px solid var(--gold-dim); background: #000; }
+  #chapter-art-wrap { position: relative; border-radius: var(--radius); overflow: hidden; border: 2px solid var(--chac); background: #000; }
   #chapter-art-wrap img { display: block; width: 100%; max-height: 340px; object-fit: contain; background: #000; cursor: zoom-in; }
   #chapter-art-wrap img.expanded, #quiz-art-wrap img.expanded { max-height: none; cursor: zoom-out; }
   #chapter-art-caption { position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(transparent, rgba(0,0,0,.85)); color: #ddd; font-size: .8em; padding: 26px 14px 8px; font-style: italic; }
-  #chapter-title { color: var(--gold); font-size: 1.5em; letter-spacing: 2px; margin: 14px 0 8px; }
-  #chapter-story { background: var(--panel); border-left: 4px solid var(--gold); border-radius: 0 var(--radius) var(--radius) 0; padding: 14px 18px; line-height: 1.8; margin-bottom: 16px; }
+  #chapter-title { font-family: var(--font-display); color: var(--gold-bright); font-size: 1.5em; letter-spacing: 3px; margin: 14px 0 8px; }
+  #chapter-story { background: var(--panel); border-left: 4px solid var(--chac); border-radius: 0 var(--radius) var(--radius) 0; padding: 14px 18px; line-height: 1.8; margin-bottom: 16px; }
   #level-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
   .level-btn {
     background: var(--panel); border: 2px solid var(--gold-dim); border-radius: 10px; color: var(--text);
@@ -108,7 +127,7 @@
   #quiz-head { display: flex; justify-content: space-between; align-items: center; margin: 6px 0 10px; flex-wrap: wrap; gap: 8px; }
   #quiz-title { color: var(--gold); font-size: 1.2em; }
   #locks { font-size: 1.15em; letter-spacing: 2px; word-break: break-all; }
-  #quiz-art-wrap { position: relative; border-radius: var(--radius); overflow: hidden; border: 2px solid var(--gold-dim); margin-bottom: 12px; background: #000; }
+  #quiz-art-wrap { position: relative; border-radius: var(--radius); overflow: hidden; border: 2px solid var(--chac); margin-bottom: 12px; background: #000; }
   #quiz-art-wrap img { display: block; width: 100%; max-height: 230px; object-fit: contain; background: #000; cursor: zoom-in; }
   #quiz-art-caption { position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(transparent, rgba(0,0,0,.85)); color: #ddd; font-size: .78em; padding: 24px 12px 7px; font-style: italic; }
   #quiz-story {
@@ -116,7 +135,7 @@
     padding: 12px 16px; line-height: 1.7; margin-bottom: 14px; font-size: .95em; color: var(--text-dim);
   }
   #quiz-card {
-    background: var(--panel); border: 2px solid var(--gold); border-radius: var(--radius);
+    background: var(--panel); border: 2px solid var(--chac); border-radius: var(--radius);
     padding: 26px 22px; text-align: center;
   }
   #q-prompt-label { color: var(--text-dim); font-size: .9em; margin-bottom: 6px; }
@@ -129,7 +148,7 @@
     font-family: inherit; text-align: center; line-height: 1.4;
   }
   .opt-btn .opt-emoji { font-size: 1.7em; display: block; }
-  .opt-btn:hover { border-color: var(--gold); background: #40376a; }
+  .opt-btn:hover { border-color: var(--chac); background: #4A3220; }
   .opt-btn.correct { border-color: var(--good); background: rgba(126,222,138,.15); }
   .opt-btn.wrong { border-color: var(--bad); background: rgba(227,126,126,.15); animation: shake .35s; }
   .opt-btn:disabled { pointer-events: none; }
@@ -289,8 +308,11 @@
   </div>
 
   <div class="screen" id="screen-title">
+    <div class="band" id="title-band-a"></div>
+    <div style="font-size:3.2em">⚱️</div>
     <h1>FUGA MYTHICA</h1>
     <div class="subtitle" data-t="tagline">希腊神话密室逃脱 · 在冒险中学拉丁语</div>
+    <div class="band" id="title-band-b"></div>
     <button class="big-btn" id="btn-start" data-t="start">开始冒险</button>
     <div style="margin-top:10px"><span class="backlink" id="btn-reset" data-t="reset">清除进度重新开始</span></div>
   </div>
@@ -326,6 +348,7 @@
   </div>
 
   <div class="screen" id="screen-chapter">
+    <div class="band" id="chapter-band"></div>
     <div id="chapter-art-wrap"><img id="chapter-art" alt="" referrerpolicy="no-referrer"><div id="chapter-art-caption"></div></div>
     <div id="chapter-title"></div>
     <div id="chapter-story"></div>
@@ -343,6 +366,7 @@
     </div>
     <div id="quiz-art-wrap" style="display:none"><img id="quiz-art" alt="" referrerpolicy="no-referrer"><div id="quiz-art-caption"></div></div>
     <div id="quiz-story"></div>
+    <div class="band" id="quiz-band"></div>
     <div id="quiz-card">
       <div id="q-prompt-label"></div>
       <div id="q-prompt"></div>
@@ -667,6 +691,43 @@ function toast(msg) {
 }
 function shuffle(a) { a = [...a]; for (let i = a.length-1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 
+/* ===================== GREEK ORNAMENT THEMES ===================== */
+/* band generators: tiny SVG patterns of classical Greek ornament */
+const BAND = {
+  meander: c => `<svg xmlns='http://www.w3.org/2000/svg' width='16' height='14' viewBox='0 0 16 14'><path d='M0 1 H16 M0 13 H16' stroke='${c}' stroke-width='1.4'/><path d='M1 11 V3 H13 V7 H6 V5' fill='none' stroke='${c}' stroke-width='1.8'/></svg>`,
+  wave:    c => `<svg xmlns='http://www.w3.org/2000/svg' width='20' height='14' viewBox='0 0 20 14'><path d='M0 11 A7 7 0 0 1 14 11 A4.5 4.5 0 0 0 7 8' fill='none' stroke='${c}' stroke-width='1.8'/><path d='M0 13 H20' stroke='${c}' stroke-width='1.2'/></svg>`,
+  dentil:  c => `<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><rect x='1' y='3' width='7' height='8' fill='${c}'/><path d='M0 1 H14 M0 13 H14' stroke='${c}' stroke-width='1.4'/></svg>`,
+  strings: c => `<svg xmlns='http://www.w3.org/2000/svg' width='8' height='14' viewBox='0 0 8 14'><rect x='3' y='2' width='1.8' height='10' fill='${c}'/><path d='M0 1 H8 M0 13 H8' stroke='${c}' stroke-width='1.2'/></svg>`,
+  eggdart: c => `<svg xmlns='http://www.w3.org/2000/svg' width='16' height='14' viewBox='0 0 16 14'><ellipse cx='5' cy='7' rx='3.4' ry='5' fill='none' stroke='${c}' stroke-width='1.6'/><line x1='12' y1='2' x2='12' y2='12' stroke='${c}' stroke-width='1.6'/></svg>`,
+  scale:   c => `<svg xmlns='http://www.w3.org/2000/svg' width='16' height='14' viewBox='0 0 16 14'><path d='M0 13 A8 9 0 0 1 16 13' fill='none' stroke='${c}' stroke-width='1.8'/><path d='M-8 6 A8 9 0 0 1 8 6 M8 6 A8 9 0 0 1 24 6' fill='none' stroke='${c}' stroke-width='1.4'/></svg>`,
+  sine:    c => `<svg xmlns='http://www.w3.org/2000/svg' width='22' height='14' viewBox='0 0 22 14'><path d='M0 7 Q5.5 0 11 7 T22 7' fill='none' stroke='${c}' stroke-width='2'/></svg>`,
+  feather: c => `<svg xmlns='http://www.w3.org/2000/svg' width='12' height='14' viewBox='0 0 12 14'><path d='M2 13 L9 1 M6 13 L12 3' fill='none' stroke='${c}' stroke-width='1.8' stroke-linecap='round'/></svg>`,
+};
+function bandURL(type, c) {
+  return `url("data:image/svg+xml,${encodeURIComponent(BAND[type](c))}")`;
+}
+/* per-chapter motif + accent (from black/red-figure & polychromy palette) */
+const THEME = {
+  labyrinthus: { c: "#C46A38", band: "meander" },   /* Cretan meander = the labyrinth pattern */
+  orpheus:     { c: "#B0564A", band: "strings" },   /* lyre strings, added-red purple */
+  olympus:     { c: "#5B8DE0", band: "eggdart" },   /* Egyptian blue + ionic egg-and-dart */
+  troia:       { c: "#CC7722", band: "dentil" },    /* ochre battlements */
+  odyssea:     { c: "#7FA8D9", band: "wave" },      /* running wave, deep sea */
+  hercules:    { c: "#C8622E", band: "scale" },     /* lion-skin scales */
+  perseus:     { c: "#57A48E", band: "sine" },      /* serpent coils, bronze-green */
+  argonautae:  { c: "#E6C35C", band: "scale" },     /* golden fleece curls */
+  icarus:      { c: "#E34234", band: "feather" },   /* feathers toward the sun */
+  pandora:     { c: "#B0564A", band: "eggdart" },   /* lidded-box palmette band */
+};
+function applyTheme(ci) {
+  const th = (ci != null && CHAPTERS[ci] && THEME[CHAPTERS[ci].id]) || { c: "#C9A227", band: "meander" };
+  document.documentElement.style.setProperty("--chac", th.c);
+  const img = bandURL(th.band, th.c);
+  const cb = $("#chapter-band"), qb = $("#quiz-band");
+  if (cb) cb.style.backgroundImage = img;
+  if (qb) qb.style.backgroundImage = img;
+}
+
 /* ===================== MAP ===================== */
 const NODE_POS = [
   [115,468],[248,415],[175,315],[318,258],[462,312],
@@ -741,6 +802,7 @@ function renderMap() {
 let viewChapter = 0;
 function openChapter(i) {
   viewChapter = i;
+  applyTheme(i);
   const ch = CHAPTERS[i];
   $("#chapter-art").src = ch.art;
   $("#chapter-art-caption").textContent = L(ch.artCaption);
@@ -772,6 +834,7 @@ function openChapter(i) {
 /* ===================== QUIZ ===================== */
 let quiz = null;
 function startQuiz(ci, li, replay) {
+  applyTheme(ci);
   const ch = CHAPTERS[ci];
   const lv = ch.levels[li];
   let locksTotal = lv.boss ? 15 : 10;
@@ -1234,6 +1297,10 @@ $("#btn-add-friend").addEventListener("click", renderPlayers);
 
 load();
 applyI18n();
+/* title-screen gold meander bands */
+$("#title-band-a").style.backgroundImage = bandURL("meander", "#C9A227");
+$("#title-band-b").style.backgroundImage = bandURL("wave", "#C9A227");
+applyTheme(null);
 showScreen("screen-title");
 
 /* PWA service worker */
