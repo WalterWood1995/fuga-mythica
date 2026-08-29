@@ -917,26 +917,47 @@ function famTableHtml(key) {
   const rootSeg = (zh ? mo.m[0] : mo.m[1]).split("+")[0].trim()
     .replace(/^词根\s*/, "").replace(/^root\s*/i, "");
   const stripGloss = s => s.replace(/\s*[((][^))]*[))]\s*$/, "").trim();
+  const PREFIX = new Set(["con","com","co","de","re","red","in","im","il","ir","ex","e","ad","ac","af","ap","ab","sub","super","sur","pro","pre","per","dis","di","trans","inter","intra","ob","oc","of","op","un","anti","ante","post","para","amb","ambi","an","en","em","extra","hyper","semi","epi","meta","se","a","au","ef"]);
+  const tokOf = p => (p.split(/[((]/)[0] || "").trim().toLowerCase().replace(/[^a-zœéèêàçäöüáíóúñ'-]/gi, "").replace(/^-|-$/g, "");
+  const glossOf = p => { const mch = p.match(/[((]([^))]*)[))]/); return mch ? mch[1] : ""; };
   const rows = mo.f.map(item => {
     const partsStr = zh ? item[1] : item[2];
     const meaning = zh ? item[3] : item[4];
-    if (!partsStr.includes("+")) {
-      return `<tr><td class="c-pre"></td><td class="c-root">${stripGloss(partsStr)}</td><td class="c-suf"></td><td class="c-word">${item[0]}</td><td class="c-meaning">${meaning}</td></tr>`;
-    }
-    const parts = partsStr.split("+").map(s => s.trim());
+    const parts = partsStr.includes("+") ? partsStr.split("+").map(s => s.trim()) : [partsStr.trim()];
+    /* locate the root part (by similarity, then by prefix-set fallback) */
     let ri = parts.findIndex(p => {
-      const tok = (p.split(/[((]/)[0] || "").trim().toLowerCase().replace(/[^a-z]/g, "");
+      const tok = tokOf(p);
       return tok.length >= 2 && rootCands.some(r => tok.slice(0, 3) === r.slice(0, 3) || r.startsWith(tok) || tok.startsWith(r.slice(0, 4)));
     });
-    if (ri < 0) {
-      /* fallback: first part that is neither a known prefix nor a suffix */
-      const PREFIX = new Set(["con","com","co","de","re","red","in","im","il","ir","ex","e","ad","ac","af","ap","ab","sub","super","sur","pro","pre","per","dis","di","trans","inter","intra","ob","oc","of","op","un","anti","ante","post","para","amb","ambi","an","en","em","extra","hyper","semi","epi","meta","se","a","au","ef"]);
-      ri = parts.findIndex(p => {
-        const tok = (p.split(/[((]/)[0] || "").trim().toLowerCase().replace(/[^a-z]/g, "");
-        return tok && !p.trim().startsWith("-") && !PREFIX.has(tok);
-      });
-      if (ri < 0) ri = parts[0].trim().startsWith("-") ? Math.min(1, parts.length - 1) : 0;
+    if (ri < 0) ri = parts.findIndex(p => { const tok = tokOf(p); return tok && !p.trim().startsWith("-") && !PREFIX.has(tok); });
+    if (ri < 0) ri = parts[0].trim().startsWith("-") ? Math.min(1, parts.length - 1) : 0;
+    /* EXACT split: find the root fragment inside the actual derived word so
+       that prefix + root + suffix spell the word letter-for-letter */
+    const wordClean = (item[0].match(/^[A-Za-zœéèêàçäöüáíóúñ'-]+/) || [""])[0];
+    const wl = wordClean.toLowerCase();
+    const cands = [tokOf(parts[ri]), ...rootCands].filter(Boolean)
+      .sort((a, b) => b.length - a.length);
+    let frag = "", idx = -1;
+    outer: for (const r of cands) {
+      for (let len = r.length; len >= 3; len--) {
+        const sub = r.slice(0, len);
+        const at = wl.indexOf(sub);
+        if (at >= 0) { frag = wordClean.slice(at, at + len); idx = at; break outer; }
+      }
     }
+    if (idx >= 0 && wordClean) {
+      const preStr = wordClean.slice(0, idx);
+      const sufStr = wordClean.slice(idx + frag.length);
+      /* attach glosses from the data parts when tokens match */
+      const preGloss = parts.slice(0, ri).map(glossOf).filter(Boolean).join(",");
+      const sufGloss = parts.slice(ri + 1).map(glossOf).filter(Boolean).join(",");
+      return `<tr>
+        <td class="c-pre">${preStr ? preStr + (preGloss ? `(${preGloss})` : "") : ""}</td>
+        <td class="c-root">${frag}</td>
+        <td class="c-suf">${sufStr ? "-" + sufStr + (sufGloss ? `(${sufGloss})` : "") : ""}</td>
+        <td class="c-word">${item[0]}</td><td class="c-meaning">${meaning}</td></tr>`;
+    }
+    /* fallback: render the data parts as before */
     const pre = parts.slice(0, ri).join(" + ");
     const suf = parts.slice(ri + 1).join(" + ");
     return `<tr><td class="c-pre">${pre}</td><td class="c-root">${stripGloss(parts[ri])}</td><td class="c-suf">${suf}</td><td class="c-word">${item[0]}</td><td class="c-meaning">${meaning}</td></tr>`;
