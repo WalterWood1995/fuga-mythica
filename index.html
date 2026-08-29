@@ -183,7 +183,13 @@
     border: 2px solid #6b4f14; box-shadow: 0 0 0 2px #2A1E16, 0 2px 6px rgba(0,0,0,.45);
     vertical-align: middle;
   }
-  .tondo .ticon { filter: grayscale(1) brightness(0.28) contrast(1.3); font-size: 1.15em; line-height: 1; }
+  .tondo .ticon { font-size: 1.15em; line-height: 1; }
+  .word-art-wrap { text-align: center; margin: 8px 0 10px; }
+  .word-art {
+    max-width: 100%; max-height: 150px; border-radius: 8px;
+    border: 2px solid var(--gold-dim); background: #000; cursor: zoom-in;
+  }
+  .word-art.expanded { max-height: none; cursor: zoom-out; }
   .fam-table td.c-word { font-weight: bold; }
   .fam-table td.c-meaning { color: var(--text-dim); }
   .fam-chain { display: flex; flex-direction: column; gap: 5px; }
@@ -475,6 +481,7 @@
 <script src="living.js"></script>
 <script src="etym_stories.js"></script>
 <script src="meanings_i18n.js"></script>
+<script src="word_art.js"></script>
 <script>
 /* ===================== I18N ===================== */
 const I18N = {
@@ -1139,6 +1146,11 @@ function wordInfoHtml(key) {
   const zh = state.lang === "zh";
   const mo = typeof MORPH !== "undefined" ? MORPH[key] : null;
   let html = "";
+  /* 0. classical artwork for the word, when curated */
+  if (typeof WORD_ART !== "undefined" && WORD_ART[key]) {
+    html += `<div class="word-art-wrap"><img class="word-art" loading="lazy" referrerpolicy="no-referrer"
+      src="${WORD_ART_URL(WORD_ART[key])}" onclick="this.classList.toggle('expanded')" alt=""></div>`;
+  }
   /* 1. root & its origin story */
   html += `<div class="etym-label">${t("morphLabel")}</div>`;
   if (mo) html += `<div class="etym"><span class="latin" style="color:var(--accent);font-style:italic">${w[0]}</span> = ${zh ? mo.m[0] : mo.m[1]}</div>`;
