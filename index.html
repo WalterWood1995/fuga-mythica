@@ -306,6 +306,34 @@
     font-size: 1em; z-index: 90; display: none; box-shadow: 0 6px 24px rgba(0,0,0,.5); max-width: 90vw;
   }
   #toast.show { display: block; animation: toastup 2.8s forwards; }
+
+  /* ===== CURSUS (rapid recognition) ===== */
+  .cur-langs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 14px 0; }
+  .cur-lang { background: var(--panel); border: 2px solid var(--gold-dim); border-radius: 22px; padding: 7px 14px; cursor: pointer; font-family: inherit; color: var(--text); font-size: .95em; }
+  .cur-lang.on { border-color: var(--gold); background: var(--panel2); color: var(--gold); }
+  .cur-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin: 14px 0; }
+  .cur-stat { background: var(--panel); border: 1px solid var(--gold-dim); border-radius: var(--radius); padding: 12px; text-align: center; }
+  .cur-stat b { display: block; color: var(--gold); font-size: 1.5em; font-variant-numeric: tabular-nums; }
+  .cur-stat span { color: var(--text-dim); font-size: .8em; }
+  .cur-bar { height: 10px; background: var(--bg-deep); border-radius: 6px; overflow: hidden; border: 1px solid var(--gold-dim); margin: 6px 0 14px; }
+  .cur-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--terra), var(--gold)); width: 0; transition: width .5s; }
+  #cur-play { display: none; }
+  #cur-timer { height: 8px; background: var(--bg-deep); border-radius: 4px; overflow: hidden; margin: 10px 0 16px; }
+  #cur-timer i { display: block; height: 100%; width: 100%; background: var(--good); transition: width .1s linear, background .3s; }
+  #cur-timer i.late { background: var(--bad); }
+  #cur-word { font-size: 2.2em; color: var(--accent); margin: 6px 0 4px; line-height: 1.25; word-break: break-word; }
+  #cur-hud { display: flex; justify-content: space-between; color: var(--text-dim); font-size: .9em; font-variant-numeric: tabular-nums; }
+  #cur-hud .streak { color: var(--gold); }
+  .cur-opts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .cur-opt { background: var(--panel2); border: 2px solid var(--gold-dim); color: var(--text); border-radius: 10px; padding: 14px 8px; font-size: 1.05em; cursor: pointer; font-family: inherit; line-height: 1.35; }
+  .cur-opt:hover { border-color: var(--chac); }
+  .cur-opt.correct { border-color: var(--good); background: rgba(95,168,143,.2); }
+  .cur-opt.wrong { border-color: var(--bad); background: rgba(227,66,52,.2); }
+  .cur-opt:disabled { cursor: default; }
+  #cur-fb { margin-top: 16px; text-align: left; }
+  .cur-sum-list { text-align: left; margin-top: 12px; }
+  .cur-sum-list .fam-item i { color: var(--accent); font-style: normal; }
+  @media (max-width: 520px) { #cur-word { font-size: 1.7em; } .cur-opt { padding: 11px 6px; font-size: .95em; } }
   @keyframes toastup {
     0% { opacity: 0; transform: translate(-50%, 20px); }
     12% { opacity: 1; transform: translate(-50%, 0); }
@@ -345,6 +373,7 @@
       <button class="pill" id="btn-codex">📖 <span data-t="codex">词汇册</span></button>
       <button class="pill" id="btn-board">🏆 <span data-t="board">排行榜</span></button>
       <button class="pill" id="btn-spells">✨ <span data-t="spellbook">咒语书</span></button>
+      <button class="pill" id="btn-cursus">⚡ <span data-t="cursus">速认</span></button>
       <button class="pill" id="btn-settings">⚙️ <span data-t="settings">设置</span></button>
     </span>
   </div>
@@ -512,6 +541,32 @@
     <p style="color:var(--text-dim);margin-top:6px;line-height:1.6" data-t="spellsDesc"></p>
     <div id="spells-list"></div>
   </div>
+
+  <div class="screen" id="screen-cursus">
+    <div id="cur-lobby">
+      <h2 style="color:var(--gold);margin-top:10px">⚡ <span data-t="cursusTitle">速认 · Cursus Verborum</span></h2>
+      <p style="color:var(--text-dim);margin-top:6px;line-height:1.6" data-t="cursusDesc"></p>
+      <div class="cur-langs" id="cur-langs"></div>
+      <div class="cur-stats" id="cur-stats"></div>
+      <div style="color:var(--text-dim);font-size:.85em;display:flex;justify-content:space-between"><span data-t="cursusGoal">通往 8000 词</span><span id="cur-goal-n"></span></div>
+      <div class="cur-bar"><i id="cur-goal-bar"></i></div>
+      <div style="text-align:center"><button class="big-btn" id="btn-cur-start" data-t="cursusStart">开始 20 题</button></div>
+      <div id="cur-weak" class="cur-sum-list"></div>
+      <div style="margin-top:14px;text-align:center"><span class="backlink" id="btn-cur-home" data-t="backhome">← 返回首页</span></div>
+    </div>
+    <div id="cur-play">
+      <div id="cur-hud"><span id="cur-count"></span><span class="streak" id="cur-streak"></span><span id="cur-score"></span></div>
+      <div id="cur-timer"><i></i></div>
+      <div id="quiz-card-cur" class="cur-card" style="background:var(--panel);border:2px solid var(--chac);border-radius:var(--radius);padding:22px 18px;text-align:center">
+        <div id="cur-label" style="color:var(--text-dim);font-size:.9em"></div>
+        <div id="cur-word"></div>
+        <div id="cur-root-hint" style="color:var(--text-dim);font-size:.85em;margin-bottom:14px;min-height:1.2em"></div>
+        <div class="cur-opts" id="cur-opts"></div>
+        <div id="cur-fb"></div>
+      </div>
+      <div style="margin-top:12px;text-align:center"><span class="backlink" id="btn-cur-quit" data-t="cursusQuit">✕ 结束本轮</span></div>
+    </div>
+  </div>
 </div>
 
 <div id="detail-mask">
@@ -534,6 +589,12 @@
 <script src="art_caps.js"></script>
 <script src="latfam1.js"></script>
 <script src="latfam2.js"></script>
+<script src="vocab_core.js"></script>
+<script src="vocab_de.js"></script>
+<script src="vocab_fr.js"></script>
+<script src="vocab_it.js"></script>
+<script src="vocab_es.js"></script>
+<script src="vocab_ja.js"></script>
 <script>
 /* ===================== I18N ===================== */
 const I18N = {
@@ -549,6 +610,14 @@ const I18N = {
     aboutTitle: "关于", linkAttrib: "图片来源与授权", linkPrivacy: "隐私说明",
     map: "地图", codex: "词汇册", tagline: "希腊神话密室逃脱 · 在冒险中学拉丁语",
     start: "开始冒险", reset: "清除进度重新开始", choosemode: "选择你的身份",
+    cursus: "速认", cursusTitle: "速认 · Cursus Verborum",
+    cursusDesc: "看到单词,立刻反应出大意——不求精确,只求阅读时不被生词卡住。同一词根的词一起记,一个顶十个。选一门语言,每轮 20 题,每题限时 6 秒。",
+    cursusStart: "开始 20 题", cursusGoal: "通往 8000 词", cursusQuit: "✕ 结束本轮", backhome: "← 返回首页",
+    cursusMastered: "已掌握", cursusSeen: "见过", cursusWeak: "待巩固", cursusPack: "本语种词库",
+    cursusPrompt: "这个词大概是什么意思?", cursusNew: "新词", cursusReview: "复习",
+    cursusTimeout: "超时!", cursusRootLabel: "词根", cursusSiblings: "同根词,一起记",
+    cursusDone: "本轮结束", cursusAcc: "正确", cursusAvg: "平均反应", cursusNewMastered: "新掌握",
+    cursusAgain: "再来 20 题", cursusStreak: "最长连击", cursusWeakTitle: "待巩固的词(下一轮优先复习)", cursusNoPlayer: "先建立一个冒险者档案", cursusAllDone: "这个语种的词你已经全部掌握!",
     apprentice: "学徒 Discipulus", apprenticedesc: "适合 6–8 岁:看图选词,三选一,轻松闯关。",
     hero: "英雄 Heros", herodesc: "适合 9–12 岁:双向翻译,四选一,更考记忆。",
     codextitle: "词汇册 Codex Verborum", backmap: "← 返回地图", quit: "放弃本次挑战",
@@ -602,6 +671,14 @@ const I18N = {
     aboutTitle: "About", linkAttrib: "Image sources and licences", linkPrivacy: "Privacy",
     map: "Map", codex: "Codex", tagline: "A Greek-myth escape room · Learn Latin by adventure",
     start: "Start Adventure", reset: "Reset progress", choosemode: "Choose your path",
+    cursus: "Sprint", cursusTitle: "Sprint · Cursus Verborum",
+    cursusDesc: "See a word, grab its gist instantly — not the exact meaning, just enough so it never blocks your reading. Words sharing a root are learned together: one root unlocks ten words. Pick a language; 20 words per round, 6 seconds each.",
+    cursusStart: "Start 20 words", cursusGoal: "Road to 8,000 words", cursusQuit: "✕ End round", backhome: "← Home",
+    cursusMastered: "Mastered", cursusSeen: "Seen", cursusWeak: "To review", cursusPack: "Words in pack",
+    cursusPrompt: "Roughly, what does it mean?", cursusNew: "new", cursusReview: "review",
+    cursusTimeout: "Too slow!", cursusRootLabel: "Root", cursusSiblings: "Same root — learn them together",
+    cursusDone: "Round complete", cursusAcc: "Correct", cursusAvg: "Avg. reaction", cursusNewMastered: "Newly mastered",
+    cursusAgain: "Another 20", cursusStreak: "Best streak", cursusWeakTitle: "Words to review (they come first next round)", cursusNoPlayer: "Create an adventurer profile first", cursusAllDone: "You have mastered every word in this pack!",
     apprentice: "Apprentice · Discipulus", apprenticedesc: "Ages 6–8: pictures & words, 3 choices, relaxed.",
     hero: "Hero · Heros", herodesc: "Ages 9–12: both directions, 4 choices, memory test.",
     codextitle: "Codex Verborum", backmap: "← Back to map", quit: "Give up this attempt",
@@ -1574,6 +1651,185 @@ function shareScore() {
   else prompt("Copy:", text);
 }
 
+/* ===================== CURSUS: rapid gist recognition ===================== */
+const CUR_LANGS = ["la", "de", "fr", "it", "es", "ja"];
+const CUR_ROUND = 20, CUR_TIME = 6000, CUR_FAST = 3500, CUR_OPTS = 6;
+const cur = { lang: null, pack: null, queue: [], i: 0, item: null, t0: 0, timer: null, streak: 0, best: 0, right: 0, times: [], newMastered: [], wrongs: [] };
+
+function curPack(lang) {
+  if (lang === "la") buildLatinPack();
+  const p = VOCAB[lang];
+  if (!p._norm) {                                   /* dedupe + index once */
+    const seen = new Set(); const words = [];
+    p.words.forEach(w => { if (!seen.has(w[0])) { seen.add(w[0]); words.push(w); } });
+    p.words = words; p.byWord = {}; p.byRoot = {};
+    words.forEach((w, i) => { p.byWord[w[0]] = i; if (w[3]) (p.byRoot[w[3]] = p.byRoot[w[3]] || []).push(i); });
+    p._norm = true;
+  }
+  return p;
+}
+function curGist(w) { return state.lang === "zh" ? w[1] : w[2]; }
+function curState() {
+  const p = P();
+  if (!p.cursus) p.cursus = { lang: "la", prog: {} };
+  if (!p.cursus.prog[cur.lang]) p.cursus.prog[cur.lang] = {};
+  return p.cursus.prog[cur.lang];
+}
+function curStats() {
+  const st = curState(), pack = curPack(cur.lang);
+  let mastered = 0, seen = 0, weak = 0;
+  pack.words.forEach(w => { const r = st[w[0]]; if (!r) return; seen++; if (r.m) mastered++; else if (r.w > 0) weak++; });
+  return { mastered, seen, weak, total: pack.words.length };
+}
+function renderCursus() {
+  if (!state.player || !state.players[state.player]) { toast(t("cursusNoPlayer")); renderPlayers(); return; }
+  cur.lang = (P().cursus && P().cursus.lang) || "la";
+  $("#cur-lobby").style.display = ""; $("#cur-play").style.display = "none";
+  const langs = $("#cur-langs"); langs.innerHTML = "";
+  CUR_LANGS.forEach(l => {
+    const p = curPack(l);
+    const b = document.createElement("button");
+    b.className = "cur-lang" + (l === cur.lang ? " on" : "");
+    b.textContent = p.flag + " " + L(p.name);
+    b.addEventListener("click", () => { cur.lang = l; P().cursus.lang = l; save(); renderCursus(); });
+    langs.appendChild(b);
+  });
+  const s = curStats();
+  $("#cur-stats").innerHTML = `
+    <div class="cur-stat"><b>${s.mastered}</b><span>${t("cursusMastered")}</span></div>
+    <div class="cur-stat"><b>${s.seen}</b><span>${t("cursusSeen")}</span></div>
+    <div class="cur-stat"><b>${s.weak}</b><span>${t("cursusWeak")}</span></div>
+    <div class="cur-stat"><b>${s.total}</b><span>${t("cursusPack")}</span></div>`;
+  $("#cur-goal-n").textContent = `${s.mastered} / ${CURSUS_GOAL}`;
+  $("#cur-goal-bar").style.width = Math.min(100, s.mastered / CURSUS_GOAL * 100).toFixed(2) + "%";
+  /* weak list */
+  const st = curState(), pack = curPack(cur.lang);
+  const weak = pack.words.filter(w => st[w[0]] && !st[w[0]].m && st[w[0]].w > 0).slice(0, 12);
+  $("#cur-weak").innerHTML = weak.length ? `<div class="etym-label" style="color:var(--gold);font-size:.85em;margin-bottom:6px">${t("cursusWeakTitle")}</div><div class="fam-chain">` +
+    weak.map(w => `<div class="fam-item"><i>${w[0]}</i> → ${curGist(w)}</div>`).join("") + "</div>" : "";
+  showScreen("screen-cursus");
+}
+function curPickRound() {
+  const st = curState(), pack = curPack(cur.lang);
+  const review = [], fresh = [];
+  pack.words.forEach((w, i) => { const r = st[w[0]]; if (!r) fresh.push(i); else if (!r.m) review.push({ i, w: r.w, last: r.last }); });
+  review.sort((a, b) => b.w - a.w || a.last - b.last);
+  const nRev = Math.min(review.length, Math.round(CUR_ROUND * 0.4));
+  const picked = review.slice(0, nRev).map(r => r.i);
+  const nNew = CUR_ROUND - picked.length;
+  picked.push(...fresh.slice(0, nNew));
+  if (picked.length < CUR_ROUND) {           /* pack exhausted: recycle mastered words as maintenance */
+    const rest = pack.words.map((w, i) => i).filter(i => !picked.includes(i));
+    picked.push(...shuffle(rest).slice(0, CUR_ROUND - picked.length));
+  }
+  return shuffle(picked);
+}
+function curOptions(idx) {
+  const pack = curPack(cur.lang), w = pack.words[idx];
+  const gist = curGist(w), used = new Set([gist]), out = [];
+  const tryAdd = i => { const g = curGist(pack.words[i]); if (i !== idx && !used.has(g)) { used.add(g); out.push(i); } };
+  /* 1-2 siblings from the same root — these are the ones that really get confused */
+  if (w[3] && pack.byRoot[w[3]]) shuffle(pack.byRoot[w[3]]).slice(0, 2).forEach(tryAdd);
+  /* neighbours in frequency order */
+  const near = []; for (let d = 1; d < 40 && near.length < 30; d++) { if (idx - d >= 0) near.push(idx - d); if (idx + d < pack.words.length) near.push(idx + d); }
+  shuffle(near).forEach(i => { if (out.length < CUR_OPTS - 1) tryAdd(i); });
+  let guard = 0; while (out.length < CUR_OPTS - 1 && guard++ < 200) tryAdd(Math.floor(Math.random() * pack.words.length));
+  return shuffle([idx, ...out]);
+}
+function startCursus() {
+  Object.assign(cur, { queue: curPickRound(), i: 0, streak: 0, best: 0, right: 0, times: [], newMastered: [], wrongs: [] });
+  $("#cur-lobby").style.display = "none"; $("#cur-play").style.display = "block";
+  curNext();
+}
+function curNext() {
+  if (cur.i >= cur.queue.length) { curFinish(); return; }
+  const pack = curPack(cur.lang), idx = cur.queue[cur.i], w = pack.words[idx];
+  cur.item = idx;
+  const st = curState(), isNew = !st[w[0]];
+  $("#cur-count").textContent = `${cur.i + 1} / ${cur.queue.length}`;
+  $("#cur-streak").textContent = cur.streak >= 2 ? `🔥 ${cur.streak}` : "";
+  $("#cur-score").textContent = `✓ ${cur.right}`;
+  $("#cur-label").innerHTML = t("cursusPrompt") + ` <span class="review-tag" style="background:${isNew ? "#2f6b5a" : "#6a4a8a"}">${isNew ? t("cursusNew") : t("cursusReview")}</span>`;
+  $("#cur-word").textContent = w[0];
+  $("#cur-root-hint").textContent = w[3] && pack.roots[w[3]] ? pack.roots[w[3]][0] : "";
+  $("#cur-fb").innerHTML = "";
+  const box = $("#cur-opts"); box.innerHTML = "";
+  curOptions(idx).forEach(i => {
+    const b = document.createElement("button");
+    b.className = "cur-opt"; b.dataset.i = i; b.textContent = curGist(pack.words[i]);
+    b.addEventListener("click", () => curAnswer(i));
+    box.appendChild(b);
+  });
+  /* timer */
+  const bar = $("#cur-timer i"); bar.className = ""; bar.style.transition = "none"; bar.style.width = "100%";
+  requestAnimationFrame(() => { bar.style.transition = `width ${CUR_TIME}ms linear`; bar.style.width = "0%"; });
+  cur.t0 = performance.now();
+  clearTimeout(cur.timer);
+  cur.timer = setTimeout(() => curAnswer(-1), CUR_TIME);
+}
+function curAnswer(chosen) {
+  clearTimeout(cur.timer);
+  const dt = performance.now() - cur.t0;
+  const pack = curPack(cur.lang), idx = cur.item, w = pack.words[idx];
+  const st = curState(); const r = st[w[0]] = st[w[0]] || { c: 0, w: 0, s: 0, m: false, last: 0 };
+  const ok = chosen === idx, fast = ok && dt <= CUR_FAST;
+  document.querySelectorAll(".cur-opt").forEach(b => { b.disabled = true; if (+b.dataset.i === idx) b.classList.add("correct"); else if (+b.dataset.i === chosen) b.classList.add("wrong"); });
+  const bar = $("#cur-timer i"); bar.style.transition = "none"; bar.style.width = "0%";
+  r.last = Date.now();
+  if (ok) {
+    r.c++; r.s = fast ? r.s + 1 : 0; cur.right++; cur.streak++; cur.best = Math.max(cur.best, cur.streak); cur.times.push(dt);
+    if (!r.m && r.s >= 2) { r.m = true; cur.newMastered.push(w[0]); }
+  } else {
+    r.w++; r.s = 0; cur.streak = 0; cur.wrongs.push(w[0]);
+    if (r.m) r.m = false;                      /* a miss re-opens a mastered word */
+  }
+  save();
+  cur.i++;
+  if (ok && fast) { setTimeout(curNext, 550); return; }
+  /* slow or wrong: teach the root family before moving on */
+  const root = w[3] && pack.roots[w[3]];
+  const sibs = root ? pack.byRoot[w[3]].filter(i => i !== idx).slice(0, 5) : [];
+  $("#cur-fb").innerHTML = `
+    <div class="ans-card">
+      <div style="color:${ok ? "var(--good)" : "var(--bad)"};margin-bottom:6px">${chosen === -1 ? t("cursusTimeout") : ok ? t("rightMark") : t("wrongMark")}</div>
+      <div class="ans-head"><span class="latin" style="color:var(--accent)">${w[0]}</span> → <b>${curGist(w)}</b></div>
+      ${root ? `<div class="etym-label" style="color:var(--gold);font-size:.85em;margin-top:8px">${t("cursusRootLabel")} · ${root[0]} = ${state.lang === "zh" ? root[1] : root[2]}</div>` : ""}
+      ${sibs.length ? `<div class="etym-label" style="color:var(--gold);font-size:.85em;margin-top:8px">${t("cursusSiblings")}</div><div class="fam-chain">` +
+        sibs.map(i => `<div class="fam-item"><i style="color:var(--accent)">${pack.words[i][0]}</i> → ${curGist(pack.words[i])}</div>`).join("") + "</div>" : ""}
+      <div class="continue-wrap"><button class="continue-btn" id="btn-cur-next">${t("nextQ")}</button></div>
+    </div>`;
+  $("#btn-cur-next").addEventListener("click", curNext);
+  $("#btn-cur-next").focus();
+}
+function curFinish() {
+  const s = curStats();
+  const avg = cur.times.length ? (cur.times.reduce((a, b) => a + b, 0) / cur.times.length / 1000).toFixed(1) + "s" : "—";
+  const pack = curPack(cur.lang);
+  $("#cur-fb").innerHTML = ""; $("#cur-opts").innerHTML = ""; $("#cur-root-hint").textContent = "";
+  $("#cur-label").textContent = t("cursusDone"); $("#cur-word").textContent = `${cur.right} / ${cur.queue.length}`;
+  $("#cur-fb").innerHTML = `
+    <div class="cur-stats">
+      <div class="cur-stat"><b>${Math.round(cur.right / cur.queue.length * 100)}%</b><span>${t("cursusAcc")}</span></div>
+      <div class="cur-stat"><b>${avg}</b><span>${t("cursusAvg")}</span></div>
+      <div class="cur-stat"><b>🔥 ${cur.best}</b><span>${t("cursusStreak") || "streak"}</span></div>
+      <div class="cur-stat"><b>+${cur.newMastered.length}</b><span>${t("cursusNewMastered")}</span></div>
+    </div>
+    <div style="color:var(--text-dim);font-size:.85em;display:flex;justify-content:space-between"><span>${t("cursusGoal")}</span><span>${s.mastered} / ${CURSUS_GOAL}</span></div>
+    <div class="cur-bar"><i style="width:${Math.min(100, s.mastered / CURSUS_GOAL * 100).toFixed(2)}%"></i></div>
+    ${cur.wrongs.length ? `<div class="etym-label" style="color:var(--gold);font-size:.85em;margin:8px 0 6px">${t("cursusWeakTitle")}</div><div class="fam-chain">` +
+      [...new Set(cur.wrongs)].map(x => { const w = pack.words[pack.byWord[x]]; return `<div class="fam-item"><i style="color:var(--accent)">${w[0]}</i> → ${curGist(w)}</div>`; }).join("") + "</div>" : ""}
+    <div class="continue-wrap" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="continue-btn" id="btn-cur-again">${t("cursusAgain")}</button>
+      <button class="continue-btn" id="btn-cur-lobby" style="background:var(--panel2);color:var(--text)">${t("backhome")}</button>
+    </div>`;
+  $("#btn-cur-again").addEventListener("click", startCursus);
+  $("#btn-cur-lobby").addEventListener("click", renderCursus);
+}
+$("#btn-cursus").addEventListener("click", renderCursus);
+$("#btn-cur-start").addEventListener("click", startCursus);
+$("#btn-cur-home").addEventListener("click", () => showScreen("screen-title"));
+$("#btn-cur-quit").addEventListener("click", () => { clearTimeout(cur.timer); renderCursus(); });
+
 /* ===================== WIRE ===================== */
 $("#sel-lang").addEventListener("change", e => {
   state.lang = e.target.value; save(); applyI18n();
@@ -1585,6 +1841,7 @@ $("#sel-lang").addEventListener("change", e => {
     else if (shown.id === "screen-board") renderBoard();
     else if (shown.id === "screen-player") renderPlayers();
     else if (shown.id === "screen-spells") renderSpells();
+    else if (shown.id === "screen-cursus" && $("#cur-lobby").style.display !== "none") renderCursus();
   }
 });
 $("#btn-spells").addEventListener("click", renderSpells);
