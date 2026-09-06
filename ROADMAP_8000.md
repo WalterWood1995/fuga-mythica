@@ -1,10 +1,13 @@
 # 通往 8000 词 · Cursus 内容路线图
 
-## 现状(v0.20)
+## 现状(v0.21)
+
+受众:全年龄段语言学习者,不限于儿童。优先级:欧洲语言(拉/英/德/法/意/西)优先,日语暂缓。
 
 | 语种 | 词数 | 词根家族 | 来源 |
 |---|---|---|---|
 | 拉丁语 | 400 | 63 | 故事关卡词汇(data.js / data2.js),运行时自动组包 |
+| 英语 | 961 | 200 | vocab_en.js(拉丁/希腊词根 + 前缀后缀) |
 | 德语 | 1044 | 262 | vocab_de.js |
 | 法语 | 825 | 295 | vocab_fr.js |
 | 意大利语 | 828 | 278 | vocab_it.js |
@@ -45,7 +48,7 @@ VOCAB.xx = {
 ## 每批追加后的检查
 
 ```bash
-node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js','vocab_de.js','vocab_fr.js','vocab_it.js','vocab_es.js','vocab_ja.js'].map(f=>fs.readFileSync(f,'utf8')).join('\n');const V=new Function(src+';buildLatinPack();return VOCAB;')();for(const l in V){const p=V[l],bad=p.words.filter(w=>w[3]&&!p.roots[w[3]]);console.log(l,p.words.length,'badRoot',bad.length)}"
+node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js','vocab_en.js','vocab_de.js','vocab_fr.js','vocab_it.js','vocab_es.js','vocab_ja.js'].map(f=>fs.readFileSync(f,'utf8')).join('\n');const V=new Function(src+';buildLatinPack();return VOCAB;')();for(const l in V){const p=V[l],bad=p.words.filter(w=>w[3]&&!p.roots[w[3]]);console.log(l,p.words.length,'badRoot',bad.length)}"
 ```
 
 `badRoot` 必须为 0,然后 `sw.js` 的 `VERSION` 加一,再提交。
