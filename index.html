@@ -613,7 +613,7 @@ const I18N = {
     cursus: "速认", cursusTitle: "速认 · Cursus Verborum",
     cursusDesc: "看到单词,立刻反应出大意——不求精确,只求阅读时不被生词卡住。同一词根的词一起记,一个顶十个。选一门语言,每轮 20 题,每题限时 6 秒。",
     cursusStart: "开始 20 题", cursusGoal: "通往 8000 词", cursusQuit: "✕ 结束本轮", backhome: "← 返回首页",
-    cursusMastered: "已掌握", cursusSeen: "见过", cursusWeak: "待巩固", cursusPack: "本语种词库",
+    cursusMastered: "已掌握", cursusSeen: "见过", cursusWeak: "待巩固", cursusPack: "本语种词库", cursusRoots: "词根家族(核心)",
     cursusPrompt: "这个词大概是什么意思?", cursusNew: "新词", cursusReview: "复习",
     cursusTimeout: "超时!", cursusRootLabel: "词根", cursusSiblings: "同根词,一起记",
     cursusDone: "本轮结束", cursusAcc: "正确", cursusAvg: "平均反应", cursusNewMastered: "新掌握",
@@ -674,7 +674,7 @@ const I18N = {
     cursus: "Sprint", cursusTitle: "Sprint · Cursus Verborum",
     cursusDesc: "See a word, grab its gist instantly — not the exact meaning, just enough so it never blocks your reading. Words sharing a root are learned together: one root unlocks ten words. Pick a language; 20 words per round, 6 seconds each.",
     cursusStart: "Start 20 words", cursusGoal: "Road to 8,000 words", cursusQuit: "✕ End round", backhome: "← Home",
-    cursusMastered: "Mastered", cursusSeen: "Seen", cursusWeak: "To review", cursusPack: "Words in pack",
+    cursusMastered: "Mastered", cursusSeen: "Seen", cursusWeak: "To review", cursusPack: "Words in pack", cursusRoots: "Root families (core)",
     cursusPrompt: "Roughly, what does it mean?", cursusNew: "new", cursusReview: "review",
     cursusTimeout: "Too slow!", cursusRootLabel: "Root", cursusSiblings: "Same root — learn them together",
     cursusDone: "Round complete", cursusAcc: "Correct", cursusAvg: "Avg. reaction", cursusNewMastered: "Newly mastered",
@@ -1677,9 +1677,9 @@ function curState() {
 }
 function curStats() {
   const st = curState(), pack = curPack(cur.lang);
-  let mastered = 0, seen = 0, weak = 0;
-  pack.words.forEach(w => { const r = st[w[0]]; if (!r) return; seen++; if (r.m) mastered++; else if (r.w > 0) weak++; });
-  return { mastered, seen, weak, total: pack.words.length };
+  let mastered = 0, seen = 0, weak = 0; const rootsHit = new Set();
+  pack.words.forEach(w => { const r = st[w[0]]; if (!r) return; seen++; if (r.m) { mastered++; if (w[3]) rootsHit.add(w[3]); } else if (r.w > 0) weak++; });
+  return { mastered, seen, weak, total: pack.words.length, roots: rootsHit.size, rootsTotal: Object.keys(pack.roots).length };
 }
 function renderCursus() {
   if (!state.player || !state.players[state.player]) { toast(t("cursusNoPlayer")); renderPlayers(); return; }
@@ -1699,6 +1699,7 @@ function renderCursus() {
     <div class="cur-stat"><b>${s.mastered}</b><span>${t("cursusMastered")}</span></div>
     <div class="cur-stat"><b>${s.seen}</b><span>${t("cursusSeen")}</span></div>
     <div class="cur-stat"><b>${s.weak}</b><span>${t("cursusWeak")}</span></div>
+    <div class="cur-stat"><b>${s.roots} / ${s.rootsTotal}</b><span>${t("cursusRoots")}</span></div>
     <div class="cur-stat"><b>${s.total}</b><span>${t("cursusPack")}</span></div>`;
   $("#cur-goal-n").textContent = `${s.mastered} / ${CURSUS_GOAL}`;
   $("#cur-goal-bar").style.width = Math.min(100, s.mastered / CURSUS_GOAL * 100).toFixed(2) + "%";
