@@ -86,6 +86,15 @@ function buildLatinPack() {
     r[3].forEach(k => { keyRoot[k] = id; });
   });
   const words = Object.keys(src).map(k => [src[k][0], src[k][2], src[k][3], keyRoot[k] || null]);
+  /* extra vocabulary beyond the story levels (vocab_la.js) */
+  if (typeof LATIN_EXTRA !== "undefined") {
+    Object.assign(roots, LATIN_EXTRA.roots);
+    const have = new Set(words.map(w => w[0]));
+    LATIN_EXTRA.words.forEach(w => {
+      if (have.has(w[0])) { const i = words.findIndex(x => x[0] === w[0]); if (!words[i][3]) words[i][3] = w[3]; }
+      else { words.push(w); have.add(w[0]); }
+    });
+  }
   VOCAB.la = { name: { zh: "拉丁语", en: "Latin" }, flag: "🏛️", roots, words };
   return VOCAB.la;
 }
