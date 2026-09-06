@@ -1,5 +1,5 @@
 /* Fuga Mythica service worker */
-const VERSION = "v0.22.0";
+const VERSION = "v0.23.0";
 const SHELL_CACHE = "fuga-shell-" + VERSION;
 const IMG_CACHE = "fuga-img-v1";
 const FONT_CACHE = "fuga-font-v1";
@@ -26,6 +26,12 @@ const SHELL = [
   "./vocab_es2.js",
   "./vocab_de2.js",
   "./vocab_it2.js",
+  "./vocab_la2.js",
+  "./vocab_en3.js",
+  "./vocab_fr3.js",
+  "./vocab_es3.js",
+  "./vocab_de3.js",
+  "./vocab_it3.js",
   "./data.js",
   "./words_morph.js",
   "./extras.js",

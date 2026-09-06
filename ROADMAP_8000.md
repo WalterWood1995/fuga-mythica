@@ -1,23 +1,24 @@
 # 通往 8000 词 · Cursus 内容路线图
 
-## 现状(v0.22)
+## 现状(v0.23)
 
 受众:全年龄段语言学习者,不限于儿童。优先级:欧洲语言(拉/英/德/法/意/西)优先,日语暂缓。
 
 | 语种 | 词数(去重) | 词根家族 | 文件 |
 |---|---|---|---|
-| 拉丁语 | 1178 | 147 | 故事词汇自动组包 + vocab_la.js(LATIN_EXTRA) |
-| 英语 | 1572 | 327 | vocab_en.js + vocab_en2.js |
-| 德语 | 1249 | 301 | vocab_de.js + vocab_de2.js |
-| 法语 | 1255 | 372 | vocab_fr.js + vocab_fr2.js |
-| 意大利语 | 1266 | 352 | vocab_it.js + vocab_it2.js |
-| 西班牙语 | 1254 | 355 | vocab_es.js + vocab_es2.js |
+| 英语 | 2253 | 493 | vocab_en.js + en2 + en3 |
+| 意大利语 | 1714 | 431 | vocab_it.js + it2 + it3 |
+| 拉丁语 | 1708 | 267 | 故事词汇自动组包 + vocab_la.js + vocab_la2.js |
+| 西班牙语 | 1686 | 436 | vocab_es.js + es2 + es3 |
+| 法语 | 1682 | 459 | vocab_fr.js + fr2 + fr3 |
+| 德语 | 1458 | 313 | vocab_de.js + de2 + de3 |
 | 日语(暂缓) | 512 | 220 | vocab_ja.js |
-| **合计** | **8286** | **2074** | |
+| **合计** | **11013** | **2619** | |
 
-第 2 批(v0.22)内容:前缀体系(德 ver-/be-/ent-/er-/zer-;罗曼语 re-/dé-/pré-/sur-/sous-/in-)、后缀家族(-tion/-ment/-eur/-able/-té…)、拉丁词根第二组(act/cap/ced/cid/cit/clam/…/vert/voc/vol)。英语加了希腊词根第二组。拉丁语加了 90 个动词词根族的派生词。
+第 2 批(v0.22):前缀体系、后缀家族、拉丁词根第二组。
+第 3 批(v0.23):拉丁词根第三组(agr/ambul/apt/cert/cult/dur/…/volv/vulner,学术与新闻词)+ 希腊词根在各语种中的形态;德语改走本族路线——强变化动词词干族(geh/steh/nehm/geb/seh/sprech/…)、可分前缀族(aus-/ein-/über-/unter-/durch-/um-)、复合词词尾(-haus/-zeug/-werk/-zeit);拉丁语补形容词/名词族与剩余高频动词干。
 
-第 3 批起每语种 500 词:抽象名词、学术词、新闻词;文件命名 `vocab_xx3.js`,结构同第 2 批(IIFE 把 roots/words 合并进 VOCAB.xx)。
+第 4 批起每语种 500 词:抽象名词、学术词、新闻词;文件命名 `vocab_xx3.js`,结构同第 2 批(IIFE 把 roots/words 合并进 VOCAB.xx)。
 
 ## 词条格式(所有语种一致)
 
@@ -53,7 +54,7 @@ VOCAB.xx = {
 ## 每批追加后的检查
 
 ```bash
-node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js','vocab_en.js','vocab_de.js','vocab_fr.js','vocab_it.js','vocab_es.js','vocab_ja.js','vocab_la.js','vocab_en2.js','vocab_fr2.js','vocab_es2.js','vocab_de2.js','vocab_it2.js'].map(f=>fs.readFileSync(f,'utf8')).join('\n');const V=new Function(src+';buildLatinPack();return VOCAB;')();for(const l in V){const p=V[l],bad=p.words.filter(w=>w[3]&&!p.roots[w[3]]);console.log(l,p.words.length,'badRoot',bad.length)}"
+node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js','vocab_en.js','vocab_de.js','vocab_fr.js','vocab_it.js','vocab_es.js','vocab_ja.js','vocab_la.js','vocab_en2.js','vocab_fr2.js','vocab_es2.js','vocab_de2.js','vocab_it2.js','vocab_la2.js','vocab_en3.js','vocab_fr3.js','vocab_es3.js','vocab_de3.js','vocab_it3.js'].map(f=>fs.readFileSync(f,'utf8')).join('\n');const V=new Function(src+';buildLatinPack();return VOCAB;')();for(const l in V){const p=V[l],bad=p.words.filter(w=>w[3]&&!p.roots[w[3]]);console.log(l,p.words.length,'badRoot',bad.length)}"
 ```
 
 `badRoot` 必须为 0,然后 `sw.js` 的 `VERSION` 加一,再提交。
