@@ -18,6 +18,12 @@
 第 2 批(v0.22):前缀体系、后缀家族、拉丁词根第二组。
 第 3 批(v0.23):拉丁词根第三组(agr/ambul/apt/cert/cult/dur/…/volv/vulner,学术与新闻词)+ 希腊词根在各语种中的形态;德语改走本族路线——强变化动词词干族(geh/steh/nehm/geb/seh/sprech/…)、可分前缀族(aus-/ein-/über-/unter-/durch-/um-)、复合词词尾(-haus/-zeug/-werk/-zeit);拉丁语补形容词/名词族与剩余高频动词干。
 
+## 质量校对(v0.24)
+
+- 英语包英文释义栏原为词源直译(produce = "make forth"、include = "shut in"),对英文界面学习者有误导;已把 843 条改为现代同义词。规则:**英文栏永远写现代常用义的短同义词,词源留给词根卡**。
+- 拉丁语删除非古典/中世纪形:collabor、immuro、companio、correspondeo、districtus(名词)、intimido、felicito、collateralis、irradio、clarifico、purifico、insipidus;posthumus → postumus。晚期拉丁(如 revolutio、vulnerabilis)保留,读者在科学/教会文本中会遇到。
+- 同一词在同一语种重复出现且中文略异的(如 transform 改变/转变)运行时取首个,不算错误。
+
 第 4 批起每语种 500 词:抽象名词、学术词、新闻词;文件命名 `vocab_xx3.js`,结构同第 2 批(IIFE 把 roots/words 合并进 VOCAB.xx)。
 
 ## 词条格式(所有语种一致)

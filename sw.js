@@ -1,5 +1,5 @@
 /* Fuga Mythica service worker */
-const VERSION = "v0.23.0";
+const VERSION = "v0.24.0";
 const SHELL_CACHE = "fuga-shell-" + VERSION;
 const IMG_CACHE = "fuga-img-v1";
 const FONT_CACHE = "fuga-font-v1";
