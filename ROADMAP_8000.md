@@ -1,19 +1,19 @@
 # 通往 8000 词 · Cursus 内容路线图
 
-## 现状(v0.23)
+## 现状(v0.25)
 
 受众:全年龄段语言学习者,不限于儿童。优先级:欧洲语言(拉/英/德/法/意/西)优先,日语暂缓。
 
 | 语种 | 词数(去重) | 词根家族 | 文件 |
 |---|---|---|---|
-| 英语 | 2253 | 493 | vocab_en.js + en2 + en3 |
-| 意大利语 | 1714 | 431 | vocab_it.js + it2 + it3 |
-| 拉丁语 | 1708 | 267 | 故事词汇自动组包 + vocab_la.js + vocab_la2.js |
-| 西班牙语 | 1686 | 436 | vocab_es.js + es2 + es3 |
-| 法语 | 1682 | 459 | vocab_fr.js + fr2 + fr3 |
-| 德语 | 1458 | 313 | vocab_de.js + de2 + de3 |
+| 英语 | 2879 | 533 | vocab_en.js + en2 + en3 + en4 |
+| 意大利语 | 2410 | 446 | vocab_it.js + it2 + it3 + it4 |
+| 西班牙语 | 2345 | 452 | vocab_es.js + es2 + es3 + es4 |
+| 法语 | 2275 | 470 | vocab_fr.js + fr2 + fr3 + fr4 |
+| 拉丁语 | 2155 | 351 | 故事词汇自动组包 + vocab_la.js + la2 + la3 |
+| 德语 | 1992 | 340 | vocab_de.js + de2 + de3 + de4 |
 | 日语(暂缓) | 512 | 220 | vocab_ja.js |
-| **合计** | **11013** | **2619** | |
+| **合计** | **14568** | **2812** | |
 
 第 2 批(v0.22):前缀体系、后缀家族、拉丁词根第二组。
 第 3 批(v0.23):拉丁词根第三组(agr/ambul/apt/cert/cult/dur/…/volv/vulner,学术与新闻词)+ 希腊词根在各语种中的形态;德语改走本族路线——强变化动词词干族(geh/steh/nehm/geb/seh/sprech/…)、可分前缀族(aus-/ein-/über-/unter-/durch-/um-)、复合词词尾(-haus/-zeug/-werk/-zeit);拉丁语补形容词/名词族与剩余高频动词干。
@@ -24,7 +24,9 @@
 - 拉丁语删除非古典/中世纪形:collabor、immuro、companio、correspondeo、districtus(名词)、intimido、felicito、collateralis、irradio、clarifico、purifico、insipidus;posthumus → postumus。晚期拉丁(如 revolutio、vulnerabilis)保留,读者在科学/教会文本中会遇到。
 - 同一词在同一语种重复出现且中文略异的(如 transform 改变/转变)运行时取首个,不算错误。
 
-第 4 批起每语种 500 词:抽象名词、学术词、新闻词;文件命名 `vocab_xx3.js`,结构同第 2 批(IIFE 把 roots/words 合并进 VOCAB.xx)。
+第 4 批(v0.25):把 30 个最大的拉丁词根族(duc/port/scrib/mitt/fac/pos/ten/ven/cap/vid/dic/sta/ced/vert/leg/tract/fer/pend/sent/grad/form/gen/mov/reg/sequ/solv/tend/voc/val/viv/vinc/fin)在英/法/西/意四语种各填到 8–25 个派生词,共用同一套 root id;法语补法兰克语/高卢语底层词,西语补阿拉伯语/哥特语底层词,意语补伦巴第语/阿拉伯语底层词(rootId 用 germ/arab/celt 表示来源层,不是词根);德语补 50 个动词干族(komm/mach/sag/führ/folg/…/wend)和 Kraft/Mut/Recht 名词族;拉丁语补感受/言语/日常生活动词干与自然名词族。
+
+第 5 批起每语种 500 词:抽象名词、学术词、新闻词;文件命名 `vocab_xx3.js`,结构同第 2 批(IIFE 把 roots/words 合并进 VOCAB.xx)。
 
 ## 词条格式(所有语种一致)
 
@@ -60,7 +62,7 @@ VOCAB.xx = {
 ## 每批追加后的检查
 
 ```bash
-node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js','vocab_en.js','vocab_de.js','vocab_fr.js','vocab_it.js','vocab_es.js','vocab_ja.js','vocab_la.js','vocab_en2.js','vocab_fr2.js','vocab_es2.js','vocab_de2.js','vocab_it2.js','vocab_la2.js','vocab_en3.js','vocab_fr3.js','vocab_es3.js','vocab_de3.js','vocab_it3.js'].map(f=>fs.readFileSync(f,'utf8')).join('\n');const V=new Function(src+';buildLatinPack();return VOCAB;')();for(const l in V){const p=V[l],bad=p.words.filter(w=>w[3]&&!p.roots[w[3]]);console.log(l,p.words.length,'badRoot',bad.length)}"
+node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js','vocab_en.js','vocab_de.js','vocab_fr.js','vocab_it.js','vocab_es.js','vocab_ja.js','vocab_la.js','vocab_en2.js','vocab_fr2.js','vocab_es2.js','vocab_de2.js','vocab_it2.js','vocab_la2.js','vocab_en3.js','vocab_fr3.js','vocab_es3.js','vocab_de3.js','vocab_it3.js','vocab_la3.js','vocab_en4.js','vocab_fr4.js','vocab_es4.js','vocab_de4.js','vocab_it4.js'].map(f=>fs.readFileSync(f,'utf8')).join('\n');const V=new Function(src+';buildLatinPack();return VOCAB;')();for(const l in V){const p=V[l],bad=p.words.filter(w=>w[3]&&!p.roots[w[3]]);console.log(l,p.words.length,'badRoot',bad.length)}"
 ```
 
 `badRoot` 必须为 0,然后 `sw.js` 的 `VERSION` 加一,再提交。
