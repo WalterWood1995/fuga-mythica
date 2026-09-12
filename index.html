@@ -552,6 +552,8 @@
       <div class="cur-bar"><i id="cur-goal-bar"></i></div>
       <div style="text-align:center"><button class="big-btn" id="btn-cur-start" data-t="cursusStart">开始 20 题</button></div>
       <div id="cur-weak" class="cur-sum-list"></div>
+      <div style="text-align:center;margin-top:12px"><button class="continue-btn" id="btn-cur-stories" style="background:var(--panel2);color:var(--text)"></button></div>
+      <div id="cur-stories" class="cur-sum-list" style="display:none"></div>
       <div style="margin-top:14px;text-align:center"><span class="backlink" id="btn-cur-home" data-t="backhome">← 返回首页</span></div>
     </div>
     <div id="cur-play">
@@ -583,6 +585,7 @@
 <script src="morph2.js"></script>
 <script src="living.js"></script>
 <script src="etym_stories.js"></script>
+<script src="root_stories.js"></script>
 <script src="meanings_i18n.js"></script>
 <script src="word_art.js"></script>
 <script src="intros.js"></script>
@@ -680,7 +683,7 @@ const I18N = {
     cursusStart: "开始 20 题", cursusGoal: "通往 8000 词", cursusQuit: "✕ 结束本轮", backhome: "← 返回首页",
     cursusMastered: "已掌握", cursusSeen: "见过", cursusWeak: "待巩固", cursusPack: "本语种词库", cursusRoots: "词根家族(核心)",
     cursusPrompt: "这个词大概是什么意思?", cursusNew: "新词", cursusReview: "复习",
-    cursusTimeout: "超时!", cursusRootLabel: "词根", cursusSiblings: "同根词,一起记",
+    cursusTimeout: "超时!", cursusRootLabel: "词根", cursusSiblings: "同根词,一起记", cursusStoryLabel: "📜 词根的来历", cursusStories: "📜 词根故事", cursusStoriesDesc: "每个词根从哪里来、在历史里怎么用、怎样走进今天的语言。已写好故事的词根:", cursusStoryNone: "这个语种的词根故事还在撰写中。",
     cursusDone: "本轮结束", cursusAcc: "正确", cursusAvg: "平均反应", cursusNewMastered: "新掌握",
     cursusAgain: "再来 20 题", cursusStreak: "最长连击", cursusWeakTitle: "待巩固的词(下一轮优先复习)", cursusNoPlayer: "先建立一个冒险者档案", cursusAllDone: "这个语种的词你已经全部掌握!",
     apprentice: "学徒 Discipulus", apprenticedesc: "适合 6–8 岁:看图选词,三选一,轻松闯关。",
@@ -741,7 +744,7 @@ const I18N = {
     cursusStart: "Start 20 words", cursusGoal: "Road to 8,000 words", cursusQuit: "✕ End round", backhome: "← Home",
     cursusMastered: "Mastered", cursusSeen: "Seen", cursusWeak: "To review", cursusPack: "Words in pack", cursusRoots: "Root families (core)",
     cursusPrompt: "Roughly, what does it mean?", cursusNew: "new", cursusReview: "review",
-    cursusTimeout: "Too slow!", cursusRootLabel: "Root", cursusSiblings: "Same root — learn them together",
+    cursusTimeout: "Too slow!", cursusRootLabel: "Root", cursusSiblings: "Same root — learn them together", cursusStoryLabel: "📜 Where the root comes from", cursusStories: "📜 Root stories", cursusStoriesDesc: "Where each root comes from, how it was used in history, how it entered today's languages. Roots with stories so far:", cursusStoryNone: "Root stories for this pack are still being written.",
     cursusDone: "Round complete", cursusAcc: "Correct", cursusAvg: "Avg. reaction", cursusNewMastered: "Newly mastered",
     cursusAgain: "Another 20", cursusStreak: "Best streak", cursusWeakTitle: "Words to review (they come first next round)", cursusNoPlayer: "Create an adventurer profile first", cursusAllDone: "You have mastered every word in this pack!",
     apprentice: "Apprentice · Discipulus", apprenticedesc: "Ages 6–8: pictures & words, 3 choices, relaxed.",
@@ -1746,6 +1749,26 @@ function curStats() {
   pack.words.forEach(w => { const r = st[w[0]]; if (!r) return; seen++; if (r.m) { mastered++; if (w[3]) rootsHit.add(w[3]); } else if (r.w > 0) weak++; });
   return { mastered, seen, weak, total: pack.words.length, roots: rootsHit.size, rootsTotal: Object.keys(pack.roots).length };
 }
+/* root-origin story for a Cursus root id (shared Latin/Greek ids across en/fr/es/it; German and Latin have their own tables) */
+function rootStory(lang, id) {
+  if (typeof ROOT_STORIES === "undefined" || !id) return "";
+  const zh = state.lang === "zh";
+  const tbl = lang === "de" ? ROOT_STORIES.de : lang === "la" ? ROOT_STORIES.la : ROOT_STORIES.shared;
+  let e = tbl[id];
+  if (!e && lang === "la" && ROOT_STORIES.laMap[id]) e = ROOT_STORIES.shared[ROOT_STORIES.laMap[id]];
+  if (!e && lang === "de" && ROOT_STORIES.deMap[id]) e = ROOT_STORIES.shared[ROOT_STORIES.deMap[id]];
+  return e ? (zh ? e[0] : e[1]) : "";
+}
+function renderCurStories() {
+  const box = $("#cur-stories"), pack = curPack(cur.lang);
+  const ids = Object.keys(pack.roots).filter(id => rootStory(cur.lang, id));
+  ids.sort((a, b) => (pack.byRoot[b] || []).length - (pack.byRoot[a] || []).length);
+  if (!ids.length) { box.innerHTML = `<div class="etym">${t("cursusStoryNone")}</div>`; return; }
+  box.innerHTML = `<div class="etym" style="color:var(--text-dim);margin-bottom:8px">${t("cursusStoriesDesc")} ${ids.length} / ${Object.keys(pack.roots).length}</div><div class="fam-chain">` +
+    ids.map(id => { const r = pack.roots[id]; const n = (pack.byRoot[id] || []).length;
+      const ex = (pack.byRoot[id] || []).slice(0, 4).map(i => pack.words[i][0]).join(" · ");
+      return `<details class="fam-item"><summary style="cursor:pointer"><i style="color:var(--accent)">${r[0]}</i> = ${state.lang === "zh" ? r[1] : r[2]} <span style="color:var(--text-dim);font-size:.85em">(${n})</span></summary><div class="etym" style="margin-top:6px">${rootStory(cur.lang, id)}</div><div style="color:var(--text-dim);font-size:.85em;margin-top:4px">${ex}</div></details>`; }).join("") + "</div>";
+}
 function renderCursus() {
   if (!state.player || !state.players[state.player]) { toast(t("cursusNoPlayer")); renderPlayers(); return; }
   cur.lang = (P().cursus && P().cursus.lang) || "la";
@@ -1773,6 +1796,8 @@ function renderCursus() {
   const weak = pack.words.filter(w => st[w[0]] && !st[w[0]].m && st[w[0]].w > 0).slice(0, 12);
   $("#cur-weak").innerHTML = weak.length ? `<div class="etym-label" style="color:var(--gold);font-size:.85em;margin-bottom:6px">${t("cursusWeakTitle")}</div><div class="fam-chain">` +
     weak.map(w => `<div class="fam-item"><i>${w[0]}</i> → ${curGist(w)}</div>`).join("") + "</div>" : "";
+  $("#btn-cur-stories").textContent = t("cursusStories");
+  $("#cur-stories").style.display = "none";
   showScreen("screen-cursus");
 }
 function curPickRound() {
@@ -1860,6 +1885,7 @@ function curAnswer(chosen) {
       <div style="color:${ok ? "var(--good)" : "var(--bad)"};margin-bottom:6px">${chosen === -1 ? t("cursusTimeout") : ok ? t("rightMark") : t("wrongMark")}</div>
       <div class="ans-head"><span class="latin" style="color:var(--accent)">${w[0]}</span> → <b>${curGist(w)}</b></div>
       ${root ? `<div class="etym-label" style="color:var(--gold);font-size:.85em;margin-top:8px">${t("cursusRootLabel")} · ${root[0]} = ${state.lang === "zh" ? root[1] : root[2]}</div>` : ""}
+      ${root && rootStory(cur.lang, w[3]) ? `<div class="etym-label" style="color:var(--gold);font-size:.85em;margin-top:8px">${t("cursusStoryLabel")}</div><div class="etym">${rootStory(cur.lang, w[3])}</div>` : ""}
       ${sibs.length ? `<div class="etym-label" style="color:var(--gold);font-size:.85em;margin-top:8px">${t("cursusSiblings")}</div><div class="fam-chain">` +
         sibs.map(i => `<div class="fam-item"><i style="color:var(--accent)">${pack.words[i][0]}</i> → ${curGist(pack.words[i])}</div>`).join("") + "</div>" : ""}
       <div class="continue-wrap"><button class="continue-btn" id="btn-cur-next">${t("nextQ")}</button></div>
@@ -1893,6 +1919,7 @@ function curFinish() {
 }
 $("#btn-cursus").addEventListener("click", renderCursus);
 $("#btn-cur-start").addEventListener("click", startCursus);
+$("#btn-cur-stories").addEventListener("click", () => { const b = $("#cur-stories"); if (b.style.display === "none") { renderCurStories(); b.style.display = ""; } else b.style.display = "none"; });
 $("#btn-cur-home").addEventListener("click", () => showScreen("screen-title"));
 $("#btn-cur-quit").addEventListener("click", () => { clearTimeout(cur.timer); renderCursus(); });
 
