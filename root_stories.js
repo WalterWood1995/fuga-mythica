@@ -4,7 +4,7 @@
    laMap / deMap: fall back from a Latin / German id to a shared story
    value = [zhStory, enStory]  — 讲来历、历史用法、进入今天语言的路径;不罗列衍生词(卡片另有同根词栏)
    ===================================================== */
-const ROOT_STORIES = { shared: {}, de: {}, la: {}, laMap: {}, deMap: {} };
+const ROOT_STORIES = { shared: {}, de: {}, la: {}, laMap: {}, deMap: {}, alias: {} };
 Object.assign(ROOT_STORIES.shared, {
   ven: ["印欧语根 *gʷem-(走、来)是欧洲最古老的动词之一:它在英语里变成 come,在希腊语里变成 bainō(走),在拉丁语里变成 venio。罗马人把\"来\"用在一切场合:军团 ad-venit(到达),元老们 con-veniunt(聚在一起,后来的 convention),真理 in-venitur(被\"走到\"、被发现,inventio 本义是找到而非发明)。1066 年诺曼人把这套词带进英语,于是 advent、event、invent、prevent、revenue(re-venue,\"回来的钱\")都是同一个动作\"来\"的不同方向。",
     "PIE *gʷem- (to go, come) is one of Europe's oldest verbs: it became English come, Greek bainō, Latin venio. Romans used \"come\" for everything: a legion ad-venit (arrives), senators con-veniunt (come together — the later convention), truth in-venitur (is \"come upon\", found: inventio meant discovery, not invention). The Normans carried the set into English after 1066, so advent, event, invent, prevent and revenue (\"money that comes back\") are all the one act of coming, pointed in different directions."],
