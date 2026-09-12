@@ -1,6 +1,6 @@
 # 通往 8000 词 · Cursus 内容路线图
 
-## 现状(v0.29)
+## 现状(v0.30)
 
 受众:全年龄段语言学习者,不限于儿童。优先级:欧洲语言(拉/英/德/法/意/西)优先,日语暂缓。
 
@@ -11,9 +11,9 @@
 | 英语 | 4462 | 801 | vocab_en.js + en2 … en7 |
 | 意大利语 | 4409 | 717 | vocab_it.js + it2 … it8 |
 | 西班牙语 | 4414 | 735 | vocab_es.js + es2 … es8 |
-| 拉丁语 | 4110 | 554 | 故事词汇自动组包 + vocab_la.js + la2 … la7 |
+| 拉丁语 | 5131 | 554 | 故事词汇自动组包 + vocab_la.js + la2 … la8 |
 | 日语(暂缓) | 512 | 220 | vocab_ja.js |
-| **合计** | **28404** | **4492** | |
+| **合计** | **29425** | **4492** | |
 
 第 2 批(v0.22):前缀体系、后缀家族、拉丁词根第二组。
 第 3 批(v0.23):拉丁词根第三组(agr/ambul/apt/cert/cult/dur/…/volv/vulner,学术与新闻词)+ 希腊词根在各语种中的形态;德语改走本族路线——强变化动词词干族(geh/steh/nehm/geb/seh/sprech/…)、可分前缀族(aus-/ein-/über-/unter-/durch-/um-)、复合词词尾(-haus/-zeug/-werk/-zeit);拉丁语补形容词/名词族与剩余高频动词干。
@@ -33,6 +33,8 @@
 其余语种冲 4000(v0.28):es6/it6 各 ~60 个拉丁族 + core 层 + 希腊词根 + 派生词;en6 日耳曼 core 层 + 40 个拉丁族;fr7 又 28 族 + topic 日常名词;la5 拉丁功能词 core 层;la6 90 个名词族 + -tio/-tor/-bilis/-osus 派生;la7 核心动词复合词(ad-/con-/de-/ex-/in-/per-/prae-/pro-/re-/sub-/trans-)+ 15 个主题域(t_mil/t_dom/t_nat/t_fauna/t_flora/t_cib/t_relig/t_iur/t_mar/t_corp/t_adj/t_adv/t_abstr/t_urb/t_ars);it7/es7/fr8 日常主题名词(topic 标签:星期月份/饮食/身体/住所/服装/购物/交通/学校/天气/动物/运动/文化/职业/情感)+ 少量派生词。
 
 希腊科学/医学/文化词族(v0.29,en7/fr9/es8/it8):约 105 个新希腊词根(cardi/ophthalm/nephr/phot/astr/polit/econ/chem/math/gram/aut/homo/meta/para/epi/endo/exo/-itis/-oma/-osis/-ectomy/thes/phen/ops/aesth/ergo/meteor/myst 等),四语共用同一 id 与词根卡;源文件为 scratchpad 里的四语对照主表 greek_master.txt(en|fr|es|it|zh|gist|root),脚本 split_greek.py 拆分、filt.py 去重生成。
+
+拉丁语 la8(v0.30):核心词干的派生层——-tio/-tor/-tus/-mentum/-culum 名词、-osus/-alis/-bilis/-ivus 形容词、频率动词、复合动词,约 1000 词,全部挂到已有词根 id。
 
 下一步:法/西/意/英/拉各到 4000(法语已 3613),方法同 fr6:A 新族 B core 层 C 希腊词根 D 派生词:抽象名词、学术词、新闻词;文件命名 `vocab_xx3.js`,结构同第 2 批(IIFE 把 roots/words 合并进 VOCAB.xx)。
 
