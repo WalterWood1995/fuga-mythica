@@ -1,5 +1,5 @@
 /* Fuga Mythica service worker */
-const VERSION = "v0.30.0";
+const VERSION = "v0.31.0";
 const SHELL_CACHE = "fuga-shell-" + VERSION;
 const IMG_CACHE = "fuga-img-v1";
 const FONT_CACHE = "fuga-font-v1";
@@ -51,7 +51,7 @@ const SHELL = [
   "./vocab_de9.js",
   "./vocab_de10.js",
   "./vocab_de11.js",
-  "./vocab_de12.js","./vocab_es6.js","./vocab_it6.js","./vocab_en6.js","./vocab_fr7.js","./vocab_la5.js","./vocab_la6.js","./vocab_la7.js","./vocab_it7.js","./vocab_es7.js","./vocab_fr8.js","./vocab_en7.js","./vocab_fr9.js","./vocab_es8.js","./vocab_it8.js","./vocab_la8.js",
+  "./vocab_de12.js","./vocab_es6.js","./vocab_it6.js","./vocab_en6.js","./vocab_fr7.js","./vocab_la5.js","./vocab_la6.js","./vocab_la7.js","./vocab_it7.js","./vocab_es7.js","./vocab_fr8.js","./vocab_en7.js","./vocab_fr9.js","./vocab_es8.js","./vocab_it8.js","./vocab_la8.js","./vocab_en8.js","./vocab_fr10.js","./vocab_es9.js","./vocab_it9.js",
   "./data.js",
   "./words_morph.js",
   "./extras.js",

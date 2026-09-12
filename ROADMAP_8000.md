@@ -1,19 +1,19 @@
 # 通往 8000 词 · Cursus 内容路线图
 
-## 现状(v0.30)
+## 现状(v0.31)
 
 受众:全年龄段语言学习者,不限于儿童。优先级:欧洲语言(拉/英/德/法/意/西)优先,日语暂缓。
 
 | 语种 | 词数(去重) | 词根家族 | 文件 |
 |---|---|---|---|
 | 德语 | 6093 | 686 | vocab_de.js + de2 … de12 |
-| 法语 | 4404 | 779 | vocab_fr.js + fr2 … fr9 |
-| 英语 | 4462 | 801 | vocab_en.js + en2 … en7 |
-| 意大利语 | 4409 | 717 | vocab_it.js + it2 … it8 |
-| 西班牙语 | 4414 | 735 | vocab_es.js + es2 … es8 |
+| 法语 | 4615 | 779 | vocab_fr.js + fr2 … fr10 |
+| 英语 | 4749 | 802 | vocab_en.js + en2 … en8 |
+| 意大利语 | 4652 | 717 | vocab_it.js + it2 … it9 |
+| 西班牙语 | 4640 | 735 | vocab_es.js + es2 … es9 |
 | 拉丁语 | 5131 | 554 | 故事词汇自动组包 + vocab_la.js + la2 … la8 |
 | 日语(暂缓) | 512 | 220 | vocab_ja.js |
-| **合计** | **29425** | **4492** | |
+| **合计** | **30392** | **4493** | |
 
 第 2 批(v0.22):前缀体系、后缀家族、拉丁词根第二组。
 第 3 批(v0.23):拉丁词根第三组(agr/ambul/apt/cert/cult/dur/…/volv/vulner,学术与新闻词)+ 希腊词根在各语种中的形态;德语改走本族路线——强变化动词词干族(geh/steh/nehm/geb/seh/sprech/…)、可分前缀族(aus-/ein-/über-/unter-/durch-/um-)、复合词词尾(-haus/-zeug/-werk/-zeit);拉丁语补形容词/名词族与剩余高频动词干。
@@ -35,6 +35,8 @@
 希腊科学/医学/文化词族(v0.29,en7/fr9/es8/it8):约 105 个新希腊词根(cardi/ophthalm/nephr/phot/astr/polit/econ/chem/math/gram/aut/homo/meta/para/epi/endo/exo/-itis/-oma/-osis/-ectomy/thes/phen/ops/aesth/ergo/meteor/myst 等),四语共用同一 id 与词根卡;源文件为 scratchpad 里的四语对照主表 greek_master.txt(en|fr|es|it|zh|gist|root),脚本 split_greek.py 拆分、filt.py 去重生成。
 
 拉丁语 la8(v0.30):核心词干的派生层——-tio/-tor/-tus/-mentum/-culum 名词、-osus/-alis/-bilis/-ivus 形容词、频率动词、复合动词,约 1000 词,全部挂到已有词根 id。
+
+四语主题词表(v0.31,en8/fr10/es9/it9):商业金融/法律政治/IT媒体/环境科学/健康/社会教育/宗教/艺术/旅行/天气,主表 topic_master.txt,脚本 split_topic.py(英语自动去 "the ")。
 
 下一步:法/西/意/英/拉各到 4000(法语已 3613),方法同 fr6:A 新族 B core 层 C 希腊词根 D 派生词:抽象名词、学术词、新闻词;文件命名 `vocab_xx3.js`,结构同第 2 批(IIFE 把 roots/words 合并进 VOCAB.xx)。
 
