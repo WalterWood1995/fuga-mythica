@@ -3,7 +3,7 @@
    ===================================================== */
 (function () {
   const p = VOCAB.en;
-  Object.assign(p.roots, {});
+  Object.assign(p.roots, { therio: ["ther / therio", "野兽", "beast"], });
   p.words.push(
     ["stepfather", "继父", "stepfather", "topic"],
     ["stepmother", "继母", "stepmother", "topic"],

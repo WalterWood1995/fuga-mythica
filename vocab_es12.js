@@ -3,7 +3,7 @@
    ===================================================== */
 (function () {
   const p = VOCAB.es;
-  Object.assign(p.roots, {});
+  Object.assign(p.roots, { bel: ["bell- (bellus)", "美", "beautiful"], toma: ["tom- (tomar)", "拿,取", "take"], mensa: ["mes- (mensa)", "桌子", "table"], mill: ["mil- / mill-", "千", "thousand"], casa: ["cas- (casa)", "房子", "house"], });
   p.words.push(
     ["el hermanastro", "继兄弟", "stepbrother", "topic"],
     ["la media hermana", "同父异母姐妹", "half-sister", "topic"],

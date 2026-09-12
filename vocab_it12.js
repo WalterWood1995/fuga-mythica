@@ -3,7 +3,7 @@
    ===================================================== */
 (function () {
   const p = VOCAB.it;
-  Object.assign(p.roots, {});
+  Object.assign(p.roots, { cap4: ["cap- / capo", "头,首领", "head, chief"], bel: ["bell- (bello)", "美", "beautiful"], casa: ["cas- (casa)", "房子", "house"], });
   p.words.push(
     ["il fratellastro", "继兄弟", "stepbrother", "topic"],
     ["la sorellastra", "同父异母姐妹", "half-sister", "topic"],

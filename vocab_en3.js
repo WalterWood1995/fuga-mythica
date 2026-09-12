@@ -46,7 +46,7 @@
     rhin: ["rhin", "鼻", "nose"], rhythm: ["rhythm / rhe", "流", "flow"], sarc: ["sarc", "肉", "flesh"], scler: ["scler", "硬", "hard"],
     sem: ["sem / semi", "符号", "sign"], som: ["som / somat", "身体", "body"], spor: ["spor", "种子", "seed"], stereo: ["stereo", "立体", "solid"],
     strat: ["strat", "军队,层", "army, layer"], styl: ["styl", "柱,笔", "pillar, pen"], tach: ["tach", "快", "fast"], tetr: ["tetr", "四", "four"],
-    thanat: ["thanat", "死", "death"], ther: ["ther", "野兽", "beast"], tyr: ["tyr / tyrann", "暴君", "tyrant"], ur: ["ur", "尿", "urine"],
+    thanat: ["thanat", "死", "death"], therio: ["ther / therio", "野兽", "beast"], tyr: ["tyr / tyrann", "暴君", "tyrant"], ur: ["ur", "尿", "urine"],
   });
   p.words.push(
     ["agriculture","农业","field cultivation","agr"], ["agrarian","农业的","of fields","agr"], ["agronomy","农学","field law","agr"], ["peregrine","漫游的","through the field","agr"], ["pilgrim","朝圣者","one across fields","agr"],
@@ -214,7 +214,7 @@
     ["tachometer","转速表","speed measure","tach"], ["tachycardia","心动过速","fast heart","tach"],
     ["tetrahedron","四面体","four faces","tetr"], ["tetrapod","四足动物","four feet","tetr"],
     ["euthanasia","安乐死","good death","thanat"], ["thanatology","死亡学","death study","thanat"],
-    ["therapy","治疗","attending","ther"], ["theropod","兽脚类","beast foot","ther"],
+    ["therapy","治疗","attending","therio"], ["theropod","兽脚类","beast foot","therio"],
     ["tyrant","暴君","absolute ruler","tyr"], ["tyranny","暴政","tyrant rule","tyr"],
     ["urine","尿","urine","ur"], ["urology","泌尿科","urine study","ur"], ["diuretic","利尿剂","through urine","ur"]
   );

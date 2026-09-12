@@ -3,7 +3,7 @@
    ===================================================== */
 (function () {
   const p = VOCAB.fr;
-  Object.assign(p.roots, {});
+  Object.assign(p.roots, { boat: ["bateau", "船", "boat"], mutt: ["mot (muttum)", "词", "word"], prehend: ["prehend- / pris-", "抓,理解", "grasp, understand"], });
   p.words.push(
     ["le beau-père", "继父", "stepfather", "topic"],
     ["la belle-mère", "继母", "stepmother", "topic"],
