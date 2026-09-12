@@ -1,19 +1,19 @@
 # 通往 8000 词 · Cursus 内容路线图
 
-## 现状(v0.28)
+## 现状(v0.29)
 
 受众:全年龄段语言学习者,不限于儿童。优先级:欧洲语言(拉/英/德/法/意/西)优先,日语暂缓。
 
 | 语种 | 词数(去重) | 词根家族 | 文件 |
 |---|---|---|---|
 | 德语 | 6093 | 686 | vocab_de.js + de2 … de12 |
-| 法语 | 4039 | 673 | vocab_fr.js + fr2 … fr8 |
-| 英语 | 4187 | 707 | vocab_en.js + en2 … en6 |
-| 意大利语 | 4037 | 611 | vocab_it.js + it2 … it7 |
-| 西班牙语 | 4043 | 629 | vocab_es.js + es2 … es7 |
+| 法语 | 4404 | 779 | vocab_fr.js + fr2 … fr9 |
+| 英语 | 4462 | 801 | vocab_en.js + en2 … en7 |
+| 意大利语 | 4409 | 717 | vocab_it.js + it2 … it8 |
+| 西班牙语 | 4414 | 735 | vocab_es.js + es2 … es8 |
 | 拉丁语 | 4110 | 554 | 故事词汇自动组包 + vocab_la.js + la2 … la7 |
 | 日语(暂缓) | 512 | 220 | vocab_ja.js |
-| **合计** | **27021** | **4080** | |
+| **合计** | **28404** | **4492** | |
 
 第 2 批(v0.22):前缀体系、后缀家族、拉丁词根第二组。
 第 3 批(v0.23):拉丁词根第三组(agr/ambul/apt/cert/cult/dur/…/volv/vulner,学术与新闻词)+ 希腊词根在各语种中的形态;德语改走本族路线——强变化动词词干族(geh/steh/nehm/geb/seh/sprech/…)、可分前缀族(aus-/ein-/über-/unter-/durch-/um-)、复合词词尾(-haus/-zeug/-werk/-zeit);拉丁语补形容词/名词族与剩余高频动词干。
@@ -31,6 +31,8 @@
 德语冲刺 6000(v0.27,用户 2026-08-29 指定优先):de6 核心日常层(代词/介词/连词/副词/情态动词/数字/时间/身体/饮食/住所/家庭/服装/动物/基础形容词,标签 core);de7 又 100 个动词干族;de8 拉丁希腊借词族(-ieren/-tion/-ität/-ismus 学术层);de9 词缀族(-isch/-sam/-haft/-voll/-reich/-arm/-frei/-mäßig/-fähig/-wert;-er/-in/-nis/-ei/-ling/-chen/-ik/-ur;Ge-/Un-/Ur-/Erz-/Neben-/Gegen-/Vor-/Nach-/Rück-/Zwischen-/Selbst-);de10 又 90 个名词族;de11 十个主题域(职业/政法/科技/环境/文化/健康/运动/交通/学校/情感,标签为主题而非词根);de12 厨房/服装/居住/日常用语。法语 fr6:90 个新族 + core 层 + 希腊词根 + 派生词。
 
 其余语种冲 4000(v0.28):es6/it6 各 ~60 个拉丁族 + core 层 + 希腊词根 + 派生词;en6 日耳曼 core 层 + 40 个拉丁族;fr7 又 28 族 + topic 日常名词;la5 拉丁功能词 core 层;la6 90 个名词族 + -tio/-tor/-bilis/-osus 派生;la7 核心动词复合词(ad-/con-/de-/ex-/in-/per-/prae-/pro-/re-/sub-/trans-)+ 15 个主题域(t_mil/t_dom/t_nat/t_fauna/t_flora/t_cib/t_relig/t_iur/t_mar/t_corp/t_adj/t_adv/t_abstr/t_urb/t_ars);it7/es7/fr8 日常主题名词(topic 标签:星期月份/饮食/身体/住所/服装/购物/交通/学校/天气/动物/运动/文化/职业/情感)+ 少量派生词。
+
+希腊科学/医学/文化词族(v0.29,en7/fr9/es8/it8):约 105 个新希腊词根(cardi/ophthalm/nephr/phot/astr/polit/econ/chem/math/gram/aut/homo/meta/para/epi/endo/exo/-itis/-oma/-osis/-ectomy/thes/phen/ops/aesth/ergo/meteor/myst 等),四语共用同一 id 与词根卡;源文件为 scratchpad 里的四语对照主表 greek_master.txt(en|fr|es|it|zh|gist|root),脚本 split_greek.py 拆分、filt.py 去重生成。
 
 下一步:法/西/意/英/拉各到 4000(法语已 3613),方法同 fr6:A 新族 B core 层 C 希腊词根 D 派生词:抽象名词、学术词、新闻词;文件命名 `vocab_xx3.js`,结构同第 2 批(IIFE 把 roots/words 合并进 VOCAB.xx)。
 
