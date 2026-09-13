@@ -1,12 +1,12 @@
 /* Fuga Mythica service worker */
-const VERSION = "v0.44.0";
+const VERSION = "v0.45.0";
 const SHELL_CACHE = "fuga-shell-" + VERSION;
 const IMG_CACHE = "fuga-img-v1";
 const FONT_CACHE = "fuga-font-v1";
 const SHELL = [
   "./",
   "./index.html",
-  "./etym_stories.js","./root_stories.js","./root_stories2.js","./root_stories3.js","./root_stories4.js","./root_stories5.js","./root_stories6.js","./root_stories_de.js","./root_stories_de2.js",
+  "./etym_stories.js","./root_stories.js","./root_stories2.js","./root_stories3.js","./root_stories4.js","./root_stories5.js","./root_stories6.js","./root_stories_de.js","./root_stories_de2.js","./root_stories7.js","./root_stories8.js","./root_stories9.js","./root_stories_de3.js",
   "./meanings_i18n.js",
   "./word_art.js",
   "./intros.js",

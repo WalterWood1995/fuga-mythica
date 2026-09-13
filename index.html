@@ -593,6 +593,10 @@
 <script src="root_stories6.js"></script>
 <script src="root_stories_de.js"></script>
 <script src="root_stories_de2.js"></script>
+<script src="root_stories7.js"></script>
+<script src="root_stories8.js"></script>
+<script src="root_stories9.js"></script>
+<script src="root_stories_de3.js"></script>
 <script src="meanings_i18n.js"></script>
 <script src="word_art.js"></script>
 <script src="intros.js"></script>
@@ -1764,6 +1768,7 @@ function rootStory(lang, id) {
   let e = tbl[id];
   if (!e && lang === "la" && ROOT_STORIES.laMap[id]) e = ROOT_STORIES.shared[ROOT_STORIES.laMap[id]];
   if (!e && lang === "de" && ROOT_STORIES.deMap[id]) e = ROOT_STORIES.shared[ROOT_STORIES.deMap[id]];
+  if (!e && lang === "la" && ROOT_STORIES.shared[id]) e = ROOT_STORIES.shared[id];
   if (!e && ROOT_STORIES.alias && ROOT_STORIES.alias[id]) e = ROOT_STORIES.shared[ROOT_STORIES.alias[id]];
   return e ? (zh ? e[0] : e[1]) : "";
 }

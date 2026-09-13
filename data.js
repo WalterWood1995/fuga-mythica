@@ -173,7 +173,7 @@ const WORDS = {
   parvus:  ["parvus","🔹","小的","small","parvovirus","医学细小病毒就叫 parvovirus(小病毒);parvo- 一律表\"小\"。","parvovirus, \"the tiny virus\"; parvo- always means small."],
   celer:   ["celer","🏃","快的","fast","accelerate","accelerate(加速)藏着它!celerity(神速)。","accelerate hides this word! celerity (swiftness)."],
   tardus:  ["tardus","🐢","慢的","slow","tardy","tardy(迟到的)、retard(使变慢);意语音乐术语 ritardando(渐慢)。","tardy, retard (to slow); the music term ritardando, \"slowing down.\""],
-  victoria:["victoria","🏆","胜利","victory","victory, Victoria","victory;维多利亚女王、维多利亚湖、悉尼维多利亚州——всё 以\"胜利\"命名。","victory; Queen Victoria, Lake Victoria — all named \"Victory.\""],
+  victoria:["victoria","🏆","胜利","victory","victory, Victoria","victory;维多利亚女王、维多利亚湖、悉尼维多利亚州——全都以\"胜利\"命名。","victory; Queen Victoria, Lake Victoria — all named \"Victory.\""],
   gloria:  ["gloria","✨","荣耀","glory","glory, glorious","glory、glorious;教堂音乐《Gloria》唱的就是这个词。","glory, glorious; the church hymn \"Gloria\" sings this very word."],
   virtus:  ["virtus","🎖️","勇气;美德","courage, virtue","virtue, virtuoso","vir(男子汉)→virtus(男子气概→美德);virtuoso(演奏大师=有极高\"功力\"的人)。","From vir (man): manly excellence → virtue; a virtuoso has mastered his craft's virtus."],
   ferrum:  ["ferrum","⚙️","铁;兵刃","iron, blade","Fe, ferrous","铁的化学符号 Fe = ferrum!ferrous(含铁的);西语铁路 ferrocarril=\"铁之路\"。","Iron's symbol Fe IS ferrum! ferrous; Spanish ferrocarril, the \"iron road\" (railway)."],
