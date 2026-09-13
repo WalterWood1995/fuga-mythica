@@ -1,6 +1,6 @@
 # 通往 8000 词 · Cursus 内容路线图
 
-## 现状(v0.44)
+## 现状(v0.45)
 
 受众:全年龄段语言学习者,不限于儿童。优先级:欧洲语言(拉/英/德/法/意/西)优先,日语暂缓。
 
@@ -89,7 +89,7 @@ node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js',
 - 进度按玩家档案、按语种分别保存在 `players[name].cursus.prog[lang]`。
 
 
-## 词根故事与审核(v0.36–v0.41)
+## 词根故事与审核(v0.36–v0.45)
 
 **词根故事层** `root_stories.js`…`root_stories5.js`:`ROOT_STORIES.shared[id] = [zh, en]`,英/法/西/意共用 id;`alias` 表把重复 id(pon→pos、cap3→cap…)指向同一故事;`laMap`/`deMap` 预留给拉丁语和德语。速认答案卡在词根行下显示「📜 词根的来历」,大厅「📜 词根故事」按钮可浏览。写法:印欧语源与同源词 → 罗马/希腊的原始用法与制度背景(带年代) → 词义转折与进入现代语言的路径 → 排除同形异源词;不用谐音,不罗列衍生词。已写 521 个共用词根(v0.42),拉丁语通过 laMap 映射后 4970 个挂根词中 3672 个有故事;德语 `root_stories_de.js`/`_de2.js`(v0.43–v0.44):100 个本族词干故事(Ge-/ver-/-isch/wenden/recht/stehen/nehmen/geben/Kind/Gott/Geist…)+ deMap 把约 130 个拉丁-希腊借词 id 指向共用故事,6387 个挂根德语词中 2515 个有故事。
 
@@ -97,3 +97,5 @@ node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js',
 - `audit_vocab.js`:结构(空字段/西里尔/尾数字)、包内重复、未定义词根、冠词与性(德语大写名词无冠词、罗曼语名词后缀无冠词)、释义栏(中文栏须含汉字、英文栏须拉丁字母且 <40 字)、词根归属启发式(词形不含词根变体者报 loose,多为合法变体,人工抽查)、**跨语种词根交叉比对**(同 id 在 en/fr/es/it 的释义不一致者列出;v0.41 已合并或改名 30 个语义冲突的 id:es cre/mil/quer/bell/tom/cas/mes/cerc,it re/cap2/cap3/donn/fa/mes/cerc/bell/cas,fr hom/ri/donn/lib/compr/bat/mot,en port2/ven2/mot/ther)。
 - `spellcheck_vocab.py` + `dump_words.js`:用 hunspell 词典(LibreOffice/wooorm:en_GB、fr、es_ES、it_IT、de_DE_frami、la)逐词校验,去掉冠词后每个词元必须在词典中;spylls 实现,全库约 1 分钟。v0.41 结果:未知词 en 64(全为美式拼写/罕见词)、fr 12(合法古词与外来词)、es 66(词典缺的科学词与外来词;修正 el sinus→el seno)、it 25(合法)、de 3(修正 ander→andere)、la 67(中世纪/新拉丁语派生;删除 12 个无依据的近代造词)。
 - 运行:`node tools/audit_vocab.js --out audit.json`;`python tools/spellcheck_vocab.py <dictDir> --out spell.json`(词典放在 scratchpad/dict)。
+
+**v0.45(2026-09-13)词根故事第 7–9 批 + 德语第 3 批**:`root_stories7.js`(长尾:tir/scend/lent/super/mag/fig/her/orig/sat/turb/vad/nomos/phor/gran/terr2/vol2/tetr/thanat/ambi/aper/xero/tourn/car/guard/gir/tri/de/dem/ify/tempt/vag/crypt/gon/hem/lith/ox/tax/top/trop/arbit/cens/ego/foli/lax/liqu/orn/prec/pugn/sever/spers/stup/ting/tut 等 50 篇 + 罗曼语变体别名),`root_stories8.js`(拉丁词族 95 篇:aqu/carn/bell/mil/brev/vulg/quer/tac/sept/mur/cinct/sculp/ov/pud/cop/nex/custod/lib/libr/iter/frat/herman/dext/rog/scind/juv/juven/al/hon/man3/equ2/caball/per/vigil/pict/natat/pecu/avi/miser/cup/estim/morb/aed/glor/puer/ferr/fle/lic/fiss/od2/sepul/lucr/silv/niv/arbor/herb/bov/serp/unct/aur/hor2/re2/parv/felic/gaud/can/lup/leo/semin/caus/vent/vet/rub/frig/fund/verd/pauper/alter/ante/camin/pont/femin/coqu/manduc/pluv/pav/obliv/barc/luct/salv/plang/cort/joc/coup/gouv/hero/dulc/rich/vill/bel/trav/pays/schol/camb/soir + 约 350 条法/西/意专属词干别名,如 sav→sci、cœur→cord、puebl→pop、chiud→clav),`root_stories9.js`(希腊组合形式与前缀 78 篇:lacrim/contra/castr/tachy/morph/soph/cosm/therm/dyn/mania/eu/less/ful/agog/chrom/gastr/iatr/kilo/orth/plast/phag/sphere/fum/gymn/dendr/ethn/oste/spor/ax/pyr/techn/mech/hypo/paleo/dys/derm/neur/bibl/gam/pneum/schiz/xen/nec/venat/hepat/hist/lip/phyt/plut/rhin/sarc/scler/som/stereo/therio/pleb/post/extra/semi/hol/bar/arithm/ichthy/pseudo/rhiz/zym/pleth/brady/potam/thalass/pyret/nous/phys/mus/funct/zone/charact/cuss/arg/cancel + deMap 补充),`root_stories_de3.js`(73 篇:与拉丁 id 同名的德语本族词干/词缀 -in/-ur/un-/Mitte/-arm/holen/legen/fallen/fest/malen/neigen/Sonne/Haut/Not/-ung/an-/Auge/singen/Mond/passen/-bar/rot/-tum/Tod/mit-/Art/Mund + -chen/-reich/-frei/-ei/-ling/-haft/-ik/Ur-/fassen/aus-/treten/-wert/warten/greifen/fördern/-sam/ein-/lassen/-fähig/Land/nach-/über-/steigen/-nis/Arbeit/Stadt/Tag/Wasser/nutzen/Ehre/Sorge/hängen/Rück-/tun/Jahr/gut/unter-/Berg/schneiden/Schuld/treu/ent-/treiben/brennen/stoßen/Stimme/merken)。`rootStory()` 新增拉丁语回退:la 的 id 若与共用故事 key 相同直接取共用故事(la 词根 id 本就是拉丁词干)。验证脚本新增「别名泄漏」检查:别名 id 若同时是德语本族词干且无 de 故事则报警(已清零)。**现状:共用故事 759,德语 173,别名 555;有故事覆盖:英 3880/5858,法 3677/5651,西 3642/5666,意 3683/5677,德 2885/6607,拉 4132/4970;laMap 目标全部存在;共用词根仍缺故事 216 个(多为 2–4 词的小族)。**
