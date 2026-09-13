@@ -1,6 +1,6 @@
 # 通往 8000 词 · Cursus 内容路线图
 
-## 现状(v0.41)
+## 现状(v0.44)
 
 受众:全年龄段语言学习者,不限于儿童。优先级:欧洲语言(拉/英/德/法/意/西)优先,日语暂缓。
 
@@ -91,7 +91,7 @@ node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js',
 
 ## 词根故事与审核(v0.36–v0.41)
 
-**词根故事层** `root_stories.js`…`root_stories5.js`:`ROOT_STORIES.shared[id] = [zh, en]`,英/法/西/意共用 id;`alias` 表把重复 id(pon→pos、cap3→cap…)指向同一故事;`laMap`/`deMap` 预留给拉丁语和德语。速认答案卡在词根行下显示「📜 词根的来历」,大厅「📜 词根故事」按钮可浏览。写法:印欧语源与同源词 → 罗马/希腊的原始用法与制度背景(带年代) → 词义转折与进入现代语言的路径 → 排除同形异源词;不用谐音,不罗列衍生词。已写 465 个共用词根(覆盖英法西意约一半的挂根单词)。
+**词根故事层** `root_stories.js`…`root_stories5.js`:`ROOT_STORIES.shared[id] = [zh, en]`,英/法/西/意共用 id;`alias` 表把重复 id(pon→pos、cap3→cap…)指向同一故事;`laMap`/`deMap` 预留给拉丁语和德语。速认答案卡在词根行下显示「📜 词根的来历」,大厅「📜 词根故事」按钮可浏览。写法:印欧语源与同源词 → 罗马/希腊的原始用法与制度背景(带年代) → 词义转折与进入现代语言的路径 → 排除同形异源词;不用谐音,不罗列衍生词。已写 521 个共用词根(v0.42),拉丁语通过 laMap 映射后 4970 个挂根词中 3672 个有故事;德语 `root_stories_de.js`/`_de2.js`(v0.43–v0.44):100 个本族词干故事(Ge-/ver-/-isch/wenden/recht/stehen/nehmen/geben/Kind/Gott/Geist…)+ deMap 把约 130 个拉丁-希腊借词 id 指向共用故事,6387 个挂根德语词中 2515 个有故事。
 
 **审核工具** `tools/`:
 - `audit_vocab.js`:结构(空字段/西里尔/尾数字)、包内重复、未定义词根、冠词与性(德语大写名词无冠词、罗曼语名词后缀无冠词)、释义栏(中文栏须含汉字、英文栏须拉丁字母且 <40 字)、词根归属启发式(词形不含词根变体者报 loose,多为合法变体,人工抽查)、**跨语种词根交叉比对**(同 id 在 en/fr/es/it 的释义不一致者列出;v0.41 已合并或改名 30 个语义冲突的 id:es cre/mil/quer/bell/tom/cas/mes/cerc,it re/cap2/cap3/donn/fa/mes/cerc/bell/cas,fr hom/ri/donn/lib/compr/bat/mot,en port2/ven2/mot/ther)。
