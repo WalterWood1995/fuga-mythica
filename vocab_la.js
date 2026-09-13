@@ -85,7 +85,7 @@ const LATIN_EXTRA = {
     ["clino","倾","lean","clino"], ["acclino","靠","lean on","clino"], ["declino","偏离","decline","clino"], ["inclino","倾斜","incline","clino"], ["reclino","靠回","recline","clino"], ["clivus","斜坡","slope","clino"],
     ["curo","关心,治","care for","curo"], ["cura","关心","care","curo"], ["curator","管理者","curator","curo"], ["procuro","照管","manage","curo"], ["securus","安全的","secure","curo"], ["accuratus","精确的","accurate","curo"], ["curiosus","好奇的","curious","curo"],
     ["doceo","教","teach","doceo"], ["doctor","教师","teacher","doceo"], ["doctrina","学说","doctrine","doceo"], ["doctus","博学的","learned","doceo"], ["documentum","证据,教训","lesson","doceo"], ["docilis","易教的","docile","doceo"],
-    ["dono","给","give","dono"], ["donum","礼物","gift","dono"], ["donatio","捐赠","donation","dono"], ["condono","宽恕","pardon","dono"], ["perdono","赠予","give away","dono"],
+    ["dono","给","give","dono"], ["donum","礼物","gift","dono"], ["donatio","捐赠","donation","dono"], ["condono","宽恕","pardon","dono"],
     ["erro","游荡,错","wander, err","erro"], ["error","错误","error","erro"], ["aberro","偏离","stray","erro"], ["erraticus","漂泊的","wandering","erro"],
     ["flecto","弯","bend","flecto"], ["deflecto","偏转","deflect","flecto"], ["inflecto","弯曲","bend","flecto"], ["reflecto","弯回","reflect","flecto"], ["flexus","弯曲","bend","flecto"], ["flexibilis","柔韧的","flexible","flecto"],
     ["frango","打碎","break","frango"], ["confringo","打破","shatter","frango"], ["infringo","打破,削弱","infringe","frango"], ["perfringo","打穿","break through","frango"], ["fractus","破碎的","broken","frango"], ["fragilis","易碎的","fragile","frango"], ["fragmentum","碎片","fragment","frango"], ["naufragium","海难","shipwreck","frango"],

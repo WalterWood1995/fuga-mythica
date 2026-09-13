@@ -1,19 +1,19 @@
 # 通往 8000 词 · Cursus 内容路线图
 
-## 现状(v0.35)
+## 现状(v0.41)
 
 受众:全年龄段语言学习者,不限于儿童。优先级:欧洲语言(拉/英/德/法/意/西)优先,日语暂缓。
 
 | 语种 | 词数(去重) | 词根家族 | 文件 |
 |---|---|---|---|
 | 德语 | 6607 | 687 | vocab_de.js + de2 … de13 |
-| 法语 | 5651 | 779 | vocab_fr.js + fr2 … fr13 |
-| 英语 | 5858 | 802 | vocab_en.js + en2 … en11 |
-| 意大利语 | 5677 | 717 | vocab_it.js + it2 … it12 |
-| 西班牙语 | 5667 | 735 | vocab_es.js + es2 … es12 |
-| 拉丁语 | 5131 | 554 | 故事词汇自动组包 + vocab_la.js + la2 … la8 |
+| 法语 | 5651 | 774 | vocab_fr.js + fr2 … fr13 |
+| 英语 | 5858 | 799 | vocab_en.js + en2 … en11 |
+| 意大利语 | 5677 | 711 | vocab_it.js + it2 … it12 |
+| 西班牙语 | 5666 | 731 | vocab_es.js + es2 … es12 |
+| 拉丁语 | 5111 | 554 | 故事词汇自动组包 + vocab_la.js + la2 … la8 |
 | 日语(暂缓) | 512 | 220 | vocab_ja.js |
-| **合计** | **35103** | **4494** | |
+| **合计** | **35082** | **4476** | |
 
 第 2 批(v0.22):前缀体系、后缀家族、拉丁词根第二组。
 第 3 批(v0.23):拉丁词根第三组(agr/ambul/apt/cert/cult/dur/…/volv/vulner,学术与新闻词)+ 希腊词根在各语种中的形态;德语改走本族路线——强变化动词词干族(geh/steh/nehm/geb/seh/sprech/…)、可分前缀族(aus-/ein-/über-/unter-/durch-/um-)、复合词词尾(-haus/-zeug/-werk/-zeit);拉丁语补形容词/名词族与剩余高频动词干。
@@ -87,3 +87,13 @@ node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js',
 - 干扰项:先取 1–2 个同根词,再取频率相邻词——同根词最容易混,这正是要练的。
 - 掌握 = 连续两次 ≤3.5 s 答对;答错一次即取消掌握,回到复习池。
 - 进度按玩家档案、按语种分别保存在 `players[name].cursus.prog[lang]`。
+
+
+## 词根故事与审核(v0.36–v0.41)
+
+**词根故事层** `root_stories.js`…`root_stories5.js`:`ROOT_STORIES.shared[id] = [zh, en]`,英/法/西/意共用 id;`alias` 表把重复 id(pon→pos、cap3→cap…)指向同一故事;`laMap`/`deMap` 预留给拉丁语和德语。速认答案卡在词根行下显示「📜 词根的来历」,大厅「📜 词根故事」按钮可浏览。写法:印欧语源与同源词 → 罗马/希腊的原始用法与制度背景(带年代) → 词义转折与进入现代语言的路径 → 排除同形异源词;不用谐音,不罗列衍生词。已写 465 个共用词根(覆盖英法西意约一半的挂根单词)。
+
+**审核工具** `tools/`:
+- `audit_vocab.js`:结构(空字段/西里尔/尾数字)、包内重复、未定义词根、冠词与性(德语大写名词无冠词、罗曼语名词后缀无冠词)、释义栏(中文栏须含汉字、英文栏须拉丁字母且 <40 字)、词根归属启发式(词形不含词根变体者报 loose,多为合法变体,人工抽查)、**跨语种词根交叉比对**(同 id 在 en/fr/es/it 的释义不一致者列出;v0.41 已合并或改名 30 个语义冲突的 id:es cre/mil/quer/bell/tom/cas/mes/cerc,it re/cap2/cap3/donn/fa/mes/cerc/bell/cas,fr hom/ri/donn/lib/compr/bat/mot,en port2/ven2/mot/ther)。
+- `spellcheck_vocab.py` + `dump_words.js`:用 hunspell 词典(LibreOffice/wooorm:en_GB、fr、es_ES、it_IT、de_DE_frami、la)逐词校验,去掉冠词后每个词元必须在词典中;spylls 实现,全库约 1 分钟。v0.41 结果:未知词 en 64(全为美式拼写/罕见词)、fr 12(合法古词与外来词)、es 66(词典缺的科学词与外来词;修正 el sinus→el seno)、it 25(合法)、de 3(修正 ander→andere)、la 67(中世纪/新拉丁语派生;删除 12 个无依据的近代造词)。
+- 运行:`node tools/audit_vocab.js --out audit.json`;`python tools/spellcheck_vocab.py <dictDir> --out spell.json`(词典放在 scratchpad/dict)。

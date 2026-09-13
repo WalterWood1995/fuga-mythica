@@ -53,7 +53,7 @@
     ["clavis","钥匙","key","clavis"], ["clavus","钉","nail","clavis"], ["clavicula","小钥匙,锁骨","little key; collarbone","clavis"], ["conclave","密室","locked room","clavis"],
     ["copia","丰富","plenty","copia"], ["copiosus","丰富的","copious","copia"], ["copiae","军队","troops","copia"], ["inopia","缺乏","want","copia"], ["inops","贫乏的","destitute","copia"],
     ["corona","冠","crown","corona"], ["corono","加冕","crown","corona"], ["coronarius","花冠的","of garlands","corona"],
-    ["crimen","罪","crime","crimen"], ["criminalis","犯罪的","criminal","crimen"], ["criminor","控告","accuse","crimen"], ["discrimino","区分","distinguish","crimen"], ["recriminatio","反控","counter-charge","crimen"],
+    ["crimen","罪","crime","crimen"], ["criminalis","犯罪的","criminal","crimen"], ["criminor","控告","accuse","crimen"], ["discrimino","区分","distinguish","crimen"],
     ["crux","十字架","cross","crux"], ["crucio","折磨","torture","crux"], ["cruciatus","酷刑","torture","crux"], ["excrucio","折磨","torment","crux"], ["crucifigo","钉十字架","crucify","crux"],
     ["cumulus","堆","heap","cumulus"], ["cumulo","堆积","heap up","cumulus"], ["accumulo","积累","accumulate","cumulus"],
     ["custos","守卫","guard","custos"], ["custodia","监护","custody","custos"], ["custodio","看守","guard","custos"],
