@@ -1,6 +1,6 @@
 # 通往 8000 词 · Cursus 内容路线图
 
-## 现状(v0.47)
+## 现状(v0.48)
 
 受众:全年龄段语言学习者,不限于儿童。优先级:欧洲语言(拉/英/德/法/意/西)优先,日语暂缓。
 
@@ -89,7 +89,7 @@ node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js',
 - 进度按玩家档案、按语种分别保存在 `players[name].cursus.prog[lang]`。
 
 
-## 词根故事与审核(v0.36–v0.47)
+## 词根故事与审核(v0.36–v0.48)
 
 **词根故事层** `root_stories.js`…`root_stories5.js`:`ROOT_STORIES.shared[id] = [zh, en]`,英/法/西/意共用 id;`alias` 表把重复 id(pon→pos、cap3→cap…)指向同一故事;`laMap`/`deMap` 预留给拉丁语和德语。速认答案卡在词根行下显示「📜 词根的来历」,大厅「📜 词根故事」按钮可浏览。写法:印欧语源与同源词 → 罗马/希腊的原始用法与制度背景(带年代) → 词义转折与进入现代语言的路径 → 排除同形异源词;不用谐音,不罗列衍生词。已写 521 个共用词根(v0.42),拉丁语通过 laMap 映射后 4970 个挂根词中 3672 个有故事;德语 `root_stories_de.js`/`_de2.js`(v0.43–v0.44):100 个本族词干故事(Ge-/ver-/-isch/wenden/recht/stehen/nehmen/geben/Kind/Gott/Geist…)+ deMap 把约 130 个拉丁-希腊借词 id 指向共用故事,6387 个挂根德语词中 2515 个有故事。
 
@@ -103,3 +103,5 @@ node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js',
 **v0.46(2026-09-13)第 10 批 + 德语第 4 批**:`root_stories10.js`(最后一批罗曼语专属词干别名 ~160 条 + 35 篇小词族:metu/necess/alacr/cond/ost/tabul/veloc/nigr/macro/peri/mis/ont/pan2/nub/bucc/auris/soror/matin/fenestr/lect/mutt/rue/boat/mêm/spath/eccles/papyr/quirit/calce/percont/mensa/denar/coch/mulier/tocc),`root_stories_de4.js`(59 篇:ziehen/Macht/hoch/Wechsel/brauchen/fließen/schauen/wirken/halb/heben/schätzen/drehen/rühren/spannen/-mäßig/neben/gegen/selbst/fragen/Ende/Luft/um-/Nacht/bitten/weit/schießen/helfen/Glück/ander/biegen/sparen/wach/Dauer/klagen/rüsten/Zeit/Schule/kochen/Sieg/Herz/Meer/-los/Geld/Tür/Tisch/Bahn/be-/rechnen/Streit/gelten/Haupt/Leid/tauschen/Erbe/pflegen/Reiz/Steuer/wiegen/Strafe)。**现状:共用 794,德语 232,别名 717;覆盖:英 3888/5858,法 3751/5651,西 3700/5666,意 3791/5677,德 3469/6607,拉 4132/4970;共用词根只剩 37 个无故事(全是日耳曼/来源不明的罗曼语词:regal、march、gan、empez、niñ、rêv、bât、tomb、dans、petit、blanc、besoin、toma、busc、hall、bamb、bleu、frapp、perr、cam、call、scarp、sping、pequeñ、bianc…——按标准不硬编故事)。** 未覆盖的词主要是 topic/core/germ/arab/celt 分层标签(约 9100 词,本无词根)和德语其余 ~520 个本族词干。
 
 **v0.47(2026-09-13)德语第 5 批** `root_stories_de5.js`(42 篇:Freund/tief/stark/warm/Anfang/lachen/bringen/Feuer/Stein/Blume/Tier/Kopf/Farbe/eins/Zweifel/ganz/waschen/fühlen/Lohn/Preis/setzen/Bett/ab-/richten/bleiben/Blut/Lust/Schutz/klingen/Lob/schicken/sperren/mischen/Mühe/prägen/Regel/sicher/Stamm/Stufe/Erz-/Zwischen-/Staat)。**德语 274 篇,覆盖 3805/6607;其余语种不变。** 下一步:德语剩余 ~480 个本族词干(les/haus/klein/gesund/kalt/flieg/himmel/fuß/zurück/durch/sach/mensch/frau/krieg/dank/ziel/brot/straß/jung/erd/feind/schmerz/eng/schlecht/langsam/hart/klar/falsch/traum/sink/mein/trenn/üb/hinder/tast/tröst/zöger/fluss/wind/regen/eis/amt/punkt/kreis/ort/sprach/flug…)。
+
+**v0.48(2026-09-13)德语第 6 批** `root_stories_de6.js`(29 篇:lesen/-haus/klein/gesund/kalt/fliegen/Himmel/Fuß/zurück/durch/Sache/Mensch/Frau/Krieg/Dank/Ziel/Brot/Straße/jung/Erde/Feind/Schmerz/eng/schlecht/lang/hart/klar/falsch/Traum)。**德语 303 篇,覆盖 4008/6607(60.7%)。** 剩余 ~450 个德语本族词干,下批从 sink/mein/trenn/üb/hinder/tast/tröst/zöger/Fluss/Wind/Regen/Eis/Amt/Punkt/Kreis/Ort/Sprache/Flug/Dienst/schön/schnell/hoffen/wachsen/schwimmen/Vogel/Pferd/Ding/Wald/Stern/Morgen/Abend/Milch/Schiff/schwach/König/zer-/miss-/-ig/springen/werfen/liegen/wählen/Holz/Angst/Hass/weich/leer/Ordnung/atmen/schweigen/prüfen/retten/wagen/schmecken/stiften/tauchen/quälen 起。
