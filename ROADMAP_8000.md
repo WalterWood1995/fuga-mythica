@@ -1,6 +1,6 @@
 # 通往 8000 词 · Cursus 内容路线图
 
-## 现状(v0.52)
+## 现状(v0.53)
 
 受众:全年龄段语言学习者,不限于儿童。优先级:欧洲语言(拉/英/德/法/意/西)优先,日语暂缓。
 
@@ -89,7 +89,7 @@ node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js',
 - 进度按玩家档案、按语种分别保存在 `players[name].cursus.prog[lang]`。
 
 
-## 词根故事与审核(v0.36–v0.52)
+## 词根故事与审核(v0.36–v0.53)
 
 **词根故事层** `root_stories.js`…`root_stories5.js`:`ROOT_STORIES.shared[id] = [zh, en]`,英/法/西/意共用 id;`alias` 表把重复 id(pon→pos、cap3→cap…)指向同一故事;`laMap`/`deMap` 预留给拉丁语和德语。速认答案卡在词根行下显示「📜 词根的来历」,大厅「📜 词根故事」按钮可浏览。写法:印欧语源与同源词 → 罗马/希腊的原始用法与制度背景(带年代) → 词义转折与进入现代语言的路径 → 排除同形异源词;不用谐音,不罗列衍生词。已写 521 个共用词根(v0.42),拉丁语通过 laMap 映射后 4970 个挂根词中 3672 个有故事;德语 `root_stories_de.js`/`_de2.js`(v0.43–v0.44):100 个本族词干故事(Ge-/ver-/-isch/wenden/recht/stehen/nehmen/geben/Kind/Gott/Geist…)+ deMap 把约 130 个拉丁-希腊借词 id 指向共用故事,6387 个挂根德语词中 2515 个有故事。
 
@@ -113,3 +113,5 @@ node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js',
 **v0.51(2026-09-13)德语第 9 批** `root_stories_de9.js`(5 篇:springen/werfen/liegen/wählen/Holz)。**德语 351 篇,覆盖 4310/6607(65%)。**
 
 **v0.52(2026-09-14)德语第 10 批** `root_stories_de10.js`(16 篇:Hass/weich/leer/Atem/schweigen/prüfen/retten/wagen/schmecken/Stift/tauchen/quälen/gesamt/sonder/Platz/Schnee/Brief/Antwort/weinen/Tanz + lang 复用 langsam)。**德语 372 篇,覆盖 4433/6607(67%)。**
+
+**v0.53(2026-09-14)德语第 11 批** `root_stories_de11.js`(9 篇长文:Seite/Baum/Fisch/Name/still/wieder(与 wider 合写)/sammeln/Stunde/Heim(含 Heimat、Heimweh、heimlich、Geheimnis 全族)+ erde、zusammen 复用)。**德语 383 篇,覆盖 4488/6607(68%)。**
