@@ -1,6 +1,6 @@
 # 通往 8000 词 · Cursus 内容路线图
 
-## 现状(v0.60)
+## 现状(v0.61)
 
 受众:全年龄段语言学习者,不限于儿童。优先级:欧洲语言(拉/英/德/法/意/西)优先,日语暂缓。
 
@@ -89,7 +89,7 @@ node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js',
 - 进度按玩家档案、按语种分别保存在 `players[name].cursus.prog[lang]`。
 
 
-## 词根故事与审核(v0.36–v0.60)
+## 词根故事与审核(v0.36–v0.61)
 
 **词根故事层** `root_stories.js`…`root_stories5.js`:`ROOT_STORIES.shared[id] = [zh, en]`,英/法/西/意共用 id;`alias` 表把重复 id(pon→pos、cap3→cap…)指向同一故事;`laMap`/`deMap` 预留给拉丁语和德语。速认答案卡在词根行下显示「📜 词根的来历」,大厅「📜 词根故事」按钮可浏览。写法:印欧语源与同源词 → 罗马/希腊的原始用法与制度背景(带年代) → 词义转折与进入现代语言的路径 → 排除同形异源词;不用谐音,不罗列衍生词。已写 521 个共用词根(v0.42),拉丁语通过 laMap 映射后 4970 个挂根词中 3672 个有故事;德语 `root_stories_de.js`/`_de2.js`(v0.43–v0.44):100 个本族词干故事(Ge-/ver-/-isch/wenden/recht/stehen/nehmen/geben/Kind/Gott/Geist…)+ deMap 把约 130 个拉丁-希腊借词 id 指向共用故事,6387 个挂根德语词中 2515 个有故事。
 
@@ -129,3 +129,5 @@ node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js',
 **v0.59(2026-09-14)德语第 17 批** `root_stories_de17.js`(6 篇长文:putzen(含 rein、sauber、wischen)/schreien(含 rufen、Beruf)/wecken(含 Schlaf 全族)/allein(含 Einsamkeit)/Garten(与俄语 gorod 同源!含 Kindergarten、Schrebergarten)/Gewinn(含 Wunsch、Gewohnheit))。**德语 435 篇,覆盖 4719/6607(71%)。**
 
 **v0.60(2026-09-14)** 德语本族词根故事第 18 批 `root_stories_de18.js`:klettern(与 kleben/Klette/Klettverschluss/Leim/Lehm 同族,印欧 *gleyH- 粘)、widmen(由 weihen 派生,*weykʲ- 献祭,与拉丁 victima 同源;牵出 Weihnachten、Kirchweih/Kirmes、Bühnenweihfestspiel)、Markt(8 世纪借自拉丁 mercatus,展开 Soziale Marktwirtschaft、Binnenmarkt、Marktlücke 等约 120 个复合词)、Ecke(日耳曼 *agjō 刃,与拉丁 acies、英语 edge 同根;Eckstein、Eckrente、Ecken und Kanten),并把 markt2 映射到 markt。共用 794 + 德语本族 440 + 别名 717;德语覆盖 4735/6607。校验 0 错、0 别名泄漏。
+
+**v0.61(2026-09-14)** 德语本族词根故事第 19 批 `root_stories_de19.js`:Linie(拉丁 linea 本义亚麻绳,牵出 Richtlinie/Parteilinie/王朝支系)、Schatten(*skadwaz,与希腊 skotos 同根;über seinen eigenen Schatten springen、Schattenbanken、Peter Schlemihl)、trocken(与 Droge/Drogerie 同族的\"干桶\"误解史、Dürre、Heizung 之外的 Darre/Durst)、zwei(*dwóh₁ 全家:zwischen、Zwilling、Zwieback、Zwietracht、zweifeln/Verzweiflung;点破 Zwiebel 非同源)、Vater(*ph₂tḗr 与格林定律、Vaterland 的历史负担、Abt 来自 abba)、heißen/heiß(明确拆分两个不同词根)、wünschen(与拉丁 Venus、gewinnen、wohnen 同根)、grüßen(本义\"使人说话\";Grüß Gott 南北界线、Begrüßungsgeld、Hitlergruß 的法律史)、spät(与 space/spes/Esperanto 同根;Spätlese 等级、Späti;点破 Spätzle 非同源)、früh(与 Fürst/pro- 同根;Frühneuzeit、Frühwarnsystem)。并把 wunsch、laut2 映射到既有故事。共用 794 + 德语本族 452 + 别名 717;德语覆盖 4773/6607。校验 0 错、0 别名泄漏。
