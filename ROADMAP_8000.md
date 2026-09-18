@@ -1,6 +1,6 @@
 # 通往 8000 词 · Cursus 内容路线图
 
-## 现状(v0.63)
+## 现状(v0.64)
 
 受众:全年龄段语言学习者,不限于儿童。优先级:欧洲语言(拉/英/德/法/意/西)优先,日语暂缓。
 
@@ -89,7 +89,7 @@ node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js',
 - 进度按玩家档案、按语种分别保存在 `players[name].cursus.prog[lang]`。
 
 
-## 词根故事与审核(v0.36–v0.63)
+## 词根故事与审核(v0.36–v0.64)
 
 **词根故事层** `root_stories.js`…`root_stories5.js`:`ROOT_STORIES.shared[id] = [zh, en]`,英/法/西/意共用 id;`alias` 表把重复 id(pon→pos、cap3→cap…)指向同一故事;`laMap`/`deMap` 预留给拉丁语和德语。速认答案卡在词根行下显示「📜 词根的来历」,大厅「📜 词根故事」按钮可浏览。写法:印欧语源与同源词 → 罗马/希腊的原始用法与制度背景(带年代) → 词义转折与进入现代语言的路径 → 排除同形异源词;不用谐音,不罗列衍生词。已写 521 个共用词根(v0.42),拉丁语通过 laMap 映射后 4970 个挂根词中 3672 个有故事;德语 `root_stories_de.js`/`_de2.js`(v0.43–v0.44):100 个本族词干故事(Ge-/ver-/-isch/wenden/recht/stehen/nehmen/geben/Kind/Gott/Geist…)+ deMap 把约 130 个拉丁-希腊借词 id 指向共用故事,6387 个挂根德语词中 2515 个有故事。
 
@@ -135,3 +135,5 @@ node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js',
 **v0.62(2026-09-15)** 德语本族词根故事第 20 批 `root_stories_de20.js`:Wunder(诚实标注印欧来源不明,点破与 Wunde 非同源;wundern/verwundern/bewundern 三兄弟,Wirtschaftswunder/Wunder von Bern)、Zauber(通说\"红色填色的符木\",Merseburger Zaubersprüche、韦伯的 Entzauberung der Welt;Hexe 另列)、Held(本义只是\"男人\",Heldentod 修辞史与 Heldengedenktag→Volkstrauertag 的改名;Heroin 命名史)、Katze(Wanderwort,猫随物传;Katze im Sack 与英语 pig in a poke 的比较)、Verlust(与希腊 lýein/Analyse/Paralyse 同根,verlustfrei/verlustbehaftet)、Glanz(*ǵʰel- 的 gl- 大家族:Gold/gelb/Galle/Chlor/Melancholie)、hell(本义\"响亮\",与 Hall/klar/Kalender 同根,跨感官迁移;点破与英语 hell 无关)、Zahn(*h₃dónts 可能是\"吃\"的分词,einen Zahn zulegen 的壁炉齿钩来历)、Seele(*saiwalō 与 See 的\"湖中灵魂\"说标为通说非定论)、drei(*tréyes;Drittes Reich 的使用敏感、Dreiklassenwahlrecht、trivial 来自 trivium)。并把 wund 映射到 Wunder 条。共用 794 + 德语本族 463 + 别名 717;德语覆盖 4802/6607。校验 0 错、0 别名泄漏、0 西里尔污染。
 
 **v0.63(2026-09-15)** 德语本族词根故事第 21 批 `root_stories_de21.js`:zehn(December 错位两月的日历化石、dezimieren、-zig 由后缀翻身成词;Milliarde≠billion 的长短级差陷阱)、Mutter(区分\"婴儿语普遍性\"与同源、Muttertag/Mutterkreuz 的来历、Mutterkorn 牵出麦角史)、Bruder(格林定律 f→b、Brüderschaft trinken 与 duzen/siezen、Bruderkuss、格林兄弟与 DWB)、Schwester(*swe-\"自家的\"+\"女人\"的独特构词、护士称谓的修会史、CDU/CSU 的 Schwesterparteien)、wollen(与英语 will 的语法化分道、Willenserklärung 这一德国民法术语的东亚翻译史、Willkommenskultur)、müssen(本义\"被允许\"的反转、Muße 与 müssen 同根反义、法条 Muss/Soll/Kann 三级语气)、sollen(本义\"欠债\"、Schuld 债务/罪责一词双义与尼采的论证、Sollbruchstelle、Soll-Ist-Vergleich)、dürfen(本义\"需要\",与 müssen 恰好换位;Bedarf/bedürftig/unbedarft 的旧义残留、dürfte 的谨慎推断语气)、Wagen 与 wagen(同形不同源;*weǵʰ- 家族 Weg/Waage/Wiege/bewegen、Waggon 环游欧洲回家、Großer Wagen 的三种民族星象)、Schuh(日耳曼独有词、Schnürsenkel 方言地图、Schuster bleib bei deinem Leisten 的普林尼出处、Wo drückt der Schuh 的普鲁塔克出处)。并把 hundert、tausend 映射到 zehn 条。共用 794 + 德语本族 475 + 别名 717;德语覆盖 4821/6607。校验 0 错、0 别名泄漏、0 西里尔污染。
+
+**v0.64(2026-09-18)** 德语本族词根故事第 22 批 `root_stories_de22.js`——颜色词专辑与四个本族名词:weiß(印欧\"白\"至少四根;与 wissen 的 ich weiß 纯属同形;Eiweiß 从蛋白升格为科学词;blanc/bianco 是日耳曼 *blank- 借入罗曼语)、schwarz(与拉丁 sordes\"脏\"同根;black 反而与 bleich 同源;schwarz=非法的用法与 Schwarzfahren 的当代语言政治;Schwarz-Rot-Gold 的旗史;黑海是突厥方位色;Neger 一词的历史直说)、grün(=\"生长中的\",与 grow/Gras/Grönland 同族,与拉丁 viridis 独立同构;auf keinen grünen Zweig kommen 的地产交割出处;Die Grünen 是全球绿色政治的起点)、blau(罗曼语的蓝全借自日耳曼;拉丁缺蓝与格莱斯顿的错误假说;blau sein 染坊段子标为弱证据;Blaue Blume、Blauer Reiter、Berliner Blau→Blausäure 的历史直说;verbläuen 的正字法假词源)、gelb(*ǵʰel- 家族续;俄语用同根造黄与绿;jaune 与 gelb 竟是远亲;Gelbe Gefahr 的殖民语境直说)、Apfel(西北印欧独有词;Apfelsine=中国苹果;Adamsapfel 的误译史;禁果成苹果的 malum 双关)、Brücke(本义\"圆木\",Brügge 是\"码头\";pons 与 finden 同根;Eselsbrücke 的 pons asinorum 出处;Brückentag、Brückentechnologie)、Kirche(直借希腊 kyriakón 而非经拉丁,与 église 的 ekklēsía 不同源;Kirchensteuer/Kirchenaustritt、Kirchenasyl、Landeskirche、Sonderfall Staatskirchenrecht)、nass(诚实标注来源不明;Nassauer 两说并列;netzen 与 Netz 的分岔)、Weg(与 via/way/Wagen 同根;副词 weg 是同一个词的缩合;Sonderweg 成为国际史学术语;Holzweg、Königsweg、Dienstweg)。共用 794 + 德语本族 485 + 别名 717;德语覆盖 4831/6607。校验 0 错、0 别名泄漏、0 西里尔污染(写作时三处西里尔转写已改为拉丁转写)。
