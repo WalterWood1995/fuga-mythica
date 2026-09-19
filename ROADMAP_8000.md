@@ -1,6 +1,6 @@
 # 通往 8000 词 · Cursus 内容路线图
 
-## 现状(v0.64)
+## 现状(v0.65)
 
 受众:全年龄段语言学习者,不限于儿童。优先级:欧洲语言(拉/英/德/法/意/西)优先,日语暂缓。
 
@@ -137,3 +137,5 @@ node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js',
 **v0.63(2026-09-15)** 德语本族词根故事第 21 批 `root_stories_de21.js`:zehn(December 错位两月的日历化石、dezimieren、-zig 由后缀翻身成词;Milliarde≠billion 的长短级差陷阱)、Mutter(区分\"婴儿语普遍性\"与同源、Muttertag/Mutterkreuz 的来历、Mutterkorn 牵出麦角史)、Bruder(格林定律 f→b、Brüderschaft trinken 与 duzen/siezen、Bruderkuss、格林兄弟与 DWB)、Schwester(*swe-\"自家的\"+\"女人\"的独特构词、护士称谓的修会史、CDU/CSU 的 Schwesterparteien)、wollen(与英语 will 的语法化分道、Willenserklärung 这一德国民法术语的东亚翻译史、Willkommenskultur)、müssen(本义\"被允许\"的反转、Muße 与 müssen 同根反义、法条 Muss/Soll/Kann 三级语气)、sollen(本义\"欠债\"、Schuld 债务/罪责一词双义与尼采的论证、Sollbruchstelle、Soll-Ist-Vergleich)、dürfen(本义\"需要\",与 müssen 恰好换位;Bedarf/bedürftig/unbedarft 的旧义残留、dürfte 的谨慎推断语气)、Wagen 与 wagen(同形不同源;*weǵʰ- 家族 Weg/Waage/Wiege/bewegen、Waggon 环游欧洲回家、Großer Wagen 的三种民族星象)、Schuh(日耳曼独有词、Schnürsenkel 方言地图、Schuster bleib bei deinem Leisten 的普林尼出处、Wo drückt der Schuh 的普鲁塔克出处)。并把 hundert、tausend 映射到 zehn 条。共用 794 + 德语本族 475 + 别名 717;德语覆盖 4821/6607。校验 0 错、0 别名泄漏、0 西里尔污染。
 
 **v0.64(2026-09-18)** 德语本族词根故事第 22 批 `root_stories_de22.js`——颜色词专辑与四个本族名词:weiß(印欧\"白\"至少四根;与 wissen 的 ich weiß 纯属同形;Eiweiß 从蛋白升格为科学词;blanc/bianco 是日耳曼 *blank- 借入罗曼语)、schwarz(与拉丁 sordes\"脏\"同根;black 反而与 bleich 同源;schwarz=非法的用法与 Schwarzfahren 的当代语言政治;Schwarz-Rot-Gold 的旗史;黑海是突厥方位色;Neger 一词的历史直说)、grün(=\"生长中的\",与 grow/Gras/Grönland 同族,与拉丁 viridis 独立同构;auf keinen grünen Zweig kommen 的地产交割出处;Die Grünen 是全球绿色政治的起点)、blau(罗曼语的蓝全借自日耳曼;拉丁缺蓝与格莱斯顿的错误假说;blau sein 染坊段子标为弱证据;Blaue Blume、Blauer Reiter、Berliner Blau→Blausäure 的历史直说;verbläuen 的正字法假词源)、gelb(*ǵʰel- 家族续;俄语用同根造黄与绿;jaune 与 gelb 竟是远亲;Gelbe Gefahr 的殖民语境直说)、Apfel(西北印欧独有词;Apfelsine=中国苹果;Adamsapfel 的误译史;禁果成苹果的 malum 双关)、Brücke(本义\"圆木\",Brügge 是\"码头\";pons 与 finden 同根;Eselsbrücke 的 pons asinorum 出处;Brückentag、Brückentechnologie)、Kirche(直借希腊 kyriakón 而非经拉丁,与 église 的 ekklēsía 不同源;Kirchensteuer/Kirchenaustritt、Kirchenasyl、Landeskirche、Sonderfall Staatskirchenrecht)、nass(诚实标注来源不明;Nassauer 两说并列;netzen 与 Netz 的分岔)、Weg(与 via/way/Wagen 同根;副词 weg 是同一个词的缩合;Sonderweg 成为国际史学术语;Holzweg、Königsweg、Dienstweg)。共用 794 + 德语本族 485 + 别名 717;德语覆盖 4831/6607。校验 0 错、0 别名泄漏、0 西里尔污染(写作时三处西里尔转写已改为拉丁转写)。
+
+**v0.65(2026-09-19)新功能:词根课堂 Radices(`radix.js`)** 用户要求:除拉丁语外可选学德语、意大利语、法语、西班牙语,同样用词根词缀法。此前这些语言只藏在速认里,没有成体系的学习路径。现在:①首页\"我想学 ——\"语言选择(拉丁语=神话密室冒险,其余直达词根课堂;未登录时先选冒险者再自动跳转);②顶栏新增 🌱 词根入口;③每门语言按词族大小排序、每 10 个词根一单元的课程表;④单课三段式:🌱 词根 → 📜 来历故事(可展开)→ 🔗 词族表(词根部分高亮,支持变音符折叠匹配);⑤不限时练习(词→义、义→词交替,最多 12 题),答对 80% 点亮词根,进度按 冒险者/语言/词根 存档。可教词根数:拉丁 507、德 623、法 689、意 642、西 657、英 749;有故事的占 97% 以上;高亮命中率 81–94%(未命中的是 établir 这类异干形)。界面文字已给 中/英/德/法/西 五种。

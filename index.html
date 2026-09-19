@@ -707,7 +707,7 @@ const I18N = {
     saveExported: "✅ 已导出,请妥善保存这个文件。", saveImported: "✅ 存档已导入。",
     saveBadFile: "❌ 这不是有效的存档文件。",
     aboutTitle: "关于", linkAttrib: "图片来源与授权", linkPrivacy: "隐私说明",
-    map: "地图", codex: "词汇册", tagline: "希腊神话密室逃脱 · 在冒险中学拉丁语",
+    map: "地图", codex: "词汇册", tagline: "希腊神话密室逃脱 · 用词根学拉丁语、德语、法语、意大利语、西班牙语",
     start: "开始冒险", reset: "清除进度重新开始", choosemode: "选择你的身份",
     cursus: "速认", cursusTitle: "速认 · Cursus Verborum",
     cursusDesc: "看到单词,立刻反应出大意——不求精确,只求阅读时不被生词卡住。同一词根的词一起记,一个顶十个。选一门语言,每轮 20 题,每题限时 6 秒。",
@@ -768,7 +768,7 @@ const I18N = {
     saveExported: "✅ Exported — keep the file somewhere safe.", saveImported: "✅ Save imported.",
     saveBadFile: "❌ That is not a valid save file.",
     aboutTitle: "About", linkAttrib: "Image sources and licences", linkPrivacy: "Privacy",
-    map: "Map", codex: "Codex", tagline: "A Greek-myth escape room · Learn Latin by adventure",
+    map: "Map", codex: "Codex", tagline: "A Greek-myth escape room · Learn Latin, German, French, Italian and Spanish by their roots",
     start: "Start Adventure", reset: "Reset progress", choosemode: "Choose your path",
     cursus: "Sprint", cursusTitle: "Sprint · Cursus Verborum",
     cursusDesc: "See a word, grab its gist instantly — not the exact meaning, just enough so it never blocks your reading. Words sharing a root are learned together: one root unlocks ten words. Pick a language; 20 words per round, 6 seconds each.",
@@ -1700,6 +1700,7 @@ async function loginAs(name) {
     if (await sha256(entered) !== p.pw) { toast(t("pwWrong")); return; }
   }
   state.player = name; save();
+  if (window.rxPending) { renderRadix(window.rxPending); return; }
   if (P().mode) renderMap(); else showScreen("screen-mode");
 }
 function showRegister() {
@@ -1723,6 +1724,7 @@ async function doRegister() {
   p.created = new Date().toISOString().slice(0, 10);
   state.players[name] = p;
   state.player = name; save();
+  if (window.rxPending) { renderRadix(window.rxPending); return; }
   showScreen("screen-mode");
 }
 
@@ -2100,5 +2102,6 @@ if ("serviceWorker" in navigator && location.protocol === "https:") {
   navigator.serviceWorker.register("sw.js").catch(() => {});
 }
 </script>
+<script src="radix.js"></script>
 </body>
 </html>
