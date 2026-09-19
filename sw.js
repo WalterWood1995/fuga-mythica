@@ -1,5 +1,5 @@
 /* Fuga Mythica service worker */
-const VERSION = "v0.65.0";
+const VERSION = "v0.65.1";
 const SHELL_CACHE = "fuga-shell-" + VERSION;
 const IMG_CACHE = "fuga-img-v1";
 const FONT_CACHE = "fuga-font-v1";
@@ -66,7 +66,7 @@ const SHELL = [
 ];
 
 self.addEventListener("install", e => {
-  e.waitUntil(caches.open(SHELL_CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(SHELL_CACHE).then(c => c.addAll(SHELL.map(u => new Request(u, { cache: "reload" }))))  /* bypass the HTTP cache: GitHub Pages serves max-age=600, which used to precache a stale index.html */.then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", e => {
