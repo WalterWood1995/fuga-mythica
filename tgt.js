@@ -96,7 +96,7 @@ function tgInfoHtml(key) {
   /* 1. 🌱 root and its story, in the study language's own root pack */
   html += `<div class="etym-label">${t("morphLabel")}</div>`;
   if (hit && hit.root) {
-    html += `<div class="etym"><span class="latin" style="color:var(--accent);font-style:italic">${rxMark(w[0], hit.root[0])}</span> · 🌱 <i style="color:var(--accent)">${rxEsc(hit.root[0])}</i> = ${rxEsc(zh ? hit.root[1] : hit.root[2])}</div>`;
+    html += `<div class="etym"><span class="latin" style="color:var(--accent);font-style:italic">${rxMark(w[0], (typeof TGR_FORM !== "undefined" && TGR_FORM[T] && TGR_FORM[T][key]) || hit.root[0])}</span> · 🌱 <i style="color:var(--accent)">${rxEsc(hit.root[0])}</i> = ${rxEsc(zh ? hit.root[1] : hit.root[2])}</div>`;
     const story = rootStory(T, hit.id);
     if (story) html += `<div class="etym rx-story" style="margin-top:4px">${story}</div><div style="text-align:center"><span class="backlink tg-more">${t("tgMore")}</span></div>`;
     /* 2. 🔗 same-root family */
