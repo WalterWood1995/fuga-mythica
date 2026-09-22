@@ -1,6 +1,6 @@
 # 通往 8000 词 · Cursus 内容路线图
 
-## 现状(v0.65)
+## 现状(v0.66)
 
 受众:全年龄段语言学习者,不限于儿童。优先级:欧洲语言(拉/英/德/法/意/西)优先,日语暂缓。
 
@@ -139,3 +139,5 @@ node -e "const fs=require('fs');const src=['data.js','data2.js','vocab_core.js',
 **v0.64(2026-09-18)** 德语本族词根故事第 22 批 `root_stories_de22.js`——颜色词专辑与四个本族名词:weiß(印欧\"白\"至少四根;与 wissen 的 ich weiß 纯属同形;Eiweiß 从蛋白升格为科学词;blanc/bianco 是日耳曼 *blank- 借入罗曼语)、schwarz(与拉丁 sordes\"脏\"同根;black 反而与 bleich 同源;schwarz=非法的用法与 Schwarzfahren 的当代语言政治;Schwarz-Rot-Gold 的旗史;黑海是突厥方位色;Neger 一词的历史直说)、grün(=\"生长中的\",与 grow/Gras/Grönland 同族,与拉丁 viridis 独立同构;auf keinen grünen Zweig kommen 的地产交割出处;Die Grünen 是全球绿色政治的起点)、blau(罗曼语的蓝全借自日耳曼;拉丁缺蓝与格莱斯顿的错误假说;blau sein 染坊段子标为弱证据;Blaue Blume、Blauer Reiter、Berliner Blau→Blausäure 的历史直说;verbläuen 的正字法假词源)、gelb(*ǵʰel- 家族续;俄语用同根造黄与绿;jaune 与 gelb 竟是远亲;Gelbe Gefahr 的殖民语境直说)、Apfel(西北印欧独有词;Apfelsine=中国苹果;Adamsapfel 的误译史;禁果成苹果的 malum 双关)、Brücke(本义\"圆木\",Brügge 是\"码头\";pons 与 finden 同根;Eselsbrücke 的 pons asinorum 出处;Brückentag、Brückentechnologie)、Kirche(直借希腊 kyriakón 而非经拉丁,与 église 的 ekklēsía 不同源;Kirchensteuer/Kirchenaustritt、Kirchenasyl、Landeskirche、Sonderfall Staatskirchenrecht)、nass(诚实标注来源不明;Nassauer 两说并列;netzen 与 Netz 的分岔)、Weg(与 via/way/Wagen 同根;副词 weg 是同一个词的缩合;Sonderweg 成为国际史学术语;Holzweg、Königsweg、Dienstweg)。共用 794 + 德语本族 485 + 别名 717;德语覆盖 4831/6607。校验 0 错、0 别名泄漏、0 西里尔污染(写作时三处西里尔转写已改为拉丁转写)。
 
 **v0.65(2026-09-19)新功能:词根课堂 Radices(`radix.js`)** 用户要求:除拉丁语外可选学德语、意大利语、法语、西班牙语,同样用词根词缀法。此前这些语言只藏在速认里,没有成体系的学习路径。现在:①首页\"我想学 ——\"语言选择(拉丁语=神话密室冒险,其余直达词根课堂;未登录时先选冒险者再自动跳转);②顶栏新增 🌱 词根入口;③每门语言按词族大小排序、每 10 个词根一单元的课程表;④单课三段式:🌱 词根 → 📜 来历故事(可展开)→ 🔗 词族表(词根部分高亮,支持变音符折叠匹配);⑤不限时练习(词→义、义→词交替,最多 12 题),答对 80% 点亮词根,进度按 冒险者/语言/词根 存档。可教词根数:拉丁 507、德 623、法 689、意 642、西 657、英 749;有故事的占 97% 以上;高亮命中率 81–94%(未命中的是 établir 这类异干形)。界面文字已给 中/英/德/法/西 五种。
+
+**v0.66(2026-09-22)多语种地图冒险** 用户要求:进入后选页面语言与学习语言;选好学习语言后都进地图,只是内容换成相应语言。实现:①首页新增\"页面语言\"下拉与\"我要学\"五个按钮(拉丁/德/法/意/西),顶栏也加了学习语言下拉;②`tl.js` 把地图 400 个词逐一译成德法意西(名词带冠词,形容词阳性);③`tgt.js` 切换时改写 WORDS 的词形,题目提示改为\"这个德语词是什么意思?\";答案卡三段式:🌱 该语言词根包里的词根+故事(55–60% 的词能对上)→ 🔗 同根词族表(词根高亮)→ 🏛️ 拉丁源头(罗曼语称\"源头\",德语称\"对应词\"并说明日耳曼关系)+原拉丁词源注;④地图进度按学习语言分开存(chapter/level/scores/words/weak 存入 p.prog[lang]);⑤德语关卡不出拉丁→罗曼音变咒语题;⑥同形异义词(如法语 le fleuve)不再同时出现在选项里。原首页的\"词根课堂\"直达按钮撤下,词根课堂保留在顶栏 🌱。

@@ -82,12 +82,6 @@ Object.keys(RX_I18N).forEach(l => { if (I18N[l]) Object.assign(I18N[l], RX_I18N[
   const app = document.getElementById("app");
   while (wrap.firstElementChild) app.appendChild(wrap.firstElementChild);
 
-  /* title-screen language chooser */
-  const start = document.getElementById("btn-start");
-  const ask = document.createElement("div");
-  ask.innerHTML = `<div class="rx-ask" data-t="rxAsk"></div><div class="cur-langs" id="rx-title-langs" style="margin-top:0"></div>`;
-  start.parentNode.insertBefore(ask, start.nextSibling);
-
   /* topbar pill */
   const pill = document.createElement("button");
   pill.className = "pill"; pill.id = "btn-radix"; pill.innerHTML = `🌱 <span data-t="rx"></span>`;
@@ -264,22 +258,12 @@ function rxFinish() {
 }
 
 /* ---------- wiring ---------- */
-function rxRenderTitleLangs() {
-  rxLangButtons($("#rx-title-langs"), l => {
-    if (l === "la") { $("#btn-start").click(); return; }     /* Latin keeps its myth adventure; the root course is one tap away in the top bar */
-    renderRadix(l);
-  }, null);
-  const la = $("#rx-title-langs").firstElementChild;
-  if (la) la.textContent += " · " + t("rxLatinAdv");
-}
 $("#btn-radix").addEventListener("click", () => renderRadix());
 $("#rx-home").addEventListener("click", () => showScreen("screen-title"));
 $("#rx-back").addEventListener("click", () => renderRadix());
 $("#sel-lang").addEventListener("change", () => {
-  rxRenderTitleLangs();
   const shown = document.querySelector(".screen.show");
   if (shown && shown.id === "screen-radix") renderRadix();
   else if (shown && shown.id === "screen-radix-lesson" && rx.root && $("#rx-go")) rxLesson(rx.root);
 });
 if (typeof applyI18n === "function") applyI18n();
-rxRenderTitleLangs();

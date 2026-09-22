@@ -1216,7 +1216,7 @@ function renderMap() {
       openChapter(i);
     });
   });
-  $("#map-status").textContent = `${state.player} · ` + I18N[state.lang].mapStatus(P().chapter+1, Math.min(P().level+1,10));
+  $("#map-status").textContent = (typeof tgMapPrefix === "function" ? tgMapPrefix() : "") + `${state.player} · ` + I18N[state.lang].mapStatus(P().chapter+1, Math.min(P().level+1,10));
   $("#map-legend").innerHTML = `<span>${t("legendDone")}</span><span>${t("legendCur")}</span><span>${t("legendLock")}</span>`;
   showScreen("screen-map");
 }
@@ -1269,7 +1269,7 @@ function startQuiz(ci, li, replay) {
   qWords = qWords.concat(reviewKeys);
   locksTotal += reviewKeys.length;
   /* levels 5+ get 2 transformation-spell questions */
-  if (li >= 4 && typeof SPELLS !== "undefined") {
+  if (li >= 4 && typeof SPELLS !== "undefined" && (typeof TARGET === "undefined" || TARGET !== "de")) {  /* Latin→Romance sound spells: not for German */
     const all = [];
     SPELLS.forEach((sp, si) => sp.pairs.forEach((p, pi) => all.push({ sp: si, pi })));
     const spellQs = shuffle(all).slice(0, 2);
@@ -1321,7 +1321,7 @@ function nextQuestion() {
   const heroMode = P().mode === "hero";
   const reverse = heroMode && Math.random() < 0.5;   /* meaning -> latin */
   const nOpts = heroMode ? 4 : 3;
-  const distractors = shuffle(quiz.pool.filter(k => k !== key && wordMeaning(k) !== wordMeaning(key))).slice(0, nOpts - 1);
+  const distractors = shuffle(quiz.pool.filter(k => k !== key && wordMeaning(k) !== wordMeaning(key) && WORDS[k][0] !== WORDS[key][0])).slice(0, nOpts - 1);
   const opts = shuffle([key, ...distractors]);
   const isReview = quiz.reviewKeys.includes(key);
   $("#q-prompt-label").innerHTML = (reverse ? t("q_m2la") : t("q_la2m")) + (isReview ? ` <span class="review-tag">🔄 ${t("reviewTag")}</span>` : "");
@@ -1700,6 +1700,7 @@ async function loginAs(name) {
     if (await sha256(entered) !== p.pw) { toast(t("pwWrong")); return; }
   }
   state.player = name; save();
+  if (typeof tgtOnLogin === "function") tgtOnLogin();
   if (window.rxPending) { renderRadix(window.rxPending); return; }
   if (P().mode) renderMap(); else showScreen("screen-mode");
 }
@@ -1724,6 +1725,7 @@ async function doRegister() {
   p.created = new Date().toISOString().slice(0, 10);
   state.players[name] = p;
   state.player = name; save();
+  if (typeof tgtOnLogin === "function") tgtOnLogin();
   if (window.rxPending) { renderRadix(window.rxPending); return; }
   showScreen("screen-mode");
 }
@@ -2102,6 +2104,8 @@ if ("serviceWorker" in navigator && location.protocol === "https:") {
   navigator.serviceWorker.register("sw.js").catch(() => {});
 }
 </script>
+<script src="tl.js"></script>
 <script src="radix.js"></script>
+<script src="tgt.js"></script>
 </body>
 </html>
