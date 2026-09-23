@@ -171,17 +171,12 @@ function rxLesson(id) {
   const story = rootStory(rx.lang, id);
   $("#rx-lesson").innerHTML = `
     <div class="rx-head"><div class="rx-big">${rxEsc(r[0])}</div><div class="rx-sub">🌱 ${rxEsc(state.lang === "zh" ? r[1] : r[2])} · ${pack.flag} ${rxEsc(L(pack.name))}</div></div>
-    <div class="rx-lbl">${t("rxStory")}</div>
-    ${story ? `<div class="etym rx-story" id="rx-story">${story}</div><div style="text-align:center;margin-top:4px"><span class="backlink" id="rx-more">${t("rxMore")}</span></div>` : `<div class="etym" style="color:var(--text-dim)">${t("rxNoStory")}</div>`}
-    <div class="rx-lbl">${t("rxFamily")} (${fam.length})</div>
-    <table class="rx-tbl">${fam.map(w => `<tr><td>${rxMark(w[0], r[0])}</td><td>${rxEsc(rxGist(w))}</td></tr>`).join("")}</table>
+    ${story ? evBlockHtml(story, { rootForm: "", rootGist: "",
+        family: fam.map(w => ({ w: rxMark(w[0], r[0]), g: rxGist(w) })), famLabel: t("rxFamily") })
+      : `<div class="etym" style="color:var(--text-dim)">${t("rxNoStory")}</div>
+         <div class="rx-lbl">${t("rxFamily")} (${fam.length})</div>
+         <table class="rx-tbl">${fam.map(w => `<tr><td>${rxMark(w[0], r[0])}</td><td>${rxEsc(rxGist(w))}</td></tr>`).join("")}</table>`}
     <div style="text-align:center;margin-top:16px"><button class="big-btn" id="rx-go">${t("rxStart")}</button><div style="color:var(--text-dim);font-size:.85em;margin-top:6px">${t("rxNeed")}</div></div>`;
-  const more = $("#rx-more");
-  if (more) {
-    const box = $("#rx-story");
-    if (box.scrollHeight <= box.clientHeight + 4) { box.classList.add("open"); more.style.display = "none"; }
-    more.addEventListener("click", () => { const open = box.classList.toggle("open"); more.textContent = t(open ? "rxLess" : "rxMore"); });
-  }
   $("#rx-go").addEventListener("click", rxStartQuiz);
   showScreen("screen-radix-lesson");
   window.scrollTo(0, 0);

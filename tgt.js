@@ -93,24 +93,23 @@ function tgInfoHtml(key) {
     html += `<div class="word-art-wrap"><img class="word-art" loading="lazy" referrerpolicy="no-referrer" src="${WORD_ART_URL(WORD_ART[key])}" onclick="this.classList.toggle('expanded')" alt="">${cap ? `<div class="word-art-cap">${cap}</div>` : ""}</div>`;
   }
   const hit = tgLookup(T, key);
-  /* 1. 🌱 root and its story, in the study language's own root pack */
+  const romance = T !== "de";
+  const la = { word: WORDS_LA[key], lead: t(romance ? "tgFromLaNote" : "tgCousinNote"), note: etymOf(key, zh) };
   html += `<div class="etym-label">${t("morphLabel")}</div>`;
   if (hit && hit.root) {
-    html += `<div class="etym"><span class="latin" style="color:var(--accent);font-style:italic">${rxMark(w[0], (typeof TGR_FORM !== "undefined" && TGR_FORM[T] && TGR_FORM[T][key]) || hit.root[0])}</span> · 🌱 <i style="color:var(--accent)">${rxEsc(hit.root[0])}</i> = ${rxEsc(zh ? hit.root[1] : hit.root[2])}</div>`;
-    const story = rootStory(T, hit.id);
-    if (story) html += `<div class="etym rx-story" style="margin-top:4px">${story}</div><div style="text-align:center"><span class="backlink tg-more">${t("tgMore")}</span></div>`;
-    /* 2. 🔗 same-root family */
-    const sibs = (hit.pack.byRoot[hit.id] || []).filter(i => i !== hit.i).slice(0, 8);
-    if (sibs.length) html += `<div class="etym-label" style="margin-top:10px">${t("famLabel")}</div><table class="rx-tbl">` +
-      sibs.map(i => { const x = hit.pack.words[i]; return `<tr><td>${rxMark(x[0], hit.root[0])}</td><td>${rxEsc(zh ? x[1] : x[2])}</td></tr>`; }).join("") + "</table>";
+    const form = (typeof TGR_FORM !== "undefined" && TGR_FORM[T] && TGR_FORM[T][key]) || hit.root[0];
+    html += `<div class="etym" style="margin-bottom:2px"><span class="latin" style="color:var(--accent);font-style:italic">${rxMark(w[0], form)}</span></div>`;
+    const fam = (hit.pack.byRoot[hit.id] || []).filter(i => i !== hit.i).slice(0, 10)
+      .map(i => { const x = hit.pack.words[i]; return { w: rxMark(x[0], hit.root[0]), g: zh ? x[1] : x[2] }; });
+    html += evBlockHtml(rootStory(T, hit.id), {
+      rootForm: hit.root[0], rootGist: zh ? hit.root[1] : hit.root[2],
+      family: fam, famLabel: t("famLabel"),
+      latin: la, latinLabel: t(romance ? "tgFromLa" : "tgCousinLa"),
+    });
   } else {
-    html += `<div class="etym" style="color:var(--text-dim)">${t("tgNoRoot")}</div>`;
+    html += `<div class="etym" style="color:var(--text-dim)">${t("tgNoRoot")}</div>`
+      + evBlockHtml("", { rootForm: w[0], latin: la, latinLabel: t(romance ? "tgFromLa" : "tgCousinLa") });
   }
-  /* 3. 🏛️ the Latin word behind it: ancestor for Romance, counterpart for German */
-  const romance = T !== "de";
-  html += `<div class="etym-label" style="margin-top:10px">${t(romance ? "tgFromLa" : "tgCousinLa")}</div>
-    <div class="etym">${t(romance ? "tgFromLaNote" : "tgCousinNote")} <span class="latin" style="color:var(--accent);font-style:italic">${WORDS_LA[key]}</span></div>
-    <div class="etym" style="margin-top:4px">${etymOf(key, zh)}</div>`;
   return html;
 }
 const _tgInfo = wordInfoHtml;

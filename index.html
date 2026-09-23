@@ -1413,17 +1413,12 @@ function wordInfoHtml(key) {
   /* 1. root & its origin story */
   html += `<div class="etym-label">${t("morphLabel")}</div>`;
   if (mo) html += `<div class="etym"><span class="latin" style="color:var(--accent);font-style:italic">${w[0]}</span> = ${zh ? mo.m[0] : mo.m[1]}</div>`;
-  html += `<div class="etym" style="margin-top:4px">${etymOf(key, zh)}</div>`;
-  /* 2. derivative table */
-  if (mo && mo.f && mo.f.length) {
-    html += `<div class="etym-label" style="margin-top:10px">${t("famLabel")}</div>` + famTableHtml(key);
-  }
-  /* 3. still alive today, each with its meaning */
+  /* the origin story, the derivative table and the living descendants, all in one layered block */
+  const extra = [];
+  if (mo && mo.f && mo.f.length) extra.push({ sec: "latfam", label: t("famLabel"), html: famTableHtml(key) });
   const vh = vivaHtml(key);
-  if (vh) {
-    html += `<div class="etym-label" style="margin-top:10px">${t("aliveLabel")}</div>
-      <div class="viva-line">${vh}</div>`;
-  }
+  if (vh) extra.push({ sec: "viva", label: t("aliveLabel"), html: `<div class="viva-line">${vh}</div>` });
+  html += evBlockHtml(etymOf(key, zh), { rootForm: "", rootGist: "", extra });
   return html;
 }
 
@@ -1806,7 +1801,7 @@ function renderCurStories() {
   box.innerHTML = `<div class="etym" style="color:var(--text-dim);margin-bottom:8px">${t("cursusStoriesDesc")} ${ids.length} / ${Object.keys(pack.roots).length}</div><div class="fam-chain">` +
     ids.map(id => { const r = pack.roots[id]; const n = (pack.byRoot[id] || []).length;
       const ex = (pack.byRoot[id] || []).slice(0, 4).map(i => pack.words[i][0]).join(" · ");
-      return `<details class="fam-item"><summary style="cursor:pointer"><i style="color:var(--accent)">${r[0]}</i> = ${state.lang === "zh" ? r[1] : r[2]} <span style="color:var(--text-dim);font-size:.85em">(${n})</span></summary><div class="etym" style="margin-top:6px">${rootStory(cur.lang, id)}</div><div style="color:var(--text-dim);font-size:.85em;margin-top:4px">${ex}</div></details>`; }).join("") + "</div>";
+      return `<details class="fam-item"><summary style="cursor:pointer"><i style="color:var(--accent)">${r[0]}</i> = ${state.lang === "zh" ? r[1] : r[2]} <span style="color:var(--text-dim);font-size:.85em">(${n})</span></summary><div style="margin-top:6px">${evBlockHtml(rootStory(cur.lang, id), { rootForm: r[0], rootGist: state.lang === "zh" ? r[1] : r[2] })}</div><div style="color:var(--text-dim);font-size:.85em;margin-top:4px">${ex}</div></details>`; }).join("") + "</div>";
 }
 function renderCursus() {
   if (!state.player || !state.players[state.player]) { toast(t("cursusNoPlayer")); renderPlayers(); return; }
@@ -2106,6 +2101,7 @@ if ("serviceWorker" in navigator && location.protocol === "https:") {
   navigator.serviceWorker.register("sw.js").catch(() => {});
 }
 </script>
+<script src="etymview.js"></script>
 <script src="tl.js"></script>
 <script src="tgroots.js"></script>
 <script src="tgfam.js"></script>
