@@ -41,7 +41,11 @@ def means_alike(za, ea, zb, eb):
     return bool(zh_set(za) & zh_set(zb)) or bool(en_set(ea) & en_set(eb))
 
 # reviewed look-alikes that are NOT related (different etyma or suffix vs root)
-NOT_RELATED = [("art", "ort"), ("leicht", "licht"), ("bring", "trag"), ("chen", "klein"), ("wund", "wunder")]
+NOT_RELATED = [("art", "ort"), ("leicht", "licht"), ("bring", "trag"), ("chen", "klein"), ("wund", "wunder"),
+  # Latin family: heart (cor/cord) is not run (curr/curs) or care (cur/cura)
+  ("cord", "curs"), ("cord", "cur"), ("cardi", "cur"), ("cord", "curr"), ("coeur", "cour"), ("cor", "curs"), ("cuor", "cur"),
+  ("port", "sort"), ("soir", "sur"), ("meta", "mut"), ("meta", "mud"), ("kine", "cion"), ("cine", "cion"),
+  ("plan", "plat"), ("plan", "plaz"), ("llan", "plaz"), ("tir", "tra"), ("tir", "tratt"), ("abit", "ibi")]
 def blocked(A, B):
     for x, y in NOT_RELATED:
         if (x in A and y in B) or (y in A and x in B): return True

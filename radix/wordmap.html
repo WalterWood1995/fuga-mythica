@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>拉丁语系造词全景图</title>
+<meta name="description" content="拉丁语、英语、法语、意大利语、西班牙语各一张造词全景图:词根骨架 → 换元音 → 换辅音 → 加前缀 → 加后缀 → 复合 → 一条完整的故事。">
+<meta name="theme-color" content="#1b1410">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌳</text></svg>">
+<style>
+  :root { --bg:#1b1410; --panel:#241b16; --panel2:#2e231c; --text:#f2e8dc; --dim:#b6a496;
+          --gold:#e8b64c; --gold-dim:#8a6d33; --accent:#e07a3f; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { margin:0; background:var(--bg); color:var(--text); line-height:1.65;
+         font-family:"Noto Serif SC",Georgia,"Songti SC",serif; }
+  #wrap { max-width:860px; margin:0 auto; padding:0 14px 70px; }
+  header { position:sticky; top:0; z-index:9; background:linear-gradient(var(--bg) 72%,transparent); padding:10px 0 8px;
+           display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  .brand { color:var(--gold); font-weight:700; margin-right:auto; }
+  a.pill, button.pill { background:var(--panel); border:1px solid var(--gold-dim); color:var(--text); border-radius:20px;
+          padding:5px 11px; font:inherit; font-size:.86em; cursor:pointer; text-decoration:none; }
+  a.pill:hover, button.pill:hover, button.pill.on { border-color:var(--gold); color:var(--gold); background:var(--panel2); }
+  h1 { color:var(--gold); font-size:1.55em; margin:14px 0 4px; }
+  h2 { color:var(--gold); font-size:1.12em; margin:26px 0 8px; scroll-margin-top:64px; }
+  h3 { color:var(--accent); font-size:1em; margin:14px 0 4px; }
+  p.lead { color:var(--dim); margin:0 0 12px; }
+  .card { background:var(--panel); border:1px solid var(--gold-dim); border-radius:14px; padding:12px 14px; margin:10px 0; }
+  .map { background:var(--panel); border:1px solid var(--gold-dim); border-radius:14px; padding:6px; overflow-x:auto; }
+  svg { display:block; min-width:640px; width:100%; height:auto; }
+  .n-box { fill:var(--panel2); stroke:var(--gold-dim); cursor:pointer; }
+  .n-box:hover { stroke:var(--gold); }
+  .n-box.core { fill:#3a2a1c; stroke:var(--gold); }
+  svg text { font-family:"Noto Serif SC",Georgia,serif; fill:var(--text); cursor:pointer; }
+  svg text.t { font-size:15px; fill:var(--gold); }
+  svg text.s { font-size:11.5px; fill:var(--dim); }
+  svg text.big { font-size:19px; fill:var(--gold); font-weight:700; }
+  path.link { fill:none; stroke:var(--gold-dim); stroke-width:1.4; }
+  table { width:100%; border-collapse:collapse; font-size:.94em; }
+  td,th { padding:6px; border-bottom:1px solid rgba(232,182,76,.16); text-align:left; vertical-align:top; }
+  th { color:var(--gold); font-weight:400; font-size:.86em; }
+  td.k { color:var(--accent); min-width:6em; }
+  td.n { color:var(--dim); font-size:.86em; white-space:nowrap; }
+  .bar { height:8px; background:var(--gold-dim); border-radius:4px; }
+  .step { display:grid; grid-template-columns:38px 1fr; gap:10px; margin:0 0 8px; align-items:start; }
+  .step .i { width:30px; height:30px; border-radius:50%; background:var(--gold); color:#241b16;
+             display:grid; place-items:center; font-weight:700; font-size:.9em; }
+  .op { color:var(--dim); font-size:.86em; }
+  .w { color:var(--accent); font-size:1.08em; }
+  mark { background:none; color:var(--gold); font-weight:700; }
+  .hint { color:var(--dim); font-size:.86em; }
+  footer { color:var(--dim); font-size:.8em; text-align:center; padding:24px 0; }
+</style>
+</head>
+<body>
+<div id="wrap">
+<header>
+  <span class="brand">🌳 造词全景图</span>
+  <span id="tabs"></span>
+  <a class="pill" href="index.html">← 回拉丁字母与造词法</a>
+</header>
+<div id="page"></div>
+<footer>造词全景图 · 表中词数取自本词库对各语言的实测切分(与同名 Excel 构词分析表同源) · 德语版见 <a href="../de/wordmap.html" style="color:var(--gold)">德语造词全景图</a></footer>
+</div>
+
+<script>
+/* Each language: the same seven-step skeleton, filled with that language's own mechanisms.
+   Counts = words in this app's vocabulary carrying that affix (measured by tools/rom_morph.js). */
+const L = {
+la: {
+  name: "拉丁语", flag: "🏛️", stat: { words: 3908, fam: 481 },
+  intro: "拉丁语是其余四种语言的源头。它造词靠三件事:<b>词根在复合时元音变弱</b>、<b>前缀跟着后面的辅音变形</b>、<b>后缀一层层往上叠</b>。学会拉丁这一套,法、意、西、英的书面词汇就都看得懂了。",
+  skel: [["f–c", "facio 做 · factum 事实 · efficio 完成 · perfectus 完美的", "a / e / i 都是同一个「做」"],
+         ["c–p", "capio 拿 · captivus 俘虏 · accipio 接受 · receptus 收回的", "a → i / e"],
+         ["t–n", "teneo 握 · tenax 顽强的 · contineo 包含 · contentus 满足的", "e → i"],
+         ["s–d", "sedeo 坐 · sessio 会议 · possideo 占有 · obsidio 围困", "e → i"]],
+  vowel: { title: "元音弱化:词根一进复合词就变 i", why: "古拉丁语重音落在第一个音节,复合词里的词根变成非重读,元音被削弱:a、e → i(开音节)或 e(闭音节)。所以 -ficio、-cipio、-tineo 不是新词根,就是 facio、capio、teneo。",
+    rows: [["facio 做", "ef<mark>fi</mark>cio 完成 · per<mark>fi</mark>cio 完善 · per<mark>fe</mark>ctus 完美的"], ["capio 拿", "ac<mark>ci</mark>pio 接受 · re<mark>ci</mark>pio 收回 · ac<mark>ce</mark>ptus 被接受的"],
+           ["teneo 握", "con<mark>ti</mark>neo 包含 · re<mark>ti</mark>neo 保留 · abs<mark>ti</mark>neo 戒除"], ["cado 落", "oc<mark>ci</mark>do 落下、死 · in<mark>ci</mark>do 落入"],
+           ["tego 盖 / toga 长袍", "e → o 的古老交替(ablaut):同一个「盖」,动词取 e,名词取 o"]] },
+  cons: { title: "换辅音:ad-、con-、in-、ob-、sub- 跟着下一个辅音变", why: "两个辅音碰在一起难发音,前缀的尾辅音就变成和后面一样(同化)。认得这张表,ac-/af-/ag-/al-/ap-/ar-/as-/at- 就都是 ad-。另有 s 在元音间变 r(r 音化):genus → generis,honos → honor。",
+    rows: [["ad- 朝向", "ac-cipio · af-fero · ag-gredior · al-ludo · ap-pono · ar-rideo · as-sumo · at-traho"], ["con- 共同", "com-pono · col-ligo · cor-rumpo · co-opto"],
+           ["in- 进/不", "im-pono · il-lustro · ir-rigo · i-gnotus"], ["ob- 对着", "oc-curro · of-fero · op-pono"], ["sub- 在下", "suc-cedo · suf-fero · sug-gero · sup-pono"],
+           ["s → r(r 音化)", "genus / gene<mark>r</mark>is · flos / flo<mark>r</mark>is · honos → hono<mark>r</mark>"]] },
+  pre: [["in-", 193, "进入 / 不"], ["con- (com-)", 224, "共同、彻底"], ["re-", 145, "回、再"], ["de-", 131, "向下、离开"], ["ex- (e-)", 168, "出、彻底"], ["pro-", 85, "向前、为"],
+        ["per-", 77, "穿过、彻底"], ["dis- (di-)", 91, "分开"], ["prae-", 52, "在前"], ["ad- (ac-, af-, ap-, as-, at-…)", 160, "朝向"]],
+  suf: [["-(t)io", 609, "动作 → 名词(含 -io 动词,见表)"], ["-itas", 93, "性质(阴性)"], ["-ilis / -bilis", 76, "能…的、可…的"], ["-alis", 71, "属于…的"], ["-ium", 70, "行为、团体"],
+        ["-atus / -tus", 79, "职位、动作"], ["-osus", 39, "充满…的"], ["-ens / -ans", 39, "正在…的"], ["-arius", 35, "与…有关的"], ["-ura", 33, "结果、职务"]],
+  comp: { lead: "拉丁语复合不多,但有固定的连接元音 <b>-i-</b>:", rows: [["agri-cola 农夫", "ager 田 + -i- + colo 耕种"], ["frat-ri-cida 杀兄弟者", "frater 兄弟 + -i- + caedo 杀(a→i 弱化)"], ["arm-i-ger 持武器者", "arma 武器 + -i- + gero 带"], ["magn-animus 心胸宽大的", "magnus 大 + animus 心"]] },
+  chain: { title: "从 f–c 到 imperfectus", steps: [
+    ["骨架", "f – c", "「做、放置」,印欧语 *dʰeh₁-。"], ["填元音 a:现在时", "facio <span class='hint'>我做</span>", "第三变位 -io 动词。"],
+    ["换元音:完成时", "feci <span class='hint'>我做了</span>", "a → ē,拉丁语的长元音完成时。"], ["加分词词干 -t-", "factum <span class='hint'>做成的事 → 事实</span>", "英语 fact、法语 fait、意语 fatto、西语 hecho 都从这里来。"],
+    ["加前缀 per-,元音弱化", "perficio <span class='hint'>做到底、完成</span>", "a → i:前缀一加,重音离开词根。"], ["分词", "perfectus <span class='hint'>完成的 → 完美的</span>", "闭音节里弱化成 e。"],
+    ["加名词后缀 -io", "perfectio <span class='hint'>完成、完美</span>", "西塞罗已用。"], ["加否定前缀 in-", "imperfectus <span class='hint'>未完成的</span>", "in- 在 p 前同化成 im-。四层零件:im + per + fect + us。"]] },
+},
+en: {
+  name: "英语", flag: "🇬🇧", stat: { words: 3716, fam: 749 },
+  intro: "英语有<b>两套零件</b>:日耳曼本族的(un-、-ness、-ful)和从拉丁、法语整批借来的(con-、-tion、-ity)。日常词多是前者,书面词几乎全是后者——后者就是一套拉丁构词法。",
+  skel: [["d–c", "duke · conduct · produce · education", "都是「引导」(拉丁 duc-/duct-)"], ["sp–c", "spectator · inspect · aspect · suspicious", "「看」(spec-/spic-)"],
+         ["p–t", "port · export · important · opportunity", "「运、带」(port-)"], ["st–t", "stand · state · statue · establish", "「站」:日耳曼 stand 与拉丁 stat- 同源"]],
+  vowel: { title: "换元音:两层来源", why: "本族词保留日耳曼的元音交替(ablaut);拉丁借词则把拉丁的元音弱化整套带了进来,所以 capture、accept、receive 是同一个「拿」。",
+    rows: [["sing / sang / sung / song", "本族强变化动词:元音一换,就是时态或名词"], ["ride / rode / road", "路,就是「骑过去的地方」"], ["bind / bound / bond / bundle", "「捆」一族"],
+           ["capture / accept / receive", "cap- / cept- / ceive:拉丁 capio → accipio 的弱化,经法语到英语"], ["fact / effect / efficient", "fac- / fect- / fic-:拉丁 facio 的三副面孔"]] },
+  cons: { title: "换辅音:格林定律把本族词和拉丁词拉开了距离", why: "日耳曼语在史前系统地改了一组辅音(格林定律,1822)。所以同一个印欧词,在英语本族词里和在拉丁借词里长得不一样——配成对记,一次两个。",
+    rows: [["p → f", "<mark>f</mark>ather / <mark>p</mark>aternal · <mark>f</mark>oot / <mark>p</mark>edal · <mark>f</mark>ish / <mark>p</mark>iscine"], ["t → th", "<mark>th</mark>ree / <mark>t</mark>riple · <mark>th</mark>in / <mark>t</mark>enuous"],
+           ["k → h", "<mark>h</mark>eart / <mark>c</mark>ardiac · <mark>h</mark>orn / <mark>c</mark>ornet · <mark>h</mark>undred / <mark>c</mark>entury"], ["d → t", "<mark>t</mark>wo / <mark>d</mark>ual · <mark>t</mark>ooth / <mark>d</mark>ental"],
+           ["g → k", "<mark>c</mark>orn / <mark>g</mark>rain · <mark>k</mark>in / <mark>g</mark>enus"], ["法语中介 ch / c", "<mark>ch</mark>ief · <mark>ch</mark>ef / <mark>c</mark>apital:拉丁 caput 经诺曼法语进英语"]] },
+  pre: [["re-", 156, "回、再"], ["in- (im-, il-, ir-)", 202, "不 / 进入"], ["con- (com-, co-)", 183, "共同"], ["de-", 109, "向下、去除"], ["ex- (e-)", 123, "出"], ["pro-", 57, "向前"],
+        ["dis-", 50, "否定、分开"], ["pre-", 43, "在前"], ["ad- (ac-, ap-, an-, as-…)", 134, "朝向"], ["per-", 30, "穿过"]],
+  suf: [["-ate", 176, "使… / 具有…的"], ["-ion / -tion / -ation", 247, "动作 → 名词"], ["-al", 134, "属于…的"], ["-ic", 130, "属于…的"], ["-ent / -ant", 106, "…的 / 做…的人"],
+        ["-er / -or", 164, "做…的人或工具"], ["-ity", 63, "性质"], ["-ous", 46, "有…的"], ["-ive", 43, "有…倾向的"], ["-ist", 39, "从事者"]],
+  comp: { lead: "英语复合两路:本族词直接拼(blackboard),学术词用<b>希腊语组合形式</b>,中间常有连接元音 <b>-o-</b>:", rows: [["bio-logy 生物学", "bios 生命 + -o- + logos 学"], ["tele-phone 电话", "tele 远 + phone 声音"], ["demo-cracy 民主", "demos 人民 + kratos 统治"], ["photo-graph 照片", "phos 光 + graphein 写"]] },
+  chain: { title: "从 d–c 到 superconductivity", steps: [
+    ["骨架", "d – c", "拉丁 duco 引导,印欧语 *dewk-(同源的本族词:tug、tow)。"], ["拉丁分词词干", "duct <span class='hint'>被引导的</span>", "拉丁 ductus;英语 duct 管道。"],
+    ["加前缀 con-", "conduct <span class='hint'>引导、传导、行为</span>", "「一起领着走」。"], ["加后缀 -or", "conductor <span class='hint'>指挥、导体</span>", "做这件事的人或物。"],
+    ["换成形容词后缀 -ive", "conductive <span class='hint'>能传导的</span>", ""], ["加名词后缀 -ity", "conductivity <span class='hint'>导电性</span>", "-ive + -ity:性质的性质。"],
+    ["加前缀 super-", "superconductivity <span class='hint'>超导性</span>", "六层零件:super + con + duct + ive + ity——全部是拉丁零件。"]] },
+},
+fr: {
+  name: "法语", flag: "🇫🇷", stat: { words: 3410, fam: 666 },
+  intro: "法语词常有<b>两副面孔</b>:一副是拉丁语口耳相传一千年磨出来的(民间词),一副是后来学者从书上重新借的(学术词)。同一个词根,两套写法——对上号,就一次记两个。",
+  skel: [["t–n", "tenir · il tient · soutien · contenu", "「握」(拉丁 teneo)"], ["v–n", "venir · il vient · avenir · souvenir", "「来」(venio)"],
+         ["m–t", "mettre · mis · promesse · commission", "「放、送」(mitto / missus)"], ["d–c / d–s", "conduire · conduite · déduire · conducteur", "「引导」(duco)"]],
+  vowel: { title: "换元音:重读元音裂成二合元音", why: "拉丁语重读的短 e、o 在法语里裂成 ie、eu/ue;不重读时保持原样。所以动词一变位,重音一挪,元音就跟着换。",
+    rows: [["tenir / il t<mark>ie</mark>nt", "拉丁 tenet,重读 e → ie"], ["venir / il v<mark>ie</mark>nt", "同上"], ["mourir / il m<mark>eu</mark>rt", "重读 o → eu"],
+           ["pouvoir / il p<mark>eu</mark>t", "同上"], ["民间词 / 学术词", "frêle / fragile · hôtel / hôpital · loyal / légal · chose / cause — 左边磨过,右边照抄拉丁"]] },
+  cons: { title: "换辅音:拉丁语到法语的几条大规律", why: "认出这几条,拉丁词根就能直接对上法语词。",
+    rows: [["ca → cha", "<mark>ch</mark>anter / <mark>c</mark>antare · <mark>ch</mark>eval / <mark>c</mark>aballus · <mark>ch</mark>er / <mark>c</mark>arus"], ["辅音前的 s 消失,留下 ^", "h<mark>ô</mark>pital / ho<mark>s</mark>pitalis · f<mark>ê</mark>te / fe<mark>s</mark>ta · for<mark>ê</mark>t / fore<mark>s</mark>t (英)"],
+           ["ct → it", "fa<mark>it</mark> / fa<mark>ct</mark>um · nu<mark>it</mark> / no<mark>ct</mark>em · la<mark>it</mark> / la<mark>ct</mark>em"], ["元音间 p/t/c 弱化或消失", "sa<mark>v</mark>oir / sa<mark>p</mark>ere · vie / vi<mark>t</mark>a · ami / ami<mark>c</mark>us"],
+           ["词首 sc/sp/st 前加 é", "<mark>é</mark>cole / schola · <mark>é</mark>pée / spatha · <mark>é</mark>tat / status"]] },
+  pre: [["in- (im-)", 137, "不 / 进入"], ["re- (ré-, r-)", 110, "回、再"], ["con- (com-, co-)", 130, "共同"], ["de- / dé-", 86, "向下、去除"], ["é- / ex-", 90, "出"], ["pro-", 47, "向前"],
+        ["a- / ad- (ac-, ap-, as-…)", 155, "朝向"], ["en- / em-", 35, "进入、使"], ["pré-", 28, "在前"], ["dis- / dés-", 30, "分开、否定"]],
+  suf: [["-ique", 106, "属于…的"], ["-ité / -té", 151, "性质(阴性)"], ["-ation / -tion", 123, "动作 → 名词(阴性)"], ["-al", 82, "属于…的"], ["-eur", 67, "做…的人(阳性)"],
+        ["-ent / -ant", 98, "…的"], ["-aire", 50, "与…有关的"], ["-ement", 44, "动作(阳性) / …地"], ["-ier / -ière", 39, "从事者、容器"], ["-if / -ive", 33, "有…倾向的"]],
+  comp: { lead: "法语复合常用<b>动词 + 名词</b>,或用 <b>de / à</b> 连接:", rows: [["porte-monnaie 钱包", "porter 带 + monnaie 钱"], ["tire-bouchon 开瓶器", "tirer 拉 + bouchon 瓶塞"], ["chemin de fer 铁路", "chemin 路 + de + fer 铁"], ["pomme de terre 土豆", "「土里的苹果」"]] },
+  chain: { title: "从 t–n 到 entretien", steps: [
+    ["骨架", "t – n", "拉丁 teneo 握、持。"], ["不定式", "tenir <span class='hint'>握</span>", "词根不重读,保持 e。"], ["重读,元音二合化", "il tient <span class='hint'>他握</span>", "e → ie。"],
+    ["加前缀 con-", "contenir → contenu <span class='hint'>包含 → 内容</span>", "「握在一起」。"], ["加前缀 sou(s)-", "soutenir → soutien <span class='hint'>支持</span>", "「从下面握住」;名词取重读形 -tien。"],
+    ["加前缀 entre-", "entretenir → l'entretien <span class='hint'>维护、面谈</span>", "「在两方之间握着」。"], ["复合 main + tenir", "maintenir → maintenance <span class='hint'>维持、维护</span>", "「用手握住」;maintenance 又进了英语。"]] },
+},
+it: {
+  name: "意大利语", flag: "🇮🇹", stat: { words: 3362, fam: 605 },
+  intro: "意大利语离拉丁语最近,词根几乎不变形。它的特色是<b>前缀同化后辅音双写</b>(ammettere、affermare)和<b>成套的小称、大称后缀</b>。",
+  skel: [["v–d", "vedere · visione · previsto · imprevedibile", "「看」(拉丁 video / visus)"], ["p–rt", "portare · porto · trasporto · importante", "「运、带」"],
+         ["m–tt", "mettere · messo · promessa · commissione", "「放、送」(mitto / missus)"], ["d–c", "condurre · conduttore · dedurre · educazione", "「引导」(duco)"]],
+  vowel: { title: "换元音:重读 e/o 裂成 ie/uo", why: "和法语同一条规律:拉丁重读短 e、o 变成 ie、uo,不重读时不变。所以一族词里常同时出现两种写法。",
+    rows: [["t<mark>ie</mark>ne / tenere", "重读 e → ie"], ["v<mark>ie</mark>ne / venire", "同上"], ["b<mark>uo</mark>no / bontà", "重读 o → uo;不重读的 bontà 保持 o"],
+           ["n<mark>uo</mark>vo / novità", "同上"], ["p<mark>ie</mark>de / pedale", "脚 / 踏板"], ["f<mark>uo</mark>co / focolare", "火 / 壁炉"]] },
+  cons: { title: "换辅音:拉丁语到意大利语的几条大规律", why: "意大利语把难发的辅音组合同化成双辅音,或把 l 变成 i。",
+    rows: [["ct → tt", "fa<mark>tt</mark>o / fa<mark>ct</mark>um · no<mark>tt</mark>e / no<mark>ct</mark>em · la<mark>tt</mark>e / la<mark>ct</mark>em"], ["pt → tt", "se<mark>tt</mark>e / se<mark>pt</mark>em · a<mark>tt</mark>o / a<mark>pt</mark>us"],
+           ["cl / pl / fl → chi / pi / fi", "<mark>chi</mark>ave / <mark>cl</mark>avis · <mark>pi</mark>eno / <mark>pl</mark>enus · <mark>fi</mark>ore / <mark>fl</mark>os"], ["前缀同化 → 双写", "a<mark>mm</mark>ettere (ad+m) · a<mark>ff</mark>ermare (ad+f) · a<mark>pp</mark>ortare (ad+p) · co<mark>rr</mark>ompere (con+r)"],
+           ["x → ss", "sa<mark>ss</mark>o / sa<mark>x</mark>um · e<mark>s</mark>empio / e<mark>x</mark>emplum"]] },
+  pre: [["in- (im-)", 173, "不 / 进入"], ["con- (com-, co-)", 130, "共同"], ["ri- / re-", 80, "回、再"], ["s-", 65, "去除、相反(拉丁 ex-/dis-)"], ["di- / dis-", 78, "分开"], ["de-", 45, "向下"],
+        ["e- / es-", 70, "出"], ["pro-", 43, "向前"], ["pre-", 26, "在前"], ["a- / ad- (ac-, as-, av-, ap-…)", 174, "朝向"]],
+  suf: [["-ità / -tà", 119, "性质(阴性)"], ["-ico", 87, "属于…的"], ["-(a)zione / -ione", 173, "动作 → 名词(阴性)"], ["-ente / -ante", 99, "…的"], ["-ale", 69, "属于…的"],
+        ["-ore / -tore", 59, "做…的人 / 抽象名词"], ["-enza", 37, "状态"], ["-oso", 37, "有…的"], ["-ario", 25, "与…有关的"], ["-ino / -etto / -one", 0, "小称 / 大称(见下)"]],
+  comp: { lead: "意大利语复合常用<b>动词 + 名词</b>;另有一整套<b>小称、大称、贬称</b>后缀,可以叠在任何名词上:", rows: [["portafoglio 钱包", "porta 带 + foglio 纸"], ["capolavoro 杰作", "capo 头 + lavoro 工作"], ["casa → casetta · casina · casona · casaccia", "小屋 · 小可爱屋 · 大房子 · 破房子"], ["libro → libretto", "小书 → 歌剧脚本(进了英语)"]] },
+  chain: { title: "从 v–d 到 imprevedibilità", steps: [
+    ["骨架", "v – d", "拉丁 video 看,印欧语 *weyd-(同源:英语 wit、wise,德语 wissen)。"], ["不定式", "vedere <span class='hint'>看</span>", ""], ["换成分词词干 vis-", "visione <span class='hint'>视觉、幻象</span>", "拉丁 visus → -ione。"],
+    ["加前缀 pre-", "prevedere <span class='hint'>预见</span>", "「先看到」。"], ["加形容词后缀 -ibile", "prevedibile <span class='hint'>可预见的</span>", ""], ["加否定前缀 in-", "imprevedibile <span class='hint'>不可预见的</span>", "in- 在 p 前变 im-。"],
+    ["加名词后缀 -ità", "imprevedibilità <span class='hint'>不可预见性</span>", "五层零件:im + pre + ved + ibil + ità。"]] },
+},
+es: {
+  name: "西班牙语", flag: "🇪🇸", stat: { words: 3330, fam: 624 },
+  intro: "西班牙语的特色是<b>重读元音二合化</b>(puedo / poder)和几条很有个性的辅音变化(拉丁 f 变 h、cl/pl/fl 变 ll)。认出来,拉丁词根就藏不住了。",
+  skel: [["p–n / p–s", "poner · puesto · componer · composición", "「放」(拉丁 pono / positus)"], ["t–n", "tener · tiene · contener · contenido", "「握」(teneo)"],
+         ["h–c / f–c", "hacer · hecho · efecto · factura", "「做」(facio / factum)"], ["d–c", "conducir · conductor · deducir · educación", "「引导」(duco)"]],
+  vowel: { title: "换元音:重读 e/o 裂成 ie/ue", why: "拉丁重读短 e、o 在西语里变 ie、ue;不重读时不变。所以动词一变位、名词一派生,元音就跟着换。",
+    rows: [["t<mark>ie</mark>ne / tener", "重读 e → ie"], ["p<mark>ue</mark>de / poder", "重读 o → ue"], ["p<mark>ue</mark>rta / portero", "门 / 门卫"],
+           ["n<mark>ue</mark>vo / novedad", "新 / 新事物"], ["m<mark>ue</mark>rte / mortal", "死亡 / 致命的"], ["d<mark>ie</mark>nte / dental", "牙 / 牙齿的"]] },
+  cons: { title: "换辅音:拉丁语到西班牙语的几条大规律", why: "这几条最有辨识度——西语的 h、ll、ch 背后,常站着一个拉丁词根。",
+    rows: [["词首 f → h", "<mark>h</mark>acer / <mark>f</mark>acere · <mark>h</mark>ijo / <mark>f</mark>ilius · <mark>h</mark>arina / <mark>f</mark>arina · <mark>h</mark>ierro / <mark>f</mark>errum"], ["cl / pl / fl → ll", "<mark>ll</mark>amar / <mark>cl</mark>amare · <mark>ll</mark>orar / <mark>pl</mark>orare · <mark>ll</mark>ama / <mark>fl</mark>amma"],
+           ["ct → ch", "he<mark>ch</mark>o / fa<mark>ct</mark>um · no<mark>ch</mark>e / no<mark>ct</mark>em · le<mark>ch</mark>e / la<mark>ct</mark>em"], ["元音间 p/t/c → b/d/g", "sa<mark>b</mark>er / sa<mark>p</mark>ere · vi<mark>d</mark>a / vi<mark>t</mark>a · ami<mark>g</mark>o / ami<mark>c</mark>us"],
+           ["词首 s + 辅音前加 e", "<mark>e</mark>scuela / schola · <mark>e</mark>spada / spatha · <mark>e</mark>stado / status"]] },
+  pre: [["in- (im-)", 124, "不 / 进入"], ["a- / ad- (及同化)", 159, "朝向"], ["con- (com-, co-)", 136, "共同"], ["re-", 102, "回、再"], ["de- / des-", 98, "向下 / 去除"], ["e- / ex-", 106, "出"],
+        ["pro-", 43, "向前"], ["di- / dis-", 59, "分开"], ["en- / em-", 36, "进入、使"], ["pre-", 26, "在前"]],
+  suf: [["-(a)ción / -sión / -ión", 225, "动作 → 名词(阴性)"], ["-ico", 93, "属于…的"], ["-al", 91, "属于…的"], ["-or / -dor", 81, "做…的人、抽象名词"], ["-idad / -dad", 68, "性质(阴性)"],
+        ["-ente / -ante", 49, "…的"], ["-encia", 35, "状态"], ["-ario", 31, "与…有关的"], ["-oso", 29, "有…的"], ["-able", 25, "可…的"]],
+  comp: { lead: "西语最有特色的复合是<b>动词 + 复数名词</b>(阳性单数):", rows: [["sacacorchos 开瓶器", "sacar 取出 + corchos 软木塞"], ["abrelatas 开罐器", "abrir 开 + latas 罐头"], ["rompecabezas 拼图", "romper 打碎 + cabezas 头 → 「伤脑筋的东西」"], ["mediodía 中午", "medio 半 + día 天"]] },
+  chain: { title: "从 p–n 到 descomposición", steps: [
+    ["骨架", "p – n / p – s", "拉丁 pono 放,完成分词 positus。"], ["不定式", "poner <span class='hint'>放</span>", ""], ["不规则分词", "puesto <span class='hint'>放好的 → 岗位</span>", "拉丁 positus 在口语里缩成 *postus,重读 o 再二合化 → puesto。"],
+    ["加前缀 com-", "componer <span class='hint'>组成</span>", "「放在一起」。"], ["加名词后缀,回到拉丁词干 pos-", "composición <span class='hint'>组成、作品</span>", "学术词直接用拉丁 positio。"], ["加前缀 des-", "descomposición <span class='hint'>分解、腐烂</span>", "四层零件:des + com + pos + ición。"],
+    ["同一个骨架换前缀", "proponer → propuesta <span class='hint'>提议</span> · exponer → exposición <span class='hint'>展览</span>", "前缀换一下,整条链再走一遍。"]] },
+},
+};
+
+const NODES = [["s1", "① 骨架", "辅音是身份证"], ["s2", "② 换元音", ""], ["s3", "③ 换辅音", ""], ["s4", "④ 加前缀", "前缀会跟着辅音变形"],
+               ["s5", "⑤ 加后缀", "后缀决定词性"], ["s6", "⑥ 复合", ""], ["s7", "⑦ 串成一条", ""]];
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+function render(code) {
+  const d = L[code];
+  document.title = d.name + "造词全景图";
+  document.querySelectorAll("#tabs .pill").forEach(b => b.classList.toggle("on", b.dataset.l === code));
+  const nodes = NODES.map(n => n.slice());
+  nodes[1][2] = d.vowel.title.split(":")[1] || d.vowel.title;
+  nodes[2][2] = d.cons.title.split(":")[1] || d.cons.title;
+  nodes[5][2] = d.comp.rows[0][0];
+  nodes[6][2] = d.chain.title;
+  const maxP = Math.max(...d.pre.map(p => p[1])), maxS = Math.max(...d.suf.map(p => p[1]));
+  document.getElementById("page").innerHTML = `
+  <h1>${d.flag} ${d.name}怎么造词</h1>
+  <p class="lead">${d.intro}</p>
+  <div class="map">${svg(d, nodes)}</div>
+
+  <h2 id="s1">① 骨架:辅音是身份证,元音只是衣服</h2>
+  <div class="card"><table><tr><th>骨架</th><th>一族词</th><th>说明</th></tr>
+    ${d.skel.map(r => `<tr><td class="k">${r[0]}</td><td>${r[1]}</td><td class="hint">${r[2]}</td></tr>`).join("")}</table>
+    <p class="hint">查一个陌生词:先削掉认得的前后缀,剩下的抹掉元音,只看辅音去找熟悉的骨架。</p></div>
+
+  <h2 id="s2">② ${d.vowel.title}</h2>
+  <div class="card"><p style="margin-top:0">${d.vowel.why}</p><table>
+    ${d.vowel.rows.map(r => `<tr><td class="k">${r[0]}</td><td>${r[1]}</td></tr>`).join("")}</table></div>
+
+  <h2 id="s3">③ ${d.cons.title}</h2>
+  <div class="card"><p style="margin-top:0">${d.cons.why}</p><table>
+    ${d.cons.rows.map(r => `<tr><td class="k">${r[0]}</td><td>${r[1]}</td></tr>`).join("")}</table></div>
+
+  <h2 id="s4">④ 加前缀:方向与态度</h2>
+  <div class="card"><table><tr><th>前缀</th><th>意思</th><th>本库词数</th><th style="width:30%"></th></tr>
+    ${d.pre.map(p => `<tr><td class="k">${p[0]}</td><td>${p[2]}</td><td class="n">${p[1]}</td><td><div class="bar" style="width:${Math.round(p[1] / maxP * 100)}%"></div></td></tr>`).join("")}</table>
+    <p class="hint">括号里是同化形式,词数已合并。前 5 个前缀就覆盖了带前缀词的大半——先吃这几个最划算。</p></div>
+
+  <h2 id="s5">⑤ 加后缀:决定词性</h2>
+  <div class="card"><table><tr><th>后缀</th><th>意思</th><th>本库词数</th><th style="width:30%"></th></tr>
+    ${d.suf.map(p => `<tr><td class="k">${p[0]}</td><td>${p[2]}</td><td class="n">${p[1] || "—"}</td><td>${p[1] ? `<div class="bar" style="width:${Math.round(p[1] / maxS * 100)}%"></div>` : ""}</td></tr>`).join("")}</table>
+    <p class="hint">后缀可以叠:形容词后缀后面再接名词后缀(-al → -ality,-ive → -ivity),每叠一层换一次词性。</p></div>
+
+  <h2 id="s6">⑥ 复合</h2>
+  <div class="card"><p style="margin-top:0">${d.comp.lead}</p><table>
+    ${d.comp.rows.map(r => `<tr><td class="k">${r[0]}</td><td>${r[1]}</td></tr>`).join("")}</table></div>
+
+  <h2 id="s7">⑦ 一条完整的故事:${d.chain.title}</h2>
+  <div class="card">${d.chain.steps.map((c, i) => `<div class="step"><div class="i">${i + 1}</div><div>
+     <div class="op">${c[0]}</div><div class="w">${c[1]}</div>${c[2] ? `<div class="hint">${c[2]}</div>` : ""}</div></div>`).join("")}</div>
+
+  <div class="card"><h3 style="margin-top:0">这张图对应的数据</h3>
+    <p style="margin:0" class="hint">本词库${d.name} ${d.stat.words} 个单词、${d.stat.fam} 个词根家族。逐词的前缀 / 词根 / 后缀拆分见 Excel《${d.name}构词分析》表「1」。</p></div>`;
+  try { history.replaceState(null, "", "?lang=" + code); localStorage.setItem("wordmap-lang", code); } catch (e) { }
+  scrollTo(0, 0);
+}
+function svg(d, nodes) {
+  const W = 880, rowH = 62, top = 30, H = top + nodes.length * rowH + 10;
+  const cy = H / 2, bx = 360, bw = 470, bh = 46;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${d.name}造词全景图">`;
+  s += `<rect class="n-box core" x="24" y="${cy - 40}" width="252" height="80" rx="16"/>`;
+  s += `<text class="big" x="150" y="${cy - 8}" text-anchor="middle">${d.flag} ${d.name}怎么造词</text>`;
+  s += `<text class="s" x="150" y="${cy + 14}" text-anchor="middle">一个骨架 + 六种动作</text>`;
+  s += `<text class="s" x="150" y="${cy + 32}" text-anchor="middle">${d.stat.words} 个词 · ${d.stat.fam} 个词根家族</text>`;
+  nodes.forEach((n, i) => {
+    const y = top + i * rowH + bh / 2;
+    s += `<path class="link" d="M276 ${cy} C 320 ${cy}, 320 ${y}, ${bx} ${y}"/>`;
+    s += `<g onclick="document.getElementById('${n[0]}').scrollIntoView({behavior:'smooth'})">`;
+    s += `<rect class="n-box" x="${bx}" y="${y - bh / 2}" width="${bw}" height="${bh}" rx="12"/>`;
+    s += `<text class="t" x="${bx + 16}" y="${y - 2}">${n[1]}</text>`;
+    s += `<text class="s" x="${bx + 16}" y="${y + 15}">${esc(n[2]).slice(0, 44)}</text></g>`;
+  });
+  return s + `</svg>`;
+}
+document.getElementById("tabs").innerHTML = Object.keys(L).map(k =>
+  `<button class="pill" data-l="${k}">${L[k].flag} ${L[k].name}</button>`).join(" ");
+document.getElementById("tabs").addEventListener("click", e => { const b = e.target.closest("[data-l]"); if (b) render(b.dataset.l); });
+let start = new URLSearchParams(location.search).get("lang");
+if (!L[start]) { try { start = localStorage.getItem("wordmap-lang"); } catch (e) { } }
+render(L[start] ? start : "la");
+</script>
+</body>
+</html>
