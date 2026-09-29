@@ -1,0 +1,15 @@
+{
+  "name": "拉丁字母与造词法 Radix Latina",
+  "short_name": "Radix",
+  "description": "从 A B C 讲起:字母的来历、元音辅音的替换规律,以及一个词根在法/意/西/英里的样子。",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#14171d",
+  "theme_color": "#14171d",
+  "lang": "zh-CN",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

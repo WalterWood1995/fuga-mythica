@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>拉丁字母与造词法 · Radix Latina</title>
+<meta name="description" content="从 A B C 讲起:拉丁字母怎么来的,元音辅音怎样替换,一个词根怎样在法语、意大利语、西班牙语、英语里变出一串词。">
+<meta name="theme-color" content="#14171d">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='88'>🔤</text></svg>">
+<style>
+  :root {
+    --bg: #14171d; --panel: #1c212a; --panel2: #232a35; --text: #eef2f7; --text-dim: #9fb0c3;
+    --gold: #d8b45c; --gold-dim: #6f5e33; --accent: #6fb3d2; --good: #5aaa78; --bad: #c85050;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: "Noto Serif SC", Georgia, "Songti SC", serif; line-height: 1.65; }
+  #app { max-width: 820px; margin: 0 auto; padding: 0 14px 60px; }
+  header { position: sticky; top: 0; z-index: 20; background: linear-gradient(var(--bg) 70%, transparent); padding: 10px 0 8px; }
+  .bar { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .brand { color: var(--gold); font-weight: 700; margin-right: auto; letter-spacing: .04em; }
+  .pill { background: var(--panel); border: 1px solid var(--gold-dim); color: var(--text); border-radius: 20px;
+          padding: 5px 11px; font-family: inherit; font-size: .86em; cursor: pointer; }
+  .pill.on, .pill:hover { border-color: var(--gold); background: var(--panel2); color: var(--gold); }
+  h1 { font-size: 1.55em; color: var(--gold); margin: 18px 0 6px; }
+  h2 { font-size: 1.1em; color: var(--gold); margin: 18px 0 8px; }
+  .lead { color: var(--text-dim); margin: 0 0 14px; }
+  .screen { display: none; } .screen.show { display: block; }
+  .card { background: var(--panel); border: 1px solid var(--gold-dim); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 10px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(62px, 1fr)); gap: 8px; }
+  .lt { background: var(--panel); border: 1px solid var(--gold-dim); border-radius: 12px; padding: 10px 0; text-align: center;
+        font-size: 1.5em; color: var(--gold); cursor: pointer; font-family: Georgia, serif; }
+  .lt:hover { border-color: var(--gold); background: var(--panel2); }
+  .lt.seen { border-color: var(--good); }
+  .lt small { display: block; font-size: .42em; color: var(--text-dim); }
+  .row { display: flex; gap: 10px; align-items: baseline; width: 100%; text-align: left; background: var(--panel);
+         border: 1px solid var(--gold-dim); border-radius: 12px; padding: 10px 12px; margin-bottom: 6px;
+         color: var(--text); font-family: inherit; font-size: .95em; cursor: pointer; }
+  .row:hover { border-color: var(--gold); }
+  .row b { color: var(--gold); }
+  .row span { color: var(--text-dim); font-size: .9em; }
+  .tag { display: inline-block; background: var(--panel2); border: 1px solid var(--gold-dim); border-radius: 10px;
+         padding: 1px 8px; font-size: .78em; color: var(--text-dim); margin-right: 6px; }
+  .tw { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 8px -4px; padding: 0 4px; }
+  table.cmp { width: 100%; min-width: 460px; border-collapse: collapse; margin: 8px 0; font-size: .95em; }
+  table.cmp th { color: var(--text-dim); font-weight: 400; font-size: .82em; text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--gold-dim); }
+  table.cmp td { padding: 6px; border-bottom: 1px solid rgba(216,180,92,.12); vertical-align: top; }
+  table.cmp td:first-child { color: var(--gold); font-style: italic; white-space: nowrap; }
+  .say { background: none; border: 0; color: var(--accent); cursor: pointer; font-size: .9em; padding: 0 3px; }
+  .big-btn { background: var(--gold); color: #14171d; border: 0; border-radius: 26px; padding: 12px 26px;
+             font-family: inherit; font-size: 1.05em; font-weight: 700; cursor: pointer; }
+  .ghost { background: var(--panel2); color: var(--text); border: 1px solid var(--gold-dim); border-radius: 22px;
+           padding: 9px 18px; font-family: inherit; cursor: pointer; }
+  .opts { display: grid; gap: 8px; margin-top: 10px; }
+  .opt { background: var(--panel2); border: 2px solid var(--gold-dim); border-radius: 12px; padding: 11px 12px;
+         color: var(--text); font-family: inherit; font-size: 1em; text-align: left; cursor: pointer; }
+  .opt.correct { border-color: var(--good); background: rgba(90,170,120,.18); }
+  .opt.wrong { border-color: var(--bad); background: rgba(200,80,80,.16); }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin: 10px 0 14px; }
+  .stat { background: var(--panel); border: 1px solid var(--gold-dim); border-radius: var(--radius); padding: 10px; text-align: center; }
+  .stat b { display: block; font-size: 1.25em; color: var(--gold); } .stat span { font-size: .8em; color: var(--text-dim); }
+  .hint { color: var(--text-dim); font-size: .86em; }
+  .glyph { font-size: 2.6em; color: var(--gold); text-align: center; margin: 6px 0 0; font-family: Georgia, serif; }
+  .glyph small { display: block; font-size: .3em; color: var(--text-dim); letter-spacing: .1em; }
+  mark { background: none; color: var(--gold); font-weight: 700; }
+  footer { color: var(--text-dim); font-size: .8em; text-align: center; padding: 22px 0; }
+  .ev-p, .etym { line-height: 1.75; }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="bar">
+      <span class="brand">🔤 Radix Latina</span>
+      <button class="pill" data-go="home">首页</button>
+      <button class="pill" data-go="letters">字母</button>
+      <button class="pill" data-go="laws">音变</button>
+      <button class="pill" data-go="roots">词族</button>
+      <button class="pill" data-go="quiz">练习</button>
+    </div>
+  </header>
+
+  <div class="screen show" id="s-home">
+    <h1>拉丁字母与造词法</h1>
+    <p class="lead">不背单词表,从字母开始:每个拉丁字母是怎么来的,古人怎样用它们造词,以及元音、辅音怎样替换——掌握替换规律,一个词根就能带出法语、意大利语、西班牙语、英语里的一大串词。</p>
+    <div class="stats" id="home-stats"></div>
+    <div class="card">
+      <h2 style="margin-top:0">① 字母篇</h2>
+      <p style="margin:0 0 8px">26 个字母,每个讲清:腓尼基的原形 → 希腊 → 罗马,它读什么音,以及它在各语言拼写里的变身。</p>
+      <button class="big-btn" data-go="letters">从 A 开始 →</button>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">② 音变篇</h2>
+      <p style="margin:0 0 8px">元音替换(ĕ→ie、ŏ→ue)、辅音替换(f→h、ct→ch、pl→ll),每条配拉丁/法/意/西/英五栏对照。会了这些,看到生词能直接反推词根。</p>
+      <button class="big-btn" data-go="laws">看规律 →</button>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">③ 词族篇</h2>
+      <p style="margin:0 0 8px">一个拉丁词根,四种语言并排看。点开有它的来历故事。</p>
+      <button class="big-btn" data-go="roots">查词族 →</button>
+    </div>
+  </div>
+
+  <div class="screen" id="s-letters">
+    <h1>字母篇</h1>
+    <p class="lead">腓尼基人画物,希腊人借来写元音,罗马人定型。点一个字母。</p>
+    <div class="grid" id="letters-grid"></div>
+  </div>
+  <div class="screen" id="s-letter"><div id="letter-box"></div></div>
+
+  <div class="screen" id="s-laws">
+    <h1>音变篇</h1>
+    <p class="lead">每条规律都是一把钥匙:左边是拉丁原形,右边是四种语言的样子。</p>
+    <div id="laws-box"></div>
+  </div>
+  <div class="screen" id="s-law"><div id="law-box"></div></div>
+
+  <div class="screen" id="s-roots">
+    <h1>词族篇</h1>
+    <p class="lead">按词族大小排列。点开看四种语言的同根词与这个词根的来历。</p>
+    <input type="search" id="q" placeholder="搜词根或单词,例如 port 或 puerta" style="width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--gold-dim);background:var(--panel);color:var(--text);font-family:inherit;font-size:1em;margin-bottom:10px">
+    <div id="roots-box"></div>
+  </div>
+  <div class="screen" id="s-root"><div id="root-box"></div></div>
+
+  <div class="screen" id="s-quiz"><div id="quiz-box"></div></div>
+</div>
+<footer>Radix Latina · 拉丁字母与造词法 · <span id="ver"></span></footer>
+
+<script>var VOCAB = {}; var state = { lang: "zh" }; var I18N = { zh: {}, en: {} };
+function t(k) { const p = I18N[state.lang] || I18N.zh; return p[k] !== undefined ? p[k] : (I18N.zh[k] !== undefined ? I18N.zh[k] : k); }</script>
+<script src="../vocab_en.js"></script><script src="../vocab_en2.js"></script><script src="../vocab_en3.js"></script>
+<script src="../vocab_en4.js"></script><script src="../vocab_en5.js"></script><script src="../vocab_en6.js"></script>
+<script src="../vocab_en7.js"></script><script src="../vocab_en8.js"></script><script src="../vocab_en9.js"></script>
+<script src="../vocab_en10.js"></script><script src="../vocab_en11.js"></script>
+<script src="../vocab_fr.js"></script><script src="../vocab_fr2.js"></script><script src="../vocab_fr3.js"></script>
+<script src="../vocab_fr4.js"></script><script src="../vocab_fr5.js"></script><script src="../vocab_fr6.js"></script>
+<script src="../vocab_fr7.js"></script><script src="../vocab_fr8.js"></script><script src="../vocab_fr9.js"></script>
+<script src="../vocab_fr10.js"></script><script src="../vocab_fr11.js"></script><script src="../vocab_fr12.js"></script>
+<script src="../vocab_it.js"></script><script src="../vocab_it2.js"></script><script src="../vocab_it3.js"></script>
+<script src="../vocab_it4.js"></script><script src="../vocab_it5.js"></script><script src="../vocab_it6.js"></script>
+<script src="../vocab_it7.js"></script><script src="../vocab_it8.js"></script><script src="../vocab_it9.js"></script>
+<script src="../vocab_it10.js"></script><script src="../vocab_it11.js"></script><script src="../vocab_it12.js"></script>
+<script src="../vocab_es.js"></script><script src="../vocab_es2.js"></script><script src="../vocab_es3.js"></script>
+<script src="../vocab_es4.js"></script><script src="../vocab_es5.js"></script><script src="../vocab_es6.js"></script>
+<script src="../vocab_es7.js"></script><script src="../vocab_es8.js"></script><script src="../vocab_es9.js"></script>
+<script src="../vocab_es10.js"></script><script src="../vocab_es11.js"></script><script src="../vocab_es12.js"></script>
+<script src="../root_stories.js"></script><script src="../root_stories2.js"></script><script src="../root_stories3.js"></script>
+<script src="../root_stories4.js"></script><script src="../root_stories5.js"></script><script src="../root_stories6.js"></script>
+<script src="../root_stories7.js"></script><script src="../root_stories8.js"></script><script src="../root_stories9.js"></script>
+<script src="../root_stories10.js"></script><script src="../root_stories11.js"></script>
+<script src="../etymview.js"></script>
+<script src="letters.js"></script>
+<script src="laws.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
