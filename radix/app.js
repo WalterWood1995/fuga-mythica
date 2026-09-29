@@ -72,16 +72,21 @@ document.addEventListener("click", e => {
 });
 
 /* ---------- nav ---------- */
-function go(name) {
+function show(name) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("show"));
   $("#s-" + name).classList.add("show");
   document.querySelectorAll("[data-go]").forEach(b => b.classList.toggle("on", b.dataset.go === name));
   window.scrollTo(0, 0);
+}
+function go(name) {
+  show(name);
   if (name === "home") renderHome();
   if (name === "letters") renderLetters();
   if (name === "laws") renderLaws();
   if (name === "roots") renderRoots();
   if (name === "quiz") startQuiz();
+  if (name === "chain") renderChain();
+  if (name === "shop") renderShop();
 }
 function renderHome() {
   $("#home-stats").innerHTML = `
@@ -110,7 +115,7 @@ function openLetter(i) {
       <button class="ghost" data-go="letters">字母表</button>
       ${i < LETTERS.length - 1 ? `<button class="big-btn" data-letter="${i + 1}">${esc(LETTERS[i + 1].id)} →</button>` : ""}
     </div>`;
-  go("letter");
+  show("letter");
 }
 
 /* ---------- 音变篇 ---------- */
@@ -143,7 +148,7 @@ function openLaw(i) {
       <button class="big-btn" data-go="quiz">练一练</button>
       ${i < LAWS.length - 1 ? `<button class="ghost" data-law="${i + 1}">下一条 →</button>` : ""}
     </div>`;
-  go("law");
+  show("law");
 }
 
 /* ---------- 词族篇 ---------- */
@@ -179,9 +184,70 @@ function openRoot(id) {
     <div class="glyph" style="font-size:2em">${esc(r.form)}<small>${esc(r.gist)}</small></div>
     <div class="tw"><table class="cmp"><tr><th>法语</th><th>意大利语</th><th>西班牙语</th><th>英语</th></tr>
       ${rows.map(cells => `<tr>${cells.map(c => `<td style="color:var(--text);font-style:normal">${c}</td>`).join("")}</tr>`).join("")}</table></div>
+    ${affixHtml(id)}
     ${story ? (typeof evBlockHtml === "function" ? evBlockHtml(story, { rootForm: r.form, rootGist: r.gist }) : `<div class="etym">${story}</div>`) : `<p class="hint">这个词根的来历还没写。</p>`}
     <div style="text-align:center;margin-top:14px"><button class="ghost" data-go="roots">← 词族表</button></div>`;
-  go("root");
+  show("root");
+}
+
+/* 一个词根在四种语言里带哪些前缀:从真实词里拆出来 */
+/* 一个词根在四种语言里带哪些前缀:从真实词里拆出来。
+   同一个前缀有很多变体(ad- 会写成 ac-/af-/ap-…),按规范形归并。 */
+const PRE_CANON = [
+  ["re-",    ["re", "ré", "ri", "ra", "r"]],
+  ["ad-",    ["ad", "ac", "af", "ag", "al", "ap", "as", "at", "ab", "a"]],
+  ["com-",   ["com", "con", "col", "cor", "co"]],
+  ["in- (进入/不)", ["in", "im", "il", "ir", "en", "em"]],
+  ["ex-",    ["ex", "ef", "es", "e"]],
+  ["de-",    ["de", "dé", "di", "dis", "dif", "des"]],
+  ["sub-",   ["sub", "sup", "sou", "sop", "sos", "su", "so"]],
+  ["super-", ["super", "sur", "sopra", "sobre"]],
+  ["trans-", ["trans", "tras", "tra", "tré"]],
+  ["per-",   ["per", "par"]],
+  ["pro-",   ["pro", "pour", "pur"]],
+  ["pre-",   ["pré", "pre", "pri"]],
+  ["inter-", ["inter", "entre"]],
+  ["ob-",    ["ob", "oc", "of", "op"]],
+  ["circum-",["circon", "circun", "circo", "circ"]],
+  ["contra-",["contra", "contre", "contro"]],
+];
+function canonOf(pre) {
+  let best = null;
+  PRE_CANON.forEach(([canon, vars]) => vars.forEach(v => {
+    if (pre === v && (!best || v.length > best.len)) best = { canon, len: v.length };
+  }));
+  return best ? best.canon : null;
+}
+function affixHtml(id) {
+  const rows = [];
+  Object.keys(PACKS).forEach(l => {
+    (PACKS[l].byRoot[id] || []).forEach(i => {
+      const w = PACKS[l].words[i];
+      const plain = w[0].replace(/^(le |la |les |il |lo |gli |i |el |los |las |l'|the )/i, "");
+      const root = (PACKS[l].roots[id] || [""])[0].replace(/\([^)]*\)/g, "").split(/[\/,]/)[0].replace(/[-\s]/g, "").toLowerCase();
+      if (!root || root.length < 3) return;
+      const stem = root.slice(0, Math.max(3, root.length - 1));
+      const k = plain.toLowerCase().indexOf(stem);
+      if (k <= 0) return;
+      const pre = plain.slice(0, k).toLowerCase().replace(/[^a-zà-ÿ]/g, "");
+      if (!pre || pre.length > 6) return;
+      const canon = canonOf(pre);
+      if (!canon) return;
+      rows.push({ canon, pre, w: plain, g: w[1] });
+    });
+  });
+  if (rows.length < 3) return "";
+  const by = {};
+  rows.forEach(r => (by[r.canon] = by[r.canon] || []).push(r));
+  const keys = Object.keys(by).sort((a, b) => by[b].length - by[a].length).slice(0, 8);
+  return `<div class="card"><h2 style="margin:0 0 6px">🧱 加前缀造出来的词</h2>` +
+    keys.map(c => {
+      const seen = new Set();
+      const items = by[c].filter(r => { if (seen.has(r.w)) return false; seen.add(r.w); return true; }).slice(0, 6);
+      return `<div style="margin-bottom:7px"><b style="color:var(--gold)">${esc(c)}</b> ` +
+        items.map(r => `<span class="tag" style="color:var(--text)">${esc(r.w)} <span class="hint">${esc(r.g)}</span></span>`).join("") + `</div>`;
+    }).join("") +
+    `<p class="hint" style="margin:6px 0 0">每个前缀的意思见「造词工坊 → 前缀表」。</p></div>`;
 }
 
 /* ---------- 练习:用规律换字母 ---------- */
@@ -256,3 +322,85 @@ $("#ver").textContent = "v1.0";
 renderHome();
 go("home");
 if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
+
+/* =====================================================
+   造词树:字母意象 → 词根群 → 换元音/换辅音/换位置 → 加前后缀
+   ===================================================== */
+const KNOWN = (() => {
+  const k = {};
+  Object.keys(PACKS).forEach(l => {
+    const p = PACKS[l];
+    Object.entries(p.roots).forEach(([id, r]) => {
+      if (!/^[-A-Za-z\u00C0-\u024F]/.test(r[0]) || !(p.byRoot[id] || []).length) return;
+      k[id] = k[id] || { id, form: r[0], gist: r[1], n: 0 };
+      k[id].n += p.byRoot[id].length;
+    });
+  });
+  return k;
+})();
+function chipRoot(id) {
+  const k = KNOWN[id];
+  if (!k) return "";
+  return `<button class="pill" data-root="${esc(id)}" style="margin:0 4px 4px 0"><b style="color:var(--gold)">${esc(k.form)}</b> ${esc(k.gist)} <span class="hint">${k.n}</span></button>`;
+}
+function renderChain(letter) {
+  const keys = Object.keys(CHAIN);
+  const L = letter || (save.chainLetter || "A");
+  save.chainLetter = L; store();
+  const c = CHAIN[L], meta = LETTERS.find(x => x.id === L) || {};
+  $("#chain-box").innerHTML = `
+    <h1>造词树</h1>
+    <p class="lead">从字母的象形义出发,记住由它起头的核心词根;再靠<b>换元音、换辅音、换位置、加前后缀</b>四种真实的历史机制,把一个骨架推成一串词。</p>
+    <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(44px,1fr));margin-bottom:12px">
+      ${keys.map(k => `<button class="lt" style="font-size:1.05em;padding:6px 0${k === L ? ";border-color:var(--gold);background:var(--panel2)" : ""}" data-chain="${k}">${k}</button>`).join("")}
+    </div>
+    <div class="card">
+      <div class="glyph" style="font-size:2.2em;margin:0">${esc(L)}<small>${esc(meta.g || "")}</small></div>
+      <p style="text-align:center;margin:4px 0 0"><span class="tag">象形</span>${esc(meta.short || "")}</p>
+      <p style="text-align:center;margin:6px 0 0;color:var(--text-dim)"><span class="tag">联想链</span>${esc(c.line)}</p>
+    </div>
+    ${c.hooks.map(h => `
+      <div class="card">
+        <h2 style="margin:0 0 6px">${esc(h.img)}</h2>
+        <div>${h.roots.map(chipRoot).join("") || `<span class="hint">这个字母下暂时没有成族的词根。</span>`}</div>
+      </div>`).join("")}
+    <p class="hint" style="margin-top:10px">⚠️ 上面的「意象」是记忆钩子,靠字形和读音去联想,<b>不是词源主张</b>;点开任何一个词根,看到的来历都是有据的。</p>
+    <div style="text-align:center;margin:14px 0"><button class="big-btn" data-go="shop">进造词工坊 →</button></div>`;
+  show("chain");
+}
+function renderShop() {
+  const v = SWAP.vowel, c = SWAP.cons, m = SWAP.meta;
+  $("#shop-box").innerHTML = `
+    <h1>造词工坊</h1>
+    <p class="lead">四种操作,把一个骨架变成一串词。</p>
+
+    <h2>① 换元音 <span class="hint">ablaut</span></h2>
+    <p class="hint" style="margin-top:0">${esc(v.why)}</p>
+    <div class="tw"><table class="cmp"><tr><th>骨架</th><th>核心义</th><th>e 级</th><th>o 级</th><th>零级</th></tr>
+      ${v.rows.map(r => `<tr><td>${esc(r.skel)}</td><td style="color:var(--text)">${esc(r.core)}</td>
+        <td style="color:var(--text)">${esc(r.e)}</td><td style="color:var(--text)">${esc(r.o)}</td><td style="color:var(--text)">${esc(r.zero)}</td></tr>
+        <tr><td></td><td colspan="4" class="hint">→ ${esc(r.words)}</td></tr>`).join("")}</table></div>
+
+    <h2>② 换辅音 <span class="hint">格林定律</span></h2>
+    <p class="hint" style="margin-top:0">${esc(c.why)}</p>
+    ${c.rows.map(r => `<div class="card" style="padding:9px 12px"><b style="color:var(--gold)">${esc(r.pair)}</b><div>${esc(r.ex)}</div></div>`).join("")}
+
+    <h2>③ 换位置 <span class="hint">metathesis</span></h2>
+    <p class="hint" style="margin-top:0">${esc(m.why)}</p>
+    <div class="tw"><table class="cmp"><tr><th>拉丁/原形</th><th>换位后</th><th>怎么换的</th></tr>
+      ${m.rows.map(r => `<tr><td>${esc(r.from)}</td><td style="color:var(--text)">${esc(r.to)}</td><td class="hint">${esc(r.note)}</td></tr>`).join("")}</table></div>
+
+    <h2>④ 加前缀 / 后缀</h2>
+    <p class="hint" style="margin-top:0">选一个词根,看它和各前缀拼出的真实词。</p>
+    <div style="margin:8px 0">${["port", "duc", "fer", "pos", "ven", "spec", "tend", "cap", "scrib", "mitt"].map(chipRoot).join("")}</div>
+    <h2 style="font-size:1em">前缀表</h2>
+    ${AFFIX.pre.map(a => `<div class="card" style="padding:8px 12px"><b style="color:var(--gold)">${esc(a.f)}</b> <span class="hint">${esc(a.m)}</span><div style="font-size:.92em">${esc(a.ex)}</div></div>`).join("")}
+    <h2 style="font-size:1em">后缀表</h2>
+    ${AFFIX.suf.map(a => `<div class="card" style="padding:8px 12px"><b style="color:var(--gold)">${esc(a.f)}</b> <span class="hint">${esc(a.m)}</span><div style="font-size:.92em">${esc(a.ex)}</div></div>`).join("")}
+    <div style="text-align:center;margin:14px 0"><button class="ghost" data-go="chain">← 回造词树</button></div>`;
+  show("shop");
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest && e.target.closest("[data-chain]");
+  if (b) renderChain(b.dataset.chain);
+});

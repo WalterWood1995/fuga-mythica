@@ -77,6 +77,7 @@
       <span class="brand">🌱 德语词根速记</span>
       <button class="pill" data-go="home">首页</button>
       <button class="pill" data-go="list">词根表</button>
+      <button class="pill" data-go="chain">造词树</button>
       <button class="pill" data-go="drill">速认</button>
       <button class="pill" data-go="search">查词</button>
       <select class="pill" id="sel-lang"><option value="zh">中文</option><option value="en">English</option></select>
@@ -108,6 +109,8 @@
 
   <div class="screen" id="s-quiz"><div id="quiz-box"></div></div>
 
+  <div class="screen" id="s-chain"><div id="chain-box"></div></div>
+  <div class="screen" id="s-shop"><div id="shop-box"></div></div>
   <div class="screen" id="s-drill"><div id="drill-box"></div></div>
 
   <div class="screen" id="s-search">
@@ -170,6 +173,7 @@ function t(k) { const p = I18N[state.lang] || I18N.zh; return p[k] !== undefined
 <script src="../root_stories_de23.js"></script>
 <script src="../etymview.js"></script>
 <script src="ipa_de.js"></script>
+<script src="chain_de.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

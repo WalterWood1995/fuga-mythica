@@ -1,7 +1,7 @@
 /* Radix Latina — offline shell */
-const VERSION = "radix-v1.0.0";
+const VERSION = "radix-v1.1.0";
 const CACHE = "radix-latina-" + VERSION;
-const SHELL = ["./", "./index.html", "./app.js", "./letters.js", "./laws.js", "./manifest.webmanifest", "../etymview.js"];
+const SHELL = ["./", "./index.html", "./app.js", "./letters.js", "./chain.js", "./laws.js", "./manifest.webmanifest", "../etymview.js"];
 ["en", "fr", "it", "es"].forEach(l => { const n = l === "en" ? 11 : 12; for (let i = 1; i <= n; i++) SHELL.push("../vocab_" + l + (i === 1 ? "" : i) + ".js"); });
 for (let i = 1; i <= 11; i++) SHELL.push("../root_stories" + (i === 1 ? "" : i) + ".js");
 self.addEventListener("install", e => {

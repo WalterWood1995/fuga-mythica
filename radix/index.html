@@ -75,6 +75,7 @@
       <span class="brand">🔤 Radix Latina</span>
       <button class="pill" data-go="home">首页</button>
       <button class="pill" data-go="letters">字母</button>
+      <button class="pill" data-go="chain">造词树</button>
       <button class="pill" data-go="laws">音变</button>
       <button class="pill" data-go="roots">词族</button>
       <button class="pill" data-go="quiz">练习</button>
@@ -108,6 +109,9 @@
     <div class="grid" id="letters-grid"></div>
   </div>
   <div class="screen" id="s-letter"><div id="letter-box"></div></div>
+
+  <div class="screen" id="s-chain"><div id="chain-box"></div></div>
+  <div class="screen" id="s-shop"><div id="shop-box"></div></div>
 
   <div class="screen" id="s-laws">
     <h1>音变篇</h1>
@@ -152,6 +156,7 @@ function t(k) { const p = I18N[state.lang] || I18N.zh; return p[k] !== undefined
 <script src="../root_stories10.js"></script><script src="../root_stories11.js"></script>
 <script src="../etymview.js"></script>
 <script src="letters.js"></script>
+<script src="chain.js"></script>
 <script src="laws.js"></script>
 <script src="app.js"></script>
 </body>

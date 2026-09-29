@@ -86,15 +86,20 @@ function mark(word, form) {
 }
 
 /* ---------- screens ---------- */
-function go(name) {
+function show(name) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("show"));
   $("#s-" + name).classList.add("show");
   document.querySelectorAll("[data-go]").forEach(b => b.classList.toggle("on", b.dataset.go === name));
   window.scrollTo(0, 0);
+}
+function go(name) {
+  show(name);
   if (name === "home") renderHome();
   if (name === "list") renderList();
   if (name === "drill") renderDrill();
   if (name === "search") renderSearch();
+  if (name === "chain") renderChain();
+  if (name === "shop") renderShop();
 }
 function stats() {
   let lit = 0, words = 0, total = 0;
@@ -146,11 +151,12 @@ function openRoot(id) {
     ${typeof evBlockHtml === "function"
       ? evBlockHtml(st, { rootForm: r[0], rootGist: rootGist(r), family: famRows, famLabel: "🧩 同根词族" })
       : `<div class="etym">${st}</div>`}
+    ${typeof stemAffixHtml === "function" ? stemAffixHtml(id) : ""}
     <div style="text-align:center;margin:18px 0"><button class="big-btn" id="btn-quiz">开始练习</button>
       <div class="hint" style="margin-top:6px">答对 80% 点亮这个词根</div></div>
     <div style="text-align:center"><button class="ghost" data-go="list">← 返回词根表</button></div>`;
   $("#btn-quiz").onclick = () => startQuiz(id);
-  go("root");
+  show("root");
 }
 
 /* ---------- practice ---------- */
@@ -165,7 +171,7 @@ function distractors(idx, rev) {
 }
 function startQuiz(id) {
   quiz = { id, queue: shuffle(P.byRoot[id]).slice(0, MAXQ), i: 0, right: 0, wrong: [] };
-  nextQ(); go("quiz");
+  nextQ(); show("quiz");
 }
 function nextQ() {
   if (quiz.i >= quiz.queue.length) return finishQuiz();
@@ -306,3 +312,74 @@ $("#sel-lang").onchange = e => { state.lang = e.target.value; save.lang = state.
 $("#ver").textContent = "v1.0";
 go("home");
 if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
+
+/* =====================================================
+   造词树:字母意象 → 词干 → 换元音(Ablaut) → 加前后缀
+   ===================================================== */
+function chipStem(id) {
+  const r = P.roots[id];
+  if (!r || !(P.byRoot[id] || []).length) return "";
+  return `<button class="pill" data-root="${esc(id)}" style="margin:0 4px 4px 0"><b style="color:var(--gold)">${esc(r[0])}</b> ${esc(rootGist(r))} <span class="hint">${P.byRoot[id].length}</span></button>`;
+}
+function renderChain(letter) {
+  const keys = Object.keys(CHAIN_DE);
+  const L = letter || save.chainLetter || "A";
+  save.chainLetter = L; store();
+  const c = CHAIN_DE[L];
+  $("#chain-box").innerHTML = `
+    <h1>造词树</h1>
+    <p class="lead">先用字母的形象记住由它起头的核心词干,再靠<b>换元音</b>(德语强变化动词的 Ablaut)和<b>加前后缀</b>,把一个词干推成一串词。</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:6px;margin-bottom:12px">
+      ${keys.map(k => `<button class="pill" style="text-align:center;font-size:1.05em${k === L ? ";border-color:var(--gold);color:var(--gold);background:var(--panel2)" : ""}" data-chain="${k}">${k}</button>`).join("")}
+    </div>
+    <div class="card"><div style="text-align:center;font-size:2.4em;color:var(--gold);font-family:Georgia,serif">${esc(L)}</div>
+      <p style="text-align:center;margin:4px 0 0;color:var(--text-dim)">${esc(c.line)}</p></div>
+    ${c.hooks.map(h => `<div class="card"><h2 style="margin:0 0 6px">${esc(h.img)}</h2>
+      <div>${h.roots.map(chipStem).join("") || `<span class="hint">这个字母下暂时没有成族的词干。</span>`}</div></div>`).join("")}
+    <p class="hint">⚠️「意象」是记忆钩子,靠字形和读音联想,<b>不是词源主张</b>;点开词干看到的来历都是有据的。</p>
+    <div style="text-align:center;margin:14px 0"><button class="big-btn" data-go="shop">换元音 + 前后缀 →</button></div>`;
+  show("chain");
+}
+function renderShop() {
+  $("#shop-box").innerHTML = `
+    <h1>换元音与加缀</h1>
+    <h2>① 换元音:Ablaut</h2>
+    <p class="hint" style="margin-top:0">德语最值钱的造词机制:同一副辅音骨架,换一个元音就换一个词。动词三态换完,再加后缀就是一串名词。</p>
+    ${ABLAUT.map(a => `<div class="card">
+      <b style="color:var(--gold)">${esc(a.name)}</b>
+      <div style="font-size:1.05em;margin:4px 0">${esc(a.verbs)} ${speakBtn(a.verbs.split(" / ")[0])}</div>
+      <div>→ ${esc(a.words)}</div>
+      <div class="hint" style="margin-top:4px">同类还有:${esc(a.more)}</div></div>`).join("")}
+    <h2>② 前缀:换一个前缀就是一个新词</h2>
+    ${AFFIX_DE.pre.map(a => `<div class="card" style="padding:8px 12px"><b style="color:var(--gold)">${esc(a.f)}</b> <span class="hint">${esc(a.m)}</span><div style="font-size:.95em">${esc(a.ex)}</div></div>`).join("")}
+    <h2>③ 后缀:决定词性与词性别</h2>
+    ${AFFIX_DE.suf.map(a => `<div class="card" style="padding:8px 12px"><b style="color:var(--gold)">${esc(a.f)}</b> <span class="hint">${esc(a.m)}</span><div style="font-size:.95em">${esc(a.ex)}</div></div>`).join("")}
+    <div style="text-align:center;margin:14px 0"><button class="ghost" data-go="chain">← 回造词树</button></div>`;
+  show("shop");
+}
+/* 一个词干带哪些前缀:从词库里真实的词拆出来 */
+const DE_PRE = ["be","ge","er","ver","zer","ent","miss","un","ur","auf","aus","ein","mit","nach","vor","über","unter","um","ab","an","zu","durch","hin","her","wieder","wider","gegen"];
+function stemAffixHtml(id) {
+  const r = P.roots[id]; if (!r) return "";
+  const stem = forms(r[0])[0];
+  if (!stem || stem.length < 3) return "";
+  const by = {};
+  (P.byRoot[id] || []).forEach(i => {
+    const w = P.words[i], plain = w[0].replace(/^(der|die|das)\s+/, "");
+    const k = plain.toLowerCase().indexOf(stem.slice(0, Math.max(3, stem.length - 1)));
+    if (k <= 0) return;
+    const pre = plain.slice(0, k).toLowerCase();
+    const hit = DE_PRE.filter(p => pre === p || pre === p + "ge").sort((a, b) => b.length - a.length)[0];
+    if (!hit) return;
+    (by[hit] = by[hit] || []).push(`${plain} <span class="hint">${esc(gist(w))}</span>`);
+  });
+  const keys = Object.keys(by).sort((a, b) => by[b].length - by[a].length);
+  if (!keys.length) return "";
+  return `<div class="card"><h2 style="margin:0 0 6px">🧱 加前缀造出来的词</h2>` +
+    keys.map(p => `<div style="margin-bottom:6px"><b style="color:var(--gold)">${esc(p)}-</b> ${by[p].slice(0, 8).join(" · ")}</div>`).join("") +
+    `<p class="hint" style="margin:6px 0 0">前缀的意思见「造词树 → 换元音与加缀」。</p></div>`;
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest && e.target.closest("[data-chain]");
+  if (b) renderChain(b.dataset.chain);
+});
