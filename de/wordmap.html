@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>德语造词全景图</title>
+<meta name="description" content="一张图讲完德语怎么造词:词根骨架 → 换元音 → 加前缀 → 加后缀 → 复合与接合 → 框式与外来层。">
+<meta name="theme-color" content="#1b1410">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌳</text></svg>">
+<style>
+  :root { --bg:#1b1410; --panel:#241b16; --panel2:#2e231c; --text:#f2e8dc; --dim:#b6a496;
+          --gold:#e8b64c; --gold-dim:#8a6d33; --accent:#e07a3f; --good:#5aaa78; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { margin:0; background:var(--bg); color:var(--text); line-height:1.65;
+         font-family:"Noto Serif SC",Georgia,"Songti SC",serif; }
+  #wrap { max-width:860px; margin:0 auto; padding:0 14px 70px; }
+  header { position:sticky; top:0; z-index:9; background:linear-gradient(var(--bg) 72%,transparent); padding:10px 0 8px;
+           display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  .brand { color:var(--gold); font-weight:700; margin-right:auto; }
+  a.pill, button.pill { background:var(--panel); border:1px solid var(--gold-dim); color:var(--text); border-radius:20px;
+          padding:5px 11px; font:inherit; font-size:.86em; cursor:pointer; text-decoration:none; }
+  a.pill:hover, button.pill:hover, button.pill.on { border-color:var(--gold); color:var(--gold); background:var(--panel2); }
+  h1 { color:var(--gold); font-size:1.55em; margin:16px 0 4px; }
+  h2 { color:var(--gold); font-size:1.12em; margin:26px 0 8px; scroll-margin-top:64px; }
+  h3 { color:var(--accent); font-size:1em; margin:14px 0 4px; }
+  p.lead { color:var(--dim); margin:0 0 12px; }
+  .card { background:var(--panel); border:1px solid var(--gold-dim); border-radius:14px; padding:12px 14px; margin:10px 0; }
+  .map { background:var(--panel); border:1px solid var(--gold-dim); border-radius:14px; padding:6px; overflow-x:auto; }
+  svg { display:block; min-width:640px; width:100%; height:auto; }
+  .n-box { fill:var(--panel2); stroke:var(--gold-dim); cursor:pointer; }
+  .n-box:hover { stroke:var(--gold); }
+  .n-box.core { fill:#3a2a1c; stroke:var(--gold); }
+  text { font-family:"Noto Serif SC",Georgia,serif; fill:var(--text); cursor:pointer; }
+  text.t { font-size:15px; fill:var(--gold); }
+  text.s { font-size:11.5px; fill:var(--dim); }
+  text.big { font-size:19px; fill:var(--gold); font-weight:700; }
+  path.link { fill:none; stroke:var(--gold-dim); stroke-width:1.4; }
+  table { width:100%; border-collapse:collapse; font-size:.94em; }
+  td,th { padding:6px 6px; border-bottom:1px solid rgba(232,182,76,.16); text-align:left; vertical-align:top; }
+  th { color:var(--gold); font-weight:400; font-size:.86em; }
+  td.k { white-space:nowrap; color:var(--accent); }
+  .num { color:var(--dim); font-size:.86em; white-space:nowrap; }
+  .chain { counter-reset:step; }
+  .step { display:grid; grid-template-columns:38px 1fr; gap:10px; margin:0 0 8px; align-items:start; }
+  .step .i { width:30px; height:30px; border-radius:50%; background:var(--gold); color:#241b16;
+             display:grid; place-items:center; font-weight:700; font-size:.9em; }
+  .step .op { color:var(--dim); font-size:.86em; }
+  .w { color:var(--accent); font-size:1.08em; }
+  mark { background:none; color:var(--gold); font-weight:700; }
+  .hint { color:var(--dim); font-size:.86em; }
+  details { border-top:1px solid rgba(232,182,76,.16); padding:6px 0; }
+  summary { cursor:pointer; color:var(--gold); }
+  footer { color:var(--dim); font-size:.8em; text-align:center; padding:24px 0; }
+</style>
+</head>
+<body>
+<div id="wrap">
+<header>
+  <span class="brand">🌳 德语造词全景图</span>
+  <a class="pill" href="index.html">← 回词根速记</a>
+</header>
+
+<h1>德语怎么造词</h1>
+<p class="lead">德语的长词不是背出来的,是<b>拼</b>出来的。下面这张图是全部零件;点任一个跳到它的细节。
+最后一节把所有零件串成一条完整的故事:从三个辅音,一路造到 <i>Unverbindlichkeit</i>。</p>
+
+<div class="map" id="map"></div>
+
+<h2 id="s1">① 骨架:辅音是身份证,元音只是衣服</h2>
+<div class="card">
+  <p style="margin-top:0">印欧语的词根，<b>辅音序列</b>才是身份,元音是可换的。德语把这一点保留得最彻底:
+  <span class="w">b–n–d</span> 这副骨架,不管元音换成什么,意思都绕着「捆、系」转。</p>
+  <table>
+    <tr><th>骨架</th><th>换上不同元音</th><th>造出来的词</th></tr>
+    <tr><td class="k">b–n–d</td><td>i / a / u</td><td>b<mark>i</mark>nden 捆 · das B<mark>a</mark>nd 带子 · der B<mark>u</mark>nd 联盟</td></tr>
+    <tr><td class="k">st–nd</td><td>e / a / ä</td><td>st<mark>e</mark>hen 站 · der St<mark>a</mark>nd 状态 · st<mark>ä</mark>ndig 不断的</td></tr>
+    <tr><td class="k">g–b</td><td>e / a / i</td><td>g<mark>e</mark>ben 给 · die G<mark>a</mark>be 天赋 · das G<mark>i</mark>ft 毒(原义「给出去的东西」)</td></tr>
+    <tr><td class="k">sp–ch</td><td>e / a / u</td><td>spr<mark>e</mark>chen 说 · die Spr<mark>a</mark>che 语言 · der Spr<mark>u</mark>ch 箴言</td></tr>
+  </table>
+  <p class="hint">所以查一个陌生的长词,先在心里把元音抹掉,只看辅音——十次里有七次能认出熟词。</p>
+</div>
+
+<h2 id="s2">② 换元音:Ablaut,德语最值钱的机制</h2>
+<div class="card">
+  <p style="margin-top:0">这不是随机变化,而是印欧语留下的<b>元音交替</b>(Ablaut),在德语里凝固成强变化动词的七类。
+  动词三态一换完,后面每加一个后缀就是一个新名词。</p>
+  <table id="ablaut"></table>
+  <p class="hint">记法:<b>记一个三态,等于记一串名词</b>。binden / band / gebunden 一背完,Band、Bund、Bündnis、Verband、Bindung 全部到手。</p>
+</div>
+
+<h2 id="s3">③ 加前缀:方向与态度</h2>
+<div class="card">
+  <p style="margin-top:0">前缀不改变词根的意思,只给它加<b>方向</b>(出、进、上、下)或<b>态度</b>(做坏了、做到底、做没了)。
+  分两类,这个区分决定句子怎么排:</p>
+  <p><b>不可分前缀</b> be- ge- er- ver- zer- ent- miss- —— 永远粘着词根,重音不在它身上,过去分词<b>不加 ge-</b>:verstehen → verstanden。</p>
+  <p><b>可分前缀</b> auf- aus- ein- an- ab- mit- nach- vor- zu- —— 说话时被甩到句尾:<i>Ich stehe um sechs <mark>auf</mark>.</i> 过去分词把 ge- 夹在中间:auf<mark>ge</mark>standen。</p>
+  <table id="pre"></table>
+  <p class="hint">数字是本词库里实际出现的词数。ver- 和 be- 两个就管着五百多个词——先吃这两个最划算。</p>
+</div>
+
+<h2 id="s4">④ 加后缀:决定词性,顺便决定性别</h2>
+<div class="card">
+  <p style="margin-top:0">后缀是德语给你的<b>免费礼物</b>:它把词性写在脸上,而名词后缀几乎<b>锁定阴阳中性</b>——记住后缀就不用背 der/die/das。</p>
+  <table id="suf"></table>
+  <h3>三条可以当公式用的规律</h3>
+  <p style="margin:0">· <b>-ung / -heit / -keit / -schaft / -ei / -ion / -ität → 一律 die</b>(阴性)</p>
+  <p style="margin:0">· <b>-chen / -lein / -tum / -nis → 一律 das</b>(中性,所以 das Mädchen 是中性,跟女孩无关)</p>
+  <p style="margin:0">· <b>-er / -ling / -ist / -or / -ent → 一律 der</b>(阳性);加 -in 变阴性</p>
+</div>
+
+<h2 id="s5">⑤ 复合:德语长词的真正来源</h2>
+<div class="card">
+  <p style="margin-top:0">本词库里 <b id="n-comp">—</b> 个词是复合词——把两个独立的词直接焊在一起。规则只有一条:
+  <b>最后一截决定一切</b>(词性、性别、复数);前面的都是修饰。</p>
+  <p class="w">die Arbeit + <span class="hint">-s-</span> + der Platz → der Arbeit<mark>s</mark>platz 工作岗位</p>
+  <p class="hint" style="margin-top:0">是 <b>der</b>,因为末尾是 Platz;意思是「一种 Platz」,不是「一种 Arbeit」。倒过来 der Platzarbeiter 就完全是另一回事。</p>
+  <h3>中间那个粘合剂:Fugenelement</h3>
+  <p style="margin:0 0 6px">两半之间常插一个小零件,纯粹是为了顺口,没有意思。本库中出现 <b id="n-fug">—</b> 次。</p>
+  <table id="fug"></table>
+  <p class="hint">最好用的经验:前件若以 <b>-ung / -heit / -keit / -schaft / -tum / -ling</b> 结尾,后面几乎一定插 <b>-s-</b>(Zeitungsartikel、Freiheitskampf、Wissenschaftsbuch)。</p>
+</div>
+
+<h2 id="s6">⑥ 框式与外来层:剩下的两块拼图</h2>
+<div class="card">
+  <h3>框式 ge-…-t:前后一起夹住词根</h3>
+  <p style="margin:0 0 6px">过去分词不是加一个缀,而是<b>前后同时加</b>:<span class="w">ge-mach-t</span>、<span class="w">ge-sproch-en</span>。
+  这解释了两件事:不可分前缀的动词没有 ge-(verkauft,因为 ver- 已经占了那个位置);可分前缀的动词把 ge- 夹在中间(ein<mark>ge</mark>kauft)。</p>
+  <h3>外来层:拉丁与希腊的那一套</h3>
+  <p style="margin:0 0 6px">德语有一整套平行的外来构词零件,规则更整齐——因为它们是成套借来的:</p>
+  <table>
+    <tr><th>外来后缀</th><th>对应的德语土产</th><th>例</th></tr>
+    <tr><td class="k">-ion / -ation</td><td>-ung</td><td>die Information · die Organisation(一律 die)</td></tr>
+    <tr><td class="k">-ität / -tät</td><td>-heit / -keit</td><td>die Aktivität · die Realität(一律 die)</td></tr>
+    <tr><td class="k">-ieren</td><td>-en</td><td>organisieren · analysieren(弱变化,分词 -iert,<b>不加 ge-</b>)</td></tr>
+    <tr><td class="k">-ist / -ent / -or</td><td>-er</td><td>der Journalist · der Student · der Motor(一律 der)</td></tr>
+    <tr><td class="k">-iv / -al / -ell / -ös</td><td>-ig / -lich</td><td>aktiv · normal · offiziell · nervös</td></tr>
+  </table>
+  <p class="hint">拉丁前缀也照搬:in-(否定)、re-(再)、de-(去)、prä-(先)、trans-(跨)。同一个概念常有土产和外来两个词:Fernsprecher / Telefon。</p>
+</div>
+
+<h2 id="s7">⑦ 一条完整的故事:从三个辅音到 Unverbindlichkeit</h2>
+<div class="card chain" id="chain"></div>
+
+<div class="card">
+  <h3 style="margin-top:0">同一套动作,换一副骨架再走一遍</h3>
+  <p style="margin:0"><b>st–nd</b>:骨架「立」→ 换元音 stehen / stand / gestanden → 加前缀 ver<b>stehen</b> 懂(「把它立起来」)
+  → 加后缀 Verständ<b>nis</b> 理解 → 复合 Selbst<b>verständ</b>lichkeit 理所当然。五步,五个词,一个骨架。</p>
+</div>
+
+<div class="card">
+  <h3 style="margin-top:0">怎么用这张图查一个陌生的长词</h3>
+  <p style="margin:0">① 从<b>右边</b>看起——最后一截决定词性和性别。② 削掉认得的后缀。③ 削掉前缀。
+  ④ 剩下的东西抹掉元音,只看辅音,去找熟悉的骨架。⑤ 把意思按「前缀的方向 + 骨架的意思 + 后缀的词性」拼回去。</p>
+  <p class="hint" style="margin:6px 0 0">练一个:<b>Unverbindlichkeit</b> → un + ver + b(i)nd + lich + keit → 「不 + 使连上 + 的 + 性质」= 不具约束力。图里第 8 步就是它。</p>
+</div>
+
+<footer>德语造词全景图 · 表中词数取自本词库 <span id="stat"></span> · 词源内容与《Fuga Mythica》同源</footer>
+</div>
+
+<script>
+/* ---------- data (counts measured from this app's own vocabulary) ---------- */
+const STAT = { words: 5159, roots: 632, compound: 1798, fugen: 249 };
+
+const ABLAUT = [
+  ["第 1 类 ei – ie – ie", "bleiben / blieb / geblieben", "der Verbleib 去向 · die Bleibe 住处 · schreiben → die Schrift 字体"],
+  ["第 2 类 ie – o – o", "bieten / bot / geboten", "das Angebot 报价 · das Verbot 禁令 · der Bote 信使"],
+  ["第 3 类 i – a – u", "binden / band / gebunden", "das Band · der Bund · das Bündnis · der Verband · die Bindung"],
+  ["第 4 类 e – a – o", "nehmen / nahm / genommen", "die Annahme 假设 · die Einnahme 收入 · angenehm 舒适的"],
+  ["第 5 类 e – a – e", "geben / gab / gegeben", "die Gabe · die Aufgabe 任务 · die Ausgabe 支出 · das Gift 毒"],
+  ["第 6 类 a – u – a", "fahren / fuhr / gefahren", "die Fahrt · die Erfahrung 经验 · die Ausfuhr 出口 · der Führer"],
+  ["第 7 类 a/au/ei – ie – a", "fallen / fiel / gefallen", "der Fall · der Zufall 偶然 · der Unfall 事故 · gefällig 讨喜的"],
+];
+const PRE = [
+  ["ver-", "弄错、用尽、改变、消失", "不可分", 262, "verstehen 懂 · verkaufen 卖 · verlaufen 走错 · verlieren 丢"],
+  ["be-", "使…、把不及物变及物", "不可分", 240, "bekommen 得到 · beachten 注意 · beantworten 回答某事"],
+  ["ge-", "完成、集合(也是分词框式)", "不可分", 187, "das Gebirge 山脉 · das Gespräch 谈话 · das Gebäude 建筑"],
+  ["er-", "做成、开始、致死", "不可分", 122, "erfinden 发明 · erkennen 认出 · erschießen 射杀"],
+  ["an-", "靠近、开始", "可分", 112, "anfangen 开始 · anrufen 打电话 · ankommen 到达"],
+  ["ab-", "离开、去掉、完成", "可分", 106, "abfahren 出发 · abnehmen 减少 · abmachen 约定"],
+  ["un-", "不、非", "不可分(名/形)", 87, "unmöglich 不可能 · das Unglück 不幸 · unabhängig 独立的"],
+  ["aus-", "出来、到尽头", "可分", 87, "ausgehen 出门 · austrinken 喝光 · die Ausfahrt 出口"],
+  ["ein-", "进入", "可分", 80, "einsteigen 上车 · einladen 邀请 · der Eingang 入口"],
+  ["vor-", "在前、预先", "可分", 73, "vorstellen 介绍 · die Vorsicht 小心 · der Vorteil 优势"],
+  ["auf-", "向上、打开", "可分", 67, "aufstehen 起床 · aufmachen 打开 · die Aufgabe 任务"],
+  ["über-", "越过、过度", "可分/不可分", 53, "übersetzen 翻译 · übertreiben 夸张"],
+  ["ent-", "去掉、脱离、开始", "不可分", 47, "entdecken 发现 · entscheiden 决定 · entstehen 产生"],
+  ["zer-", "弄碎、拆散", "不可分", 10, "zerbrechen 弄碎 · zerstören 摧毁"],
+  ["miss-", "错、坏", "不可分", 9, "missverstehen 误解 · der Misserfolg 失败"],
+];
+const SUF = [
+  ["-ung", "动作或其结果", "die", 329, "die Bildung 教育 · die Wohnung 住房 · die Bindung 联系"],
+  ["-er", "做这件事的人或工具", "der", 241, "der Lehrer 老师 · der Wecker 闹钟 · der Fahrer 司机"],
+  ["-ig", "具有…的", "形容词", 170, "windig 有风的 · ruhig 安静的 · abhängig 依赖的"],
+  ["-lich", "…的、每…的", "形容词", 166, "freundlich 友好的 · täglich 每天的 · verbindlich 有约束力的"],
+  ["-heit / -keit", "抽象性质", "die", 88, "die Freiheit 自由 · die Möglichkeit 可能性"],
+  ["-ieren", "外来词动词化", "动词", 76, "organisieren · analysieren · studieren"],
+  ["-los", "没有…的", "形容词", 35, "arbeitslos 失业的 · sinnlos 无意义的"],
+  ["-ion / -ation", "动作或结果(外来)", "die", 56, "die Information · die Situation"],
+  ["-isch", "属于…的", "形容词", 79, "politisch 政治的 · kindisch 幼稚的"],
+  ["-schaft", "关系、集体、身份", "die", 17, "die Freundschaft 友谊 · die Wissenschaft 科学"],
+  ["-bar", "可…的", "形容词", 27, "essbar 可食用的 · vorstellbar 可想象的"],
+  ["-chen / -lein", "小称", "das(一律!)", 12, "das Häuschen 小屋 · das Mädchen 女孩"],
+  ["-nis", "结果、状态", "das", 20, "das Verständnis 理解 · das Ergebnis 结果"],
+  ["-tum", "领域、身份", "das", 6, "das Eigentum 财产 · der Reichtum 财富(例外)"],
+];
+const FUG = [
+  ["-s-", "最常见;前件以 -ung/-heit/-keit/-schaft 结尾时几乎必然出现", "der Arbeitsplatz · das Liebeslied"],
+  ["-es-", "-s- 在单音节词后的加长形", "das Tageslicht · die Landesgrenze"],
+  ["-en-", "来自弱变化名词的复数或第二格", "der Sonnenschein · die Straßenbahn"],
+  ["-er-", "来自 -er 复数的前件", "der Kindergarten · das Bücherregal"],
+  ["-e-", "旧第二格或复数留下的 -e-", "die Hundehütte · das Badezimmer"],
+  ["(无)", "大多数情况下什么都不加,直接焊", "der Hausschlüssel · die Handtasche"],
+];
+const CHAIN = [
+  ["骨架", "b – n – d", "三个辅音,意思绕着「捆、系」转。这是词根的身份证。"],
+  ["填元音 i", "binden <span class='hint'>捆、系</span>", "最基本的动词形态成立。强变化,第 3 类。"],
+  ["换元音 a / u(Ablaut)", "das Band <span class='hint'>带子</span> · der Bund <span class='hint'>联盟</span>", "同一骨架,换元音就换词:一个是捆的东西,一个是捆成的团体。Bundesrepublik 就在这里。"],
+  ["加不可分前缀 ver-", "verbinden <span class='hint'>连接、包扎</span>", "ver- 给出「改变状态」的方向:把两样东西变成捆在一起的。"],
+  ["加名词后缀 -ung", "die Verbindung <span class='hint'>联系、连接</span>", "-ung 把动作变成事物,并锁定阴性。die,不用背。"],
+  ["换成形容词后缀 -lich", "verbindlich <span class='hint'>有约束力的</span>", "「能把人捆住的」。到这里意思已经从物理的捆,走到了法律上的约束。"],
+  ["加否定前缀 un-", "unverbindlich <span class='hint'>不具约束力的</span>", "un- 只管否定,不动别的。商务德语里的高频词。"],
+  ["加抽象后缀 -keit", "die Unverbindlichkeit <span class='hint'>不具约束力(这一性质)</span>", "-lich 后面接 -keit(不是 -heit),阴性。六层零件,一个骨架:un+ver+b(i)nd+lich+keit。"],
+  ["顺手再复合一次", "die <mark>Arbeits</mark>verbindung · der <mark>Bundes</mark>tag", "复合与派生可以无限叠——这就是德语长词的全部秘密,没有第二个机制。"],
+];
+
+/* ---------- the mind map ---------- */
+const NODES = [
+  ["s1", "① 骨架", "辅音决定身份,元音可换"],
+  ["s2", "② 换元音", "Ablaut 七类,一换一串"],
+  ["s3", "③ 加前缀", "方向与态度 · 可分/不可分"],
+  ["s4", "④ 加后缀", "定词性,顺便定 der/die/das"],
+  ["s5", "⑤ 复合", "最后一截决定一切 · 接合成分"],
+  ["s6", "⑥ 框式与外来层", "ge-…-t · -ion/-ität/-ieren"],
+  ["s7", "⑦ 串成一条", "b–n–d → Unverbindlichkeit"],
+];
+function drawMap() {
+  const W = 880, rowH = 62, top = 54, H = top + NODES.length * rowH + 20;
+  const cx = 150, cy = H / 2, bx = 360, bw = 470, bh = 46;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="德语造词全景图">`;
+  s += `<rect class="n-box core" x="24" y="${cy - 40}" width="252" height="80" rx="16"/>`;
+  s += `<text class="big" x="150" y="${cy - 8}" text-anchor="middle">德语怎么造词</text>`;
+  s += `<text class="s" x="150" y="${cy + 14}" text-anchor="middle">一个骨架 + 六种动作</text>`;
+  s += `<text class="s" x="150" y="${cy + 32}" text-anchor="middle">${STAT.words} 个词 · ${STAT.roots} 个词根</text>`;
+  NODES.forEach((n, i) => {
+    const y = top + i * rowH + bh / 2;
+    s += `<path class="link" d="M276 ${cy} C 320 ${cy}, 320 ${y}, ${bx} ${y}"/>`;
+    s += `<g onclick="jump('${n[0]}')">`;
+    s += `<rect class="n-box" x="${bx}" y="${y - bh / 2}" width="${bw}" height="${bh}" rx="12"/>`;
+    s += `<text class="t" x="${bx + 16}" y="${y - 2}">${n[1]}</text>`;
+    s += `<text class="s" x="${bx + 16}" y="${y + 15}">${n[2]}</text>`;
+    s += `</g>`;
+  });
+  s += `</svg>`;
+  document.getElementById("map").innerHTML = s;
+}
+function jump(id) { document.getElementById(id).scrollIntoView({ behavior: "smooth", block: "start" }); }
+
+const rows = (el, head, data) => document.getElementById(el).innerHTML =
+  `<tr>${head.map(h => `<th>${h}</th>`).join("")}</tr>` +
+  data.map(r => `<tr>${r.map((c, i) => `<td class="${i === 0 ? "k" : (typeof c === "number" ? "num" : "")}">${c}</td>`).join("")}</tr>`).join("");
+
+drawMap();
+rows("ablaut", ["类别", "三态", "换完元音再加后缀,得到"], ABLAUT);
+rows("pre", ["前缀", "意思", "可分?", "本库词数", "例"], PRE);
+rows("suf", ["后缀", "意思", "词性/性别", "本库词数", "例"], SUF);
+rows("fug", ["接合成分", "什么时候出现", "例"], FUG);
+document.getElementById("n-comp").textContent = STAT.compound;
+document.getElementById("n-fug").textContent = STAT.fugen;
+document.getElementById("stat").textContent = `${STAT.words} 词 / ${STAT.roots} 词根`;
+document.getElementById("chain").innerHTML = CHAIN.map((c, i) =>
+  `<div class="step"><div class="i">${i + 1}</div><div>
+     <div class="op">${c[0]}</div>
+     <div class="w">${c[1]}</div>
+     <div class="hint">${c[2]}</div>
+   </div></div>`).join("");
+</script>
+</body>
+</html>
