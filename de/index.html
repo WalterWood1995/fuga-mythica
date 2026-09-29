@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>德语单词词根词缀速记</title>
+<meta name="description" content="用词根词缀成串记德语单词:每个词根讲清来历,带出整族词,配发音。">
+<meta name="theme-color" content="#1b1410">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
+<style>
+  :root {
+    --bg: #1b1410; --panel: #241b16; --panel2: #2e231c; --text: #f2e8dc; --text-dim: #b6a496;
+    --gold: #e8b64c; --gold-dim: #8a6d33; --accent: #e07a3f; --good: #5aaa78; --bad: #c85050;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: "Noto Serif SC", Georgia, "Songti SC", serif; line-height: 1.6; }
+  #app { max-width: 780px; margin: 0 auto; padding: 0 14px 60px; }
+  header { position: sticky; top: 0; z-index: 20; background: linear-gradient(var(--bg) 70%, transparent); padding: 10px 0 8px; }
+  .bar { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .brand { color: var(--gold); font-weight: 700; letter-spacing: .04em; margin-right: auto; font-size: 1.02em; }
+  .pill { background: var(--panel); border: 1px solid var(--gold-dim); color: var(--text); border-radius: 20px;
+          padding: 5px 11px; font-family: inherit; font-size: .86em; cursor: pointer; }
+  .pill.on, .pill:hover { border-color: var(--gold); background: var(--panel2); color: var(--gold); }
+  h1 { font-size: 1.6em; color: var(--gold); margin: 18px 0 4px; }
+  h2 { font-size: 1.15em; color: var(--gold); margin: 20px 0 8px; }
+  .lead { color: var(--text-dim); margin: 0 0 14px; }
+  .screen { display: none; }
+  .screen.show { display: block; }
+  .card { background: var(--panel); border: 1px solid var(--gold-dim); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 10px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin: 10px 0 14px; }
+  .stat { background: var(--panel); border: 1px solid var(--gold-dim); border-radius: var(--radius); padding: 10px; text-align: center; }
+  .stat b { display: block; font-size: 1.3em; color: var(--gold); }
+  .stat span { font-size: .8em; color: var(--text-dim); }
+  .bar-wrap { background: var(--panel); border-radius: 10px; height: 10px; overflow: hidden; border: 1px solid var(--gold-dim); }
+  .bar-wrap i { display: block; height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold)); }
+  .big-btn { background: var(--gold); color: #241b16; border: 0; border-radius: 26px; padding: 12px 26px;
+             font-family: inherit; font-size: 1.05em; font-weight: 700; cursor: pointer; }
+  .ghost { background: var(--panel2); color: var(--text); border: 1px solid var(--gold-dim); border-radius: 22px;
+           padding: 9px 18px; font-family: inherit; cursor: pointer; }
+  .unit-h { color: var(--gold); font-size: .88em; margin: 16px 0 6px; letter-spacing: .05em; }
+  .row { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; background: var(--panel);
+         border: 1px solid var(--gold-dim); border-radius: 12px; padding: 9px 12px; margin-bottom: 6px;
+         color: var(--text); font-family: inherit; font-size: .95em; cursor: pointer; }
+  .row:hover { border-color: var(--gold); }
+  .row.done { border-color: var(--good); background: rgba(90,170,120,.10); }
+  .row .rf { color: var(--accent); font-style: italic; min-width: 7em; }
+  .row .rg { flex: 1; }
+  .row .rn { color: var(--text-dim); font-size: .84em; white-space: nowrap; }
+  .word-head { text-align: center; margin: 10px 0; }
+  .word-head .w { font-size: 2em; color: var(--accent); }
+  .word-head .ipa { color: var(--text-dim); font-family: "Segoe UI", system-ui, sans-serif; }
+  .speak { background: none; border: 0; color: var(--gold); font-size: 1em; cursor: pointer; padding: 2px 6px; }
+  table.tbl { width: 100%; border-collapse: collapse; }
+  table.tbl td { padding: 7px 6px; border-bottom: 1px solid rgba(232,182,76,.15); vertical-align: top; line-height: 1.45; }
+  table.tbl td:first-child { white-space: nowrap; }
+  table.tbl .ipa { display: block; color: var(--text-dim); font-size: .8em; font-family: "Segoe UI", system-ui, sans-serif; }
+  mark { background: none; color: var(--gold); font-weight: 700; border-bottom: 2px solid var(--gold-dim); }
+  .opts { display: grid; gap: 8px; margin-top: 10px; }
+  .opt { background: var(--panel2); border: 2px solid var(--gold-dim); border-radius: 12px; padding: 11px 12px;
+         color: var(--text); font-family: inherit; font-size: 1em; text-align: left; cursor: pointer; }
+  .opt.correct { border-color: var(--good); background: rgba(90,170,120,.18); }
+  .opt.wrong { border-color: var(--bad); background: rgba(200,80,80,.16); }
+  .hud { display: flex; justify-content: space-between; color: var(--text-dim); font-size: .9em; margin-top: 6px; }
+  input[type=search] { width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--gold-dim);
+                       background: var(--panel); color: var(--text); font-family: inherit; font-size: 1em; }
+  .hint { color: var(--text-dim); font-size: .85em; }
+  footer { color: var(--text-dim); font-size: .8em; text-align: center; padding: 20px 0; }
+  .etym, .ev-p { line-height: 1.75; }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="bar">
+      <span class="brand">🌱 德语词根速记</span>
+      <button class="pill" data-go="home">首页</button>
+      <button class="pill" data-go="list">词根表</button>
+      <button class="pill" data-go="drill">速认</button>
+      <button class="pill" data-go="search">查词</button>
+      <select class="pill" id="sel-lang"><option value="zh">中文</option><option value="en">English</option></select>
+    </div>
+  </header>
+
+  <div class="screen show" id="s-home">
+    <h1>德语单词词根词缀速记</h1>
+    <p class="lead">德语的长词是拼出来的:<b>词根 + 前缀 + 后缀</b>。认识一个词根,就一次认识一整族词。每个词根都讲清它从哪里来,并配发音。</p>
+    <div class="stats" id="home-stats"></div>
+    <div class="bar-wrap"><i id="home-bar"></i></div>
+    <div style="text-align:center;margin:16px 0"><button class="big-btn" id="btn-continue">继续学习 →</button></div>
+    <div class="card">
+      <h2 style="margin-top:0">怎么用</h2>
+      <p style="margin:0 0 6px"><b>① 学词根</b> — 读词根的来历,看它生出的整族词,点 🔊 听发音。</p>
+      <p style="margin:0 0 6px"><b>② 练</b> — 每个词根一轮练习,答对八成点亮。</p>
+      <p style="margin:0"><b>③ 速认</b> — 限时复习,把认得慢的词挑出来反复练。</p>
+    </div>
+    <div class="card" id="home-next"></div>
+  </div>
+
+  <div class="screen" id="s-list">
+    <h1>词根表</h1>
+    <p class="lead" id="list-lead"></p>
+    <div id="list-box"></div>
+  </div>
+
+  <div class="screen" id="s-root"><div id="root-box"></div></div>
+
+  <div class="screen" id="s-quiz"><div id="quiz-box"></div></div>
+
+  <div class="screen" id="s-drill"><div id="drill-box"></div></div>
+
+  <div class="screen" id="s-search">
+    <h1>查词</h1>
+    <p class="lead">输入德语单词或中文意思,查它属于哪个词根。</p>
+    <input type="search" id="q" placeholder="例如 Freundschaft 或 朋友" autocomplete="off">
+    <div id="search-box"></div>
+  </div>
+</div>
+<footer>德语单词词根词缀速记 · <span id="ver"></span> · 词源内容与《Fuga Mythica》同源</footer>
+
+<script>var VOCAB = {}; var state = { lang: "zh" }; var I18N = { zh: {}, en: {} };
+function t(k) { const p = I18N[state.lang] || I18N.zh; return p[k] !== undefined ? p[k] : (I18N.zh[k] !== undefined ? I18N.zh[k] : k); }</script>
+<script src="../vocab_de.js"></script>
+<script src="../vocab_de2.js"></script>
+<script src="../vocab_de3.js"></script>
+<script src="../vocab_de4.js"></script>
+<script src="../vocab_de5.js"></script>
+<script src="../vocab_de6.js"></script>
+<script src="../vocab_de7.js"></script>
+<script src="../vocab_de8.js"></script>
+<script src="../vocab_de9.js"></script>
+<script src="../vocab_de10.js"></script>
+<script src="../vocab_de11.js"></script>
+<script src="../vocab_de12.js"></script>
+<script src="../vocab_de13.js"></script>
+<script src="../root_stories.js"></script>
+<script src="../root_stories2.js"></script>
+<script src="../root_stories3.js"></script>
+<script src="../root_stories4.js"></script>
+<script src="../root_stories5.js"></script>
+<script src="../root_stories6.js"></script>
+<script src="../root_stories7.js"></script>
+<script src="../root_stories8.js"></script>
+<script src="../root_stories9.js"></script>
+<script src="../root_stories10.js"></script>
+<script src="../root_stories11.js"></script>
+<script src="../root_stories_de.js"></script>
+<script src="../root_stories_de2.js"></script>
+<script src="../root_stories_de3.js"></script>
+<script src="../root_stories_de4.js"></script>
+<script src="../root_stories_de5.js"></script>
+<script src="../root_stories_de6.js"></script>
+<script src="../root_stories_de7.js"></script>
+<script src="../root_stories_de8.js"></script>
+<script src="../root_stories_de9.js"></script>
+<script src="../root_stories_de10.js"></script>
+<script src="../root_stories_de11.js"></script>
+<script src="../root_stories_de12.js"></script>
+<script src="../root_stories_de13.js"></script>
+<script src="../root_stories_de14.js"></script>
+<script src="../root_stories_de15.js"></script>
+<script src="../root_stories_de16.js"></script>
+<script src="../root_stories_de17.js"></script>
+<script src="../root_stories_de18.js"></script>
+<script src="../root_stories_de19.js"></script>
+<script src="../root_stories_de20.js"></script>
+<script src="../root_stories_de21.js"></script>
+<script src="../root_stories_de22.js"></script>
+<script src="../root_stories_de23.js"></script>
+<script src="../etymview.js"></script>
+<script src="ipa_de.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
