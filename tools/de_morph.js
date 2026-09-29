@@ -5,6 +5,8 @@ vm.runInContext("var VOCAB={}; var ROOT_STORIES={shared:{},de:{},la:{},laMap:{},
 const html = fs.readFileSync(ROOT + "/de/index.html", "utf8");
 for (const f of [...html.matchAll(/<script src="\.\.\/([^"]+)"/g)].map(m => m[1]))
   try { vm.runInContext(fs.readFileSync(ROOT + "/" + f, "utf8"), ctx, { filename: f }); } catch (e) { }
+for (const f of fs.readdirSync(ROOT).filter(f => /^vocab_(la|en|fr|it|es)\d*\.js$/.test(f)))
+  try { vm.runInContext(fs.readFileSync(ROOT + "/" + f, "utf8"), ctx, { filename: f }); } catch (e) { }
 try { vm.runInContext(fs.readFileSync(ROOT + "/de/ipa_de.js", "utf8"), ctx); } catch (e) { console.log("ipa fail", e.message); }
 const X = vm.runInContext("({VOCAB, RS:ROOT_STORIES, ipaDe: typeof ipaDe==='function'?ipaDe:null})", ctx);
 const P = X.VOCAB.de;
@@ -30,6 +32,21 @@ const PRE = [
 ];
 const PREMAP = {}; PRE.forEach(p => PREMAP[p[0]] = p);
 const PRE_SORTED = PRE.map(p => p[0]).sort((a, b) => b.length - a.length);
+const LPRE = [
+  ["abs", "离开(拉丁 ab- 在 c/t 前)"], ["ab", "离开(拉丁)"], ["ad", "朝向(拉丁)"], ["ak", "朝向(ad- 在 k 前)"],
+  ["ap", "朝向(ad- 在 p 前)"], ["as", "朝向(ad- 在 s 前)"], ["at", "朝向(ad- 在 t 前)"],
+  ["kon", "共同(拉丁 con-)"], ["kom", "共同(con- 在 b/p/m 前)"], ["kor", "共同(con- 在 r 前)"],
+  ["kol", "共同(con- 在 l 前)"], ["kontra", "反对(拉丁)"], ["de", "向下、去除(拉丁)"],
+  ["des", "去除(法语 dés-)"], ["dis", "分开(拉丁)"], ["ex", "出(拉丁)"], ["extra", "在外(拉丁)"],
+  ["in", "进入 / 不(拉丁)"], ["im", "进入 / 不(in- 在 b/p/m 前)"], ["il", "不(in- 在 l 前)"],
+  ["ir", "不(in- 在 r 前)"], ["inter", "在…之间(拉丁)"], ["intro", "向内(拉丁)"],
+  ["ob", "对着(拉丁)"], ["op", "对着(ob- 在 p 前)"], ["per", "穿过、彻底(拉丁)"], ["prä", "在前(拉丁 prae-)"],
+  ["pro", "向前、为(拉丁)"], ["re", "回、再(拉丁)"], ["se", "分开(拉丁)"], ["sub", "在下(拉丁)"],
+  ["sup", "在下(sub- 在 p 前)"], ["super", "在上(拉丁)"], ["trans", "穿越(拉丁)"],
+  ["ultra", "超过(拉丁)"], ["post", "在后(拉丁)"], ["kon", "共同(拉丁 con-)"],
+];
+LPRE.forEach(p => { if (!PREMAP[p[0]]) PREMAP[p[0]] = [p[0], p[1], "拉丁前缀"]; });
+const LPRE_SORTED = [...new Set(LPRE.map(p => p[0]))].sort((a, b) => b.length - a.length);
 
 const SUF = [
   ["ungen", "-ung 的复数", "阴性名词·复数"], ["ung", "动作或其结果", "阴性名词"],
@@ -161,6 +178,15 @@ function lexAt(zone, min) {                  /* is another root sitting at the h
     }
   return null;
 }
+const NO_SPLIT = new Set(["re:gen", "re:gel", "re:che", "dis:kot", "per:son", "per:sön"]);
+const LAT_STEMS = new Set();
+for (const L of ["la", "en", "fr", "it", "es"]) {
+  const pk = X.VOCAB[L]; if (!pk || !pk.roots) continue;
+  Object.values(pk.roots).forEach(r => String(r[0]).split("/").forEach(f => {
+    const t = flat(f.trim().replace(/[-–()]/g, "")).replace(/[cq]/g, "k");
+    if (/^[a-z]{3,}$/.test(t)) { LAT_STEMS.add(t); LAT_STEMS.add(flat(f.trim().replace(/[-–()]/g, ""))); }
+  }));
+}
 function bestRootFor(word) {                  /* longest root form that literally occurs in the word */
   const z = flat(word);
   for (const e of ALL_FORMS) {
@@ -247,9 +273,28 @@ P.words.forEach(w => {
     preChain = [low(core)]; core = comp2.replace(/^-/, ""); comp2 = ""; comp2id = "";
     link = links.filter(Boolean).join(" + ");
   }
+  let famCore = "";
+  {
+    const fc = flat(core);
+    for (const lp of LPRE_SORTED.concat(PRE_SORTED)) {
+      if (!fc.startsWith(lp)) continue;
+      const rest = fc.slice(lp.length);
+      if (rest.length < 3) continue;
+      /* reviewed false splits: Geist/gegen/Generation, Mittag, Regen/Regel/rechnen, Disko-thek,
+         and Person (persona is probably Etruscan φersu, not per+sonare) */
+      if (lp === "ge" || lp === "mit" || NO_SPLIT.has(lp + ":" + rest.slice(0, 4)) || NO_SPLIT.has(lp + ":" + rest.slice(0, 3))) continue;
+      const latin = LAT_STEMS.has(rest) || [...LAT_STEMS].some(st => st.length >= 4 && rest.startsWith(st));
+      const lex = rest.length >= 4 && ALL_FORMS.some(e => e.f === rest);
+      if (!latin && !lex) continue;
+      preChain = preChain.concat([lp]);
+      core = core.slice(lp.length);
+      famCore = rest;
+      break;
+    }
+  }
   const rec = {
     letter: (flat(fs_[0]).replace(/^-/, "")[0] || "?").toUpperCase(),
-    rootForm: r[0], rid, rootZh: r[1], rootEn: r[2], hasStory: story(rid) ? "有" : "",
+    rootForm: r[0], famKey: famCore ? famCore + "-" : r[0], rid, rootZh: r[1], rootEn: r[2], hasStory: story(rid) ? "有" : "",
     pre: preChain.map(p => p + "-").join(" + "),
     preM: preChain.map(p => (PREMAP[p] || [, ""])[1]).join(" / "),
     preT: preChain.map(p => (PREMAP[p] || [, , ""])[2]).join(" / "),
@@ -263,7 +308,7 @@ P.words.forEach(w => {
   };
   (rec.pre || rec.suf || rec.comp1 || rec.comp2 || rec.link ? rows : plainRows).push(rec);
 });
-const key = r => flat(r.rootForm).replace(/^-/, "") + "\u0000" + flat(r.word);
+const key = r => flat(r.famKey).replace(/^-/, "") + "\u0000" + flat(r.word);
 rows.sort((a, b) => key(a).localeCompare(key(b), "de"));
 plainRows.sort((a, b) => key(a).localeCompare(key(b), "de"));
 

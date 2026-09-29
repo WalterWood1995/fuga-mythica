@@ -16,16 +16,22 @@ ws.append(H)
 gold = PatternFill("solid", fgColor="E8B64C"); alt = PatternFill("solid", fgColor="F6EFE3")
 top = Border(top=Side(style="thin", color="B8A07A"))
 for c in ws[1]: c.font = Font(bold=True); c.fill = gold
+# one merged meaning per family; if two vocab roots land in the same family, list both meanings
+means = {}
+for r in rows:
+    m = means.setdefault(r["famKey"], ([], []))
+    if r["rootZh"] not in m[0]: m[0].append(r["rootZh"])
+    if r["rootEn"] not in m[1]: m[1].append(r["rootEn"])
 r0, fam, shade = 2, None, False
 for i, r in enumerate(rows):
     ws.append([r["pre"], r["comp1"], r["link"], r["core"], r["comp2"], r["tail"], r["suf"],
-               r["word"], r["art"], r["zh"], r["en"], r["rootZh"], r["rootEn"]])
+               r["word"], r["art"], r["zh"], r["en"], " / ".join(means[r["famKey"]][0]), " / ".join(means[r["famKey"]][1])])
     row = i + 2
-    if r["rootForm"] != fam:                       # a new family starts: close the previous block
+    if r["famKey"] != fam:                       # a new family starts: close the previous block
         if fam is not None and row - 1 > r0:
             ws.merge_cells(start_row=r0, start_column=12, end_row=row - 1, end_column=12)
             ws.merge_cells(start_row=r0, start_column=13, end_row=row - 1, end_column=13)
-        fam, r0, shade = r["rootForm"], row, not shade
+        fam, r0, shade = r["famKey"], row, not shade
         for c in ws[row]: c.border = top
     if shade:
         for c in ws[row]: c.fill = alt
@@ -39,5 +45,5 @@ for col, w in zip("ABCDEFGHIJKLM", [9, 11, 12, 11, 11, 6, 13, 22, 5, 20, 22, 16,
     ws.column_dimensions[col].width = w
 ws.freeze_panes = "A2"
 wb.save(path)
-fams = len({r["rootForm"] for r in rows})
+fams = len({r["famKey"] for r in rows})
 print(f"sheet 1: {len(rows)} 行, {fams} 个词根家族, 词根义各合并成一格")
