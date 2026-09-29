@@ -188,7 +188,7 @@ P.words.forEach(w => {
   let [word, zh, en, rid] = w;
   let r = rid && P.roots[rid], src = "词库标注";
   const b = bare(word);
-  if (seen.has(word)) return; seen.add(word);
+  if (seen.has(flat(b))) return; seen.add(flat(b));
   if (/\s/.test(b)) { phrases.push([word, zh, en, rid || "", r ? r[0] : ""]); return; }
   if (!r || !realRoot(r[0])) {                    /* filed under a theme bucket: try to find its root */
     const g = bestRootFor(b);
@@ -263,7 +263,7 @@ P.words.forEach(w => {
   };
   (rec.pre || rec.suf || rec.comp1 || rec.comp2 || rec.link ? rows : plainRows).push(rec);
 });
-const key = r => flat(r.coreForm).replace(/^-/, "") + "\u0000" + flat(r.word);
+const key = r => flat(r.rootForm).replace(/^-/, "") + "\u0000" + flat(r.word);
 rows.sort((a, b) => key(a).localeCompare(key(b), "de"));
 plainRows.sort((a, b) => key(a).localeCompare(key(b), "de"));
 
