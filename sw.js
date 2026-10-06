@@ -1,5 +1,5 @@
 /* Fuga Mythica service worker */
-const VERSION = "v0.70.0";
+const VERSION = "v0.70.1";
 const SHELL_CACHE = "fuga-shell-" + VERSION;
 const IMG_CACHE = "fuga-img-v1";
 const FONT_CACHE = "fuga-font-v1";
@@ -65,9 +65,21 @@ const SHELL = [
   "./icons/icon-512.png",
 ];
 
-self.addEventListener("install", e => {
-  e.waitUntil(caches.open(SHELL_CACHE).then(c => c.addAll(SHELL.map(u => new Request(u, { cache: "reload" }))))  /* bypass the HTTP cache: GitHub Pages serves max-age=600, which used to precache a stale index.html */.then(() => self.skipWaiting()));
-});
+/* Precache each shell file by asking for it with the release version in the query
+   string, which defeats both the browser cache and the GitHub Pages CDN edge
+   (it serves max-age=600 and would otherwise hand us the previous release's
+   index.html), then store the response under its clean URL so the fetch
+   handler finds it. */
+async function precache() {
+  const c = await caches.open(SHELL_CACHE);
+  await Promise.all(SHELL.map(async u => {
+    try {
+      const resp = await fetch(u + (u.includes("?") ? "&" : "?") + "v=" + VERSION, { cache: "reload" });
+      if (resp.ok) await c.put(new Request(u), resp);
+    } catch (err) { /* a file that fails now is fetched on demand later */ }
+  }));
+}
+self.addEventListener("install", e => { e.waitUntil(precache().then(() => self.skipWaiting())); });
 
 self.addEventListener("activate", e => {
   e.waitUntil(
