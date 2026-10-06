@@ -1,5 +1,5 @@
 /* Fuga Mythica service worker */
-const VERSION = "v0.70.2";
+const VERSION = "v0.70.3";
 const SHELL_CACHE = "fuga-shell-" + VERSION;
 const IMG_CACHE = "fuga-img-v1";
 const FONT_CACHE = "fuga-font-v1";
@@ -123,10 +123,13 @@ self.addEventListener("fetch", e => {
     return;
   }
 
-  /* app shell: network-first so updates arrive, cache fallback for offline */
+  /* app shell: network-first so updates arrive, cache fallback for offline.
+     A page navigation is re-fetched with cache:"reload" so the browser's own
+     disk cache can never hand back the previous release's HTML. */
   if (url.origin === location.origin) {
+    const req = e.request.mode === "navigate" ? new Request(e.request.url, { cache: "reload", credentials: "same-origin" }) : e.request;
     e.respondWith(
-      fetch(e.request).then(resp => {
+      fetch(req).then(resp => {
         const copy = resp.clone();
         caches.open(SHELL_CACHE).then(c => c.put(e.request, copy));
         return resp;
