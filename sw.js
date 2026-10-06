@@ -1,5 +1,5 @@
 /* Fuga Mythica service worker */
-const VERSION = "v0.70.1";
+const VERSION = "v0.70.2";
 const SHELL_CACHE = "fuga-shell-" + VERSION;
 const IMG_CACHE = "fuga-img-v1";
 const FONT_CACHE = "fuga-font-v1";
@@ -74,7 +74,11 @@ async function precache() {
   const c = await caches.open(SHELL_CACHE);
   await Promise.all(SHELL.map(async u => {
     try {
-      const resp = await fetch(u + (u.includes("?") ? "&" : "?") + "v=" + VERSION, { cache: "reload" });
+      /* "./" and "./index.html" are the same document; fetch it once, under the
+         explicit filename, so the directory URL can never keep an older copy
+         than the file URL. */
+      const src = u === "./" ? "./index.html" : u;
+      const resp = await fetch(src + (src.includes("?") ? "&" : "?") + "v=" + VERSION, { cache: "reload" });
       if (resp.ok) await c.put(new Request(u), resp);
     } catch (err) { /* a file that fails now is fetched on demand later */ }
   }));
