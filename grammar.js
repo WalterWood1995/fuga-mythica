@@ -1,33 +1,37 @@
 /* =====================================================
-   FUGA MYTHICA — VIA GRAMMATICA: a second journey, for Latin grammar.
-   Ten stations, each one topic: scene → rule → paradigm table → history
-   note → practice. 80% passes a station and opens the next.
-   Progress lives in P().gram, separate from the map adventure.
+   FUGA MYTHICA — VIA GRAMMATICA: a second journey, one grammar road per
+   study language. Ten stations each, one topic per station: scene → rule →
+   paradigm table → history note → practice. 80% passes a station and opens
+   the next. The Latin road lives here (GRAM_LA); the modern-language roads
+   are added by gram_de.js, gram_fr.js, gram_it.js and gram_es.js through
+   GRAM_ADD(), and the road shown follows the study language (TARGET).
+   Progress lives in P().gram.done keyed by station id (modern ids carry a
+   language prefix, de_…), separate from the map adventure.
    ===================================================== */
 const GRAM_PASS = 0.8;
 const gram = { i: 0, queue: [], q: 0, right: 0, wrong: [] };
 
 const GR_I18N = {
-  zh: { gr: "语法", grTitle: "语法之路 · Via Grammatica", grDesc: "拉丁语的意思藏在词尾里。沿着这条路走十站,从名词的格到动词的时态,每站先读规则、看变化表,再做一轮练习。答对八成即可通关,下一站随之开启。",
+  zh: { gr: "语法", grTitle: "语法之路",
         grStations: "已通关", grStart: "开始练习", grBack: "← 返回路线图", grHome: "← 返回首页", grLocked: "先通过上一站", grScene: "🏛️ 场景", grRule: "📐 规则", grTable: "📊 变化表", grNotes: "📜 历史与词源",
         grQ: "第 {n} / {m} 题", grWhy: "为什么", grDone: "本站完成", grPassMark: "🎓 通关!", grRetry: "再练一次", grNext: "下一站 →", grNeed: "答对 80% 即可通关", grScore: "成绩" },
-  en: { gr: "Grammar", grTitle: "Via Grammatica · The Grammar Road", grDesc: "In Latin the meaning sits in the endings. Ten stations lead from the cases of the noun to the tenses of the verb: read the rule, study the table, then practise. Score 80% to pass and open the next station.",
+  en: { gr: "Grammar", grTitle: "The Grammar Road",
         grStations: "passed", grStart: "Start practice", grBack: "← Back to the road", grHome: "← Back to home", grLocked: "Pass the previous station first", grScene: "🏛️ Scene", grRule: "📐 Rule", grTable: "📊 Paradigm", grNotes: "📜 History & origin",
         grQ: "Question {n} / {m}", grWhy: "Why", grDone: "Station complete", grPassMark: "🎓 Passed!", grRetry: "Practise again", grNext: "Next station →", grNeed: "80% passes the station", grScore: "Score" },
-  de: { gr: "Grammatik", grTitle: "Via Grammatica · Der Grammatikweg", grDesc: "Im Lateinischen steckt die Bedeutung in den Endungen. Zehn Stationen führen von den Fällen zum Tempus: Regel lesen, Tabelle ansehen, üben. Ab 80 % ist die Station bestanden.",
+  de: { gr: "Grammatik", grTitle: "Der Grammatikweg",
         grStations: "bestanden", grStart: "Übung starten", grBack: "← Zurück zur Route", grHome: "← Zur Startseite", grLocked: "Erst die Station davor bestehen", grScene: "🏛️ Szene", grRule: "📐 Regel", grTable: "📊 Formentabelle", grNotes: "📜 Geschichte & Herkunft",
         grQ: "Frage {n} / {m}", grWhy: "Warum", grDone: "Station abgeschlossen", grPassMark: "🎓 Bestanden!", grRetry: "Noch einmal", grNext: "Nächste Station →", grNeed: "80 % bestehen die Station", grScore: "Ergebnis" },
-  fr: { gr: "Grammaire", grTitle: "Via Grammatica · La route de la grammaire", grDesc: "En latin le sens est dans les terminaisons. Dix étapes mènent des cas du nom aux temps du verbe : la règle, le tableau, puis l'exercice. 80 % suffisent pour passer.",
+  fr: { gr: "Grammaire", grTitle: "La route de la grammaire",
         grStations: "validées", grStart: "Commencer l'exercice", grBack: "← Retour à la route", grHome: "← Accueil", grLocked: "Validez d'abord l'étape précédente", grScene: "🏛️ Scène", grRule: "📐 Règle", grTable: "📊 Tableau", grNotes: "📜 Histoire et origine",
         grQ: "Question {n} / {m}", grWhy: "Pourquoi", grDone: "Étape terminée", grPassMark: "🎓 Validée !", grRetry: "Recommencer", grNext: "Étape suivante →", grNeed: "80 % pour valider", grScore: "Score" },
-  es: { gr: "Gramática", grTitle: "Via Grammatica · El camino de la gramática", grDesc: "En latín el significado está en las terminaciones. Diez estaciones van de los casos del nombre a los tiempos del verbo: la regla, la tabla y la práctica. Con un 80 % se supera.",
+  es: { gr: "Gramática", grTitle: "El camino de la gramática",
         grStations: "superadas", grStart: "Empezar la práctica", grBack: "← Volver al camino", grHome: "← Inicio", grLocked: "Supera antes la estación anterior", grScene: "🏛️ Escena", grRule: "📐 Regla", grTable: "📊 Tabla", grNotes: "📜 Historia y origen",
         grQ: "Pregunta {n} / {m}", grWhy: "Por qué", grDone: "Estación completada", grPassMark: "🎓 ¡Superada!", grRetry: "Otra vez", grNext: "Siguiente estación →", grNeed: "El 80 % supera la estación", grScore: "Resultado" },
 };
 Object.keys(GR_I18N).forEach(l => { if (typeof I18N !== "undefined" && I18N[l]) Object.assign(I18N[l], GR_I18N[l]); });
 
-/* ---------- the ten stations ---------- */
-const GRAM = [
+/* ---------- the ten Latin stations ---------- */
+const GRAM_LA = [
 { id: "decl1", icon: "🏺",
   name: { zh: "第一变格法 · 阿里阿德涅的线", en: "First declension · Ariadne's thread" },
   scene: { zh: "阿里阿德涅把线团交给忒修斯。拉丁语里,同一个「女孩」会随着她在句中的角色换一个词尾:她做主语是 puella,被看见是 puellam,东西属于她是 puellae。词尾就是语法。",
@@ -416,9 +420,45 @@ const GRAM = [
   ] },
 ];
 
+/* ---------- one road per study language ---------- */
+const GRAMS = { la: GRAM_LA };
+function GRAM_ADD(lang, list) { (GRAMS[lang] = GRAMS[lang] || []).push(...list); }
+const GRAM_META = {
+  la: { title: { zh: "拉丁语语法之路 · Via Grammatica", en: "Via Grammatica · The Latin Grammar Road", de: "Via Grammatica · Der lateinische Grammatikweg", fr: "Via Grammatica · La route de la grammaire latine", es: "Via Grammatica · El camino de la gramática latina" },
+        desc: { zh: "拉丁语的意思藏在词尾里。沿着这条路走十站,从名词的格到动词的时态,每站先读规则、看变化表,再做一轮练习。答对八成即可通关,下一站随之开启。", en: "In Latin the meaning sits in the endings. Ten stations lead from the cases of the noun to the tenses of the verb: read the rule, study the table, then practise. Score 80% to pass and open the next station.", de: "Im Lateinischen steckt die Bedeutung in den Endungen. Zehn Stationen führen von den Fällen zum Tempus: Regel lesen, Tabelle ansehen, üben. Ab 80 % ist die Station bestanden.", fr: "En latin le sens est dans les terminaisons. Dix étapes mènent des cas du nom aux temps du verbe : la règle, le tableau, puis l'exercice. 80 % suffisent pour passer.", es: "En latín el significado está en las terminaciones. Diez estaciones van de los casos del nombre a los tiempos del verbo: la regla, la tabla y la práctica. Con un 80 % se supera." } },
+  de: { title: { zh: "德语语法之路 · Der Grammatikweg", en: "The German Grammar Road · Der Grammatikweg", de: "Der Grammatikweg · Deutsch", fr: "La route de la grammaire allemande", es: "El camino de la gramática alemana" },
+        desc: { zh: "德语把意思放在冠词、词尾和词序里。十站从名词的性、复数和四个格,走到动词的完成时和可分前缀。每站先读规则、看变化表,再做一轮练习;答对八成即可通关,下一站随之开启。",
+                en: "German carries its meaning in the articles, the endings and the word order. Ten stations lead from gender, plurals and the four cases to the perfect tense and separable prefixes: read the rule, study the table, then practise. Score 80% to pass and open the next station.",
+                de: "Im Deutschen steckt die Bedeutung in Artikeln, Endungen und Wortstellung. Zehn Stationen führen von Genus, Plural und den vier Fällen bis zum Perfekt und den trennbaren Verben: Regel lesen, Tabelle ansehen, üben. Ab 80 % ist die Station bestanden.",
+                fr: "En allemand le sens est dans les articles, les terminaisons et l'ordre des mots. Dix étapes mènent du genre et des quatre cas au parfait et aux verbes à particule : la règle, le tableau, puis l'exercice. 80 % suffisent pour passer.",
+                es: "En alemán el significado está en los artículos, las terminaciones y el orden de las palabras. Diez estaciones van del género y los cuatro casos al perfecto y los verbos separables: la regla, la tabla y la práctica. Con un 80 % se supera." } },
+  fr: { title: { zh: "法语语法之路 · La route de la grammaire", en: "The French Grammar Road · La route de la grammaire", de: "Der französische Grammatikweg", fr: "La route de la grammaire · Français", es: "El camino de la gramática francesa" },
+        desc: { zh: "法语从拉丁语长出来,丢掉了名词的格,改用冠词和介词来标明关系。十站从名词的性与冠词,走到复合过去时、将来时、代词和虚拟式。每站先读规则、看变化表,再做一轮练习;答对八成即可通关。",
+                en: "French grew out of Latin, lost the noun cases and let articles and prepositions do their work. Ten stations lead from gender and articles to the passé composé, the future, pronouns and the subjunctive: read the rule, study the table, then practise. Score 80% to pass.",
+                de: "Das Französische ist aus dem Latein gewachsen, hat die Fälle verloren und lässt Artikel und Präpositionen ihre Arbeit tun. Zehn Stationen vom Genus bis zum Subjonctif: Regel, Tabelle, Übung. Ab 80 % ist die Station bestanden.",
+                fr: "Le français est né du latin, a perdu les cas et confié leur travail aux articles et aux prépositions. Dix étapes mènent du genre au passé composé, au futur, aux pronoms et au subjonctif : la règle, le tableau, puis l'exercice. 80 % suffisent pour passer.",
+                es: "El francés nació del latín, perdió los casos y dejó su trabajo a los artículos y las preposiciones. Diez estaciones van del género al passé composé, el futuro, los pronombres y el subjuntivo: la regla, la tabla y la práctica. Con un 80 % se supera." } },
+  it: { title: { zh: "意大利语语法之路 · La via della grammatica", en: "The Italian Grammar Road · La via della grammatica", de: "Der italienische Grammatikweg", fr: "La route de la grammaire italienne", es: "El camino de la gramática italiana" },
+        desc: { zh: "意大利语保留了拉丁语的元音词尾:复数不加 -s,而是把 -o 换成 -i、-a 换成 -e。十站从名词的性与冠词,走到近过去时、将来时、条件式和代词。每站先读规则、看变化表,再做一轮练习;答对八成即可通关。",
+                en: "Italian kept the vowel endings of Latin: its plurals add no -s but turn -o into -i and -a into -e. Ten stations lead from gender and articles to the passato prossimo, the future, the conditional and pronouns: read the rule, study the table, then practise. Score 80% to pass.",
+                de: "Das Italienische hat die Vokalendungen des Lateins bewahrt: Der Plural hängt kein -s an, sondern macht aus -o ein -i und aus -a ein -e. Zehn Stationen vom Genus bis zu den Pronomen: Regel, Tabelle, Übung. Ab 80 % ist die Station bestanden.",
+                fr: "L'italien a gardé les voyelles finales du latin : son pluriel n'ajoute pas de -s, il change -o en -i et -a en -e. Dix étapes mènent du genre au passato prossimo, au futur, au conditionnel et aux pronoms. 80 % suffisent pour passer.",
+                es: "El italiano conservó las vocales finales del latín: su plural no añade -s, cambia -o por -i y -a por -e. Diez estaciones van del género al passato prossimo, el futuro, el condicional y los pronombres. Con un 80 % se supera." } },
+  es: { title: { zh: "西班牙语语法之路 · El camino de la gramática", en: "The Spanish Grammar Road · El camino de la gramática", de: "Der spanische Grammatikweg", fr: "La route de la grammaire espagnole", es: "El camino de la gramática · Español" },
+        desc: { zh: "西班牙语有两个「是」,动词词尾标明人称,所以主语常常省略。十站从名词的性与冠词,走到 ser 与 estar、两种过去时、将来时和代词。每站先读规则、看变化表,再做一轮练习;答对八成即可通关。",
+                en: "Spanish has two verbs for to be, and its verb endings mark the person, so the subject is often left out. Ten stations lead from gender and articles to ser and estar, the two past tenses, the future and pronouns: read the rule, study the table, then practise. Score 80% to pass.",
+                de: "Das Spanische hat zwei Verben für ‚sein‘, und die Verbendung zeigt die Person, darum fällt das Subjekt oft weg. Zehn Stationen vom Genus über ser und estar bis zu den Pronomen: Regel, Tabelle, Übung. Ab 80 % ist die Station bestanden.",
+                fr: "L'espagnol a deux verbes « être », et la terminaison du verbe marque la personne, si bien que le sujet tombe souvent. Dix étapes mènent du genre à ser et estar, aux deux passés, au futur et aux pronoms. 80 % suffisent pour passer.",
+                es: "El español tiene dos verbos «ser» y «estar», y la terminación del verbo marca la persona, así que el sujeto suele omitirse. Diez estaciones van del género a ser y estar, los dos pasados, el futuro y los pronombres. Con un 80 % se supera." } },
+};
+let GRAM = GRAM_LA;
+/* the road follows the study language; a language without stations falls back to Latin */
+function grLang() { return typeof TARGET !== "undefined" && GRAMS[TARGET] && GRAMS[TARGET].length ? TARGET : "la"; }
+function grSync() { GRAM = GRAMS[grLang()]; }
+
 /* ---------- helpers ---------- */
 function grT(k, a, b) { let s = typeof t === "function" ? t(k) : k; if (a !== undefined) s = s.replace("{n}", a); if (b !== undefined) s = s.replace("{m}", b); return s; }
-function grL(v) { if (v == null) return ""; if (typeof v === "string") { if (v.includes("|")) { const p = v.split("|"); return state.lang === "zh" ? p[0] : p[1]; } return v; } return state.lang === "zh" ? (v.zh || v.en) : (v.en || v.zh); }
+function grL(v) { if (v == null) return ""; if (typeof v === "string") { if (v.includes("|")) { const p = v.split("|"); return state.lang === "zh" ? p[0] : p[1]; } return v; } if (v[state.lang]) return v[state.lang]; return state.lang === "zh" ? (v.zh || v.en) : (v.en || v.zh); }
 function grEsc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
 function grState() { const p = P(); if (!p.gram) p.gram = { done: {} }; return p.gram; }
 function grOpen(i) { return i === 0 || !!grState().done[GRAM[i - 1].id]; }
@@ -454,8 +494,9 @@ function grOpen(i) { return i === 0 || !!grState().done[GRAM[i - 1].id]; }
   const wrap = document.createElement("div");
   wrap.innerHTML = `
   <div class="screen" id="screen-gram">
-    <h2 style="color:var(--gold);margin-top:10px">📐 <span data-t="grTitle"></span></h2>
-    <p style="color:var(--text-dim);margin-top:6px;line-height:1.6" data-t="grDesc"></p>
+    <h2 style="color:var(--gold);margin-top:10px">📐 <span id="gr-h"></span></h2>
+    <div class="cur-langs" id="gr-langs" style="margin:8px 0 2px"></div>
+    <p style="color:var(--text-dim);margin-top:6px;line-height:1.6" id="gr-desc"></p>
     <div class="cur-stats" id="gr-stats"></div>
     <div class="cur-bar"><i id="gr-bar"></i></div>
     <div class="gr-road" id="gr-road"></div>
@@ -475,10 +516,7 @@ function grOpen(i) { return i === 0 || !!grState().done[GRAM[i - 1].id]; }
     row.className = "tg-row";
     row.innerHTML = `<span></span><button class="cur-lang" id="gr-title">📐 <span data-t="grTitle"></span></button>`;
     tgBox.appendChild(row);
-    row.querySelector("#gr-title").addEventListener("click", () => {
-      if (typeof setTarget === "function") setTarget("la");
-      renderGram();
-    });
+    row.querySelector("#gr-title").addEventListener("click", () => renderGram());
   }
 
   const pill = document.createElement("button");
@@ -489,7 +527,19 @@ function grOpen(i) { return i === 0 || !!grState().done[GRAM[i - 1].id]; }
 
 function renderGram() {
   if (!state.player || !state.players[state.player]) { toast(t("cursusNoPlayer")); renderPlayers(); return; }
-  const st = grState();
+  grSync();
+  const st = grState(), L0 = grLang(), M = GRAM_META[L0] || GRAM_META.la;
+  $("#gr-h").textContent = grL(M.title);
+  $("#gr-desc").textContent = grL(M.desc);
+  const langs = $("#gr-langs");
+  langs.innerHTML = "";
+  (typeof TGT_LANGS !== "undefined" ? TGT_LANGS : ["la"]).filter(l => GRAMS[l] && GRAMS[l].length).forEach(l => {
+    const b = document.createElement("button");
+    b.className = "cur-lang" + (l === L0 ? " on" : "");
+    b.textContent = (typeof tgFlag === "function" ? tgFlag(l) + " " : "") + (typeof tgName === "function" ? tgName(l) : l);
+    b.addEventListener("click", () => { if (typeof tgChoose === "function") tgChoose(l); else renderGram(); });
+    langs.appendChild(b);
+  });
   const done = GRAM.filter(g => st.done[g.id]).length;
   $("#gr-stats").innerHTML = `<div class="cur-stat"><b>${done} / ${GRAM.length}</b><span>${t("grStations")}</span></div>`;
   $("#gr-bar").style.width = (done / GRAM.length * 100).toFixed(1) + "%";
@@ -601,4 +651,12 @@ $("#sel-lang").addEventListener("change", () => {
   const shown = document.querySelector(".screen.show");
   if (shown && shown.id === "screen-gram") renderGram();
 });
+if (typeof tgChoose === "function") {
+  const _grChoose = tgChoose;
+  tgChoose = function (T) {
+    _grChoose(T);
+    const shown = document.querySelector(".screen.show");
+    if (shown && (shown.id === "screen-gram" || shown.id === "screen-gram-lesson")) renderGram();
+  };
+}
 if (typeof applyI18n === "function") applyI18n();
