@@ -41,7 +41,7 @@ GRAM_ADD("de", [
     { q: { zh: "下面哪个名词是阳性?", en: "Which of these nouns is masculine?" }, opts: ["Winter", "Fenster", "Wolke", "Stille"], a: 0,
       why: { zh: "季节、月份、星期都是阳性:der Winter、der Mai、der Montag。Fenster 虽然也以 -er 结尾,却不是「做事的人」,它是中性 das Fenster(借自拉丁语 fenestra)。", en: "Seasons, months and days are masculine: der Winter, der Mai, der Montag. Fenster also ends in -er, but it is no agent; it is neuter, das Fenster, borrowed from Latin fenestra." } },
     { q: { zh: "der、die、das 与下面哪一组同源?", en: "Der, die, das share their origin with:" },
-      opts: [{ zh: "希腊语冠词 ho、hē、to", en: "the Greek article ho, hē, to" }, { zh: "法语冠词 le、la", en: "the French articles le, la" }, { zh: "拉丁语名词词尾 -us、-a、-um", en: "the Latin noun endings -us, -a, -um" }, { zh: "意大利语冠词 il、la", en: "the Italian articles il, la" }], a: 0,
+      opts: [{ zh: "希腊语冠词 ho、hē、to", en: "the Greek article ho, hē, to" }, { zh: "法语冠词 le、la", en: "the French articles le, la" }, { zh: "拉丁语指示代词 hic、haec、hoc", en: "the Latin demonstratives hic, haec, hoc" }, { zh: "意大利语冠词 il、la", en: "the Italian articles il, la" }], a: 0,
       why: { zh: "两者都出自印欧语的指示代词 *so、*seh₂、*tod。法语 le、la 和意大利语 il、la 来自拉丁语 ille「那个」,是罗曼语后来另起炉灶造出的冠词。", en: "Both come from the Indo-European demonstrative *so, *seh₂, *tod. French le, la and Italian il, la come from Latin ille, that: Romance built its articles later, from a different word." } },
   ] },
 
@@ -336,7 +336,7 @@ GRAM_ADD("de", [
   ] },
 
 { id: "de_perfekt", icon: "⏳",
-  name: { zh: "完成时 · 普罗米修斯盗火", en: "Perfect tense · Prometheus has stolen fire" },
+  name: { zh: "完成时 · 被缚的普罗米修斯", en: "Perfect tense · Prometheus bound" },
   scene: { zh: "宙斯震怒:Prometheus hat das Feuer gestohlen!他把火藏在茴香秆里,带给了人类:Er hat den Menschen das Feuer gebracht。宙斯把他锁在山崖上,每天派一只鹰飞来:Der Adler ist gekommen。德语口语讲过去多用完成时。",
            en: "Zeus is furious: Prometheus hat das Feuer gestohlen! Prometheus hid the fire in a hollow fennel stalk and gave it to mankind: Er hat den Menschen das Feuer gebracht. Zeus chains him to a crag and each day sends an eagle: Der Adler ist gekommen. For past events, spoken German mostly uses the Perfekt." },
   rule: { zh: "完成时 = haben 或 sein(第 2 位)+ 过去分词(句末)。多数动词用 haben;位移或状态变化的不及物动词用 sein(gehen、kommen、sterben、werden),sein、bleiben 也是。弱变化 ge-…-t(gemacht);强变化 ge-…-en,常换元音(gesungen);混合变化 -t 加换元音(gebracht)。-ieren 动词和不可分前缀不加 ge-:studiert、besucht。书面叙事和 sein、haben、情态动词常用过去时 war、hatte。",
@@ -368,7 +368,7 @@ GRAM_ADD("de", [
     { q: { zh: "Prometheus hat den Menschen das Feuer ___.(bringen)", en: "Prometheus hat den Menschen das Feuer ___. (bringen)" },
       opts: ["gebracht", "gebringt", "gebrungen", "gebrachen"], a: 0,
       why: { zh: "bringen 是混合变化:像弱变化一样用 -t,又像强变化一样换元音:gebracht。英语 bring–brought 是同一种模式。", en: "Bringen is mixed: the weak -t, but a strong-style vowel change — gebracht. English bring–brought shows the same pattern." } },
-    { q: { zh: "Odysseus hat die Unterwelt ___.(besuchen)", en: "Odysseus hat die Unterwelt ___. (besuchen)" },
+    { q: { zh: "Herakles hat die Unterwelt ___.(besuchen;他下冥界去带回刻耳柏洛斯)", en: "Herakles hat die Unterwelt ___. (besuchen — he went down to fetch Cerberus)" },
       opts: ["besucht", "gebesucht", "besuchen", "begesucht"], a: 0,
       why: { zh: "be- 是不重读的不可分前缀,这样的动词分词不加 ge-:besucht。gebesucht 是最常见的过度类推。", en: "Be- is an unstressed, inseparable prefix, and such verbs take no ge-: besucht. Gebesucht is the commonest over-regularisation." } },
     { q: { zh: "Eurydike ___ an einem Schlangenbiss gestorben.", en: "Eurydike ___ an einem Schlangenbiss gestorben." },

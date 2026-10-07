@@ -312,7 +312,7 @@ GRAM_ADD("fr", [
     { q: { zh: "卡珊德拉预言:「特洛伊将会陷落。」Troie ___.", en: "Cassandra prophesies that Troy will fall: Troie ___." },
       opts: ["tombera", "tomberai", "tombra", "tomberra"], a: 0,
       why: { zh: "将来时 = 不定式 + 词尾,第三人称单数是 -a:tomber + a = tombera。tomberai 是 je 的形式;tombra 丢了不定式里的 e;双 r 只属于 pourra、verra 这类不规则词干。", en: "Future = infinitive + ending, and the third singular is -a: tomber + a = tombera. Tomberai is the je form; tombra loses the e of the infinitive; the double r belongs only to irregular stems like pourra and verra." } },
-    { q: { zh: "皮提亚对赫拉克勒斯说:「你将为欧律斯透斯做苦役。」Tu ___ des travaux pour Eurysthée.", en: "The Pythia tells Heracles he will labour for Eurystheus: Tu ___ des travaux pour Eurysthée." },
+    { q: { zh: "皮提亚对赫拉克勒斯说:「欧律斯透斯要你做什么,你就做什么。」Tu ___ tout ce que veut Eurysthée.", en: "The Pythia tells Heracles to serve Eurystheus: Tu ___ tout ce que veut Eurysthée — you will do whatever Eurystheus wants." },
       opts: ["feras", "fairas", "faisras", "faireras"], a: 0,
       why: { zh: "faire 的将来词干不规则,是 fer-:tu feras。fairas 是照 prendre → prendr- 硬套的;faisras 用了 nous faisons 的词干。词干会变,词尾 -ai, -as, -a… 永远不变。", en: "Faire has the irregular future stem fer-: tu feras. Fairas copies the pattern prendre → prendr-; faisras uses the stem of nous faisons. The stem may change, but the endings -ai, -as, -a… never do." } },
     { q: { zh: "「如果珀耳修斯直视美杜莎,他就会变成石头。」Si Persée ___ Méduse dans les yeux, il sera changé en pierre.", en: "If Perseus looks Medusa in the eye, he will be turned to stone: Si Persée ___ Méduse dans les yeux, il sera changé en pierre." },
